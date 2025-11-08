@@ -1,0 +1,11 @@
+# Terraform Variables Example
+# Copy this file to terraform.tfvars and update with your values
+
+aws_region   = "us-east-1"  # Cheapest region for Free Tier
+environment  = "production"
+project_name = "telematics-insurance"
+
+# Optional: EC2 Key Pair for SSH access to simulator
+# Create a key pair in AWS Console: EC2 > Key Pairs > Create key pair
+# ec2_key_name = "my-key-pair"
+
