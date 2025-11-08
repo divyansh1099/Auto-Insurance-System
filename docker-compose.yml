@@ -63,7 +63,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-telematics_db}
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
-      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/backend/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U insurance_user"]
       interval: 10s
@@ -83,7 +83,7 @@ services:
   # FastAPI Backend
   backend:
     build:
-      context: ./backend
+      context: ./src/backend
       dockerfile: Dockerfile
     container_name: backend
     ports:
@@ -100,15 +100,15 @@ services:
       - kafka
       - schema-registry
     volumes:
-      - ./backend:/app
-      - ./ml/models:/models
-      - ./schemas:/app/schemas
+      - ./src/backend:/app
+      - ./models:/models
+      - ./src/backend/schemas:/app/schemas
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   # Telematics Data Simulator
   simulator:
     build:
-      context: ./simulator
+      context: ./src/simulator
       dockerfile: Dockerfile
     container_name: simulator
     environment:
@@ -124,7 +124,7 @@ services:
       - kafka
       - schema-registry
     volumes:
-      - ./simulator:/app
+      - ./src/simulator:/app
     # Don't run automatically - we'll start it manually
     command: tail -f /dev/null
 
@@ -147,7 +147,7 @@ services:
   # Frontend (React Dashboard)
   frontend:
     build:
-      context: ./frontend
+      context: ./src/frontend
       dockerfile: Dockerfile
     container_name: frontend
     ports:
@@ -155,7 +155,7 @@ services:
     environment:
       REACT_APP_API_URL: http://localhost:8000
     volumes:
-      - ./frontend:/app
+      - ./src/frontend:/app
       - /app/node_modules
     command: npm start
 

@@ -36,14 +36,19 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Data
-data/
+# Data (keep sample data, ignore large datasets)
+data/kafka/
+data/postgres/
+data/redis/
+data/zookeeper/
 *.db
 *.sqlite
 
-# ML Models
-ml/models/*.pkl
-ml/models/*.joblib
+# ML Models (large files - use pointers or external storage)
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.ckpt
 
 # Logs
 *.log
@@ -60,3 +65,14 @@ htmlcov/
 
 # Docker
 docker-compose.override.yml
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Temporary files
+*.tmp
+*.bak
+*.swp

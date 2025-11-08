@@ -2,50 +2,34 @@
 
 A production-ready telematics-based automobile insurance system that enables usage-based insurance (UBI) pricing models through real-time driving behavior analysis.
 
-## Overview
-
-This system collects real-time driving behavior data, processes it through distributed streaming pipelines, calculates personalized risk scores using machine learning, and provides dynamic insurance pricing.
-
-### Key Features
-
-- **Real-time Data Processing**: Kafka + Spark Streaming for processing telematics events
-- **ML-Based Risk Scoring**: XGBoost model for personalized risk assessment
-- **Dynamic Pricing**: Usage-based insurance premium calculation
-- **Interactive Dashboard**: React-based UI with driving behavior insights
-- **Scalable Architecture**: Distributed system design supporting thousands of drivers
-
-## Architecture
+## 🏗️ Project Structure
 
 ```
-Telematics Simulator → Kafka → Spark Streaming → Feature Store (Redis)
-                                      ↓
-                                Data Lake (S3)
-                                      ↓
-                              ML Risk Scoring Model
-                                      ↓
-                                FastAPI Backend
-                                      ↓
-                                React Dashboard
+.
+├── src/                    # Source code
+│   ├── backend/           # FastAPI backend application
+│   ├── frontend/          # React frontend application
+│   ├── simulator/         # Telematics data simulator
+│   ├── ml/                # Machine learning models and training
+│   └── schemas/           # Avro schemas for data serialization
+├── models/                # AI model weights (or pointers to downloads)
+├── docs/                  # Documentation, design docs, diagrams
+├── bin/                   # Executables and run scripts
+├── data/                  # Sample data (anonymized)
+│   └── sample/           # Small sample datasets
+└── docker-compose.yml     # Docker orchestration
+
 ```
 
-## Technology Stack
+## 🚀 Quick Start
 
-- **Data Ingestion**: Apache Kafka, Confluent Schema Registry
-- **Stream Processing**: Apache Spark Structured Streaming
-- **Storage**: PostgreSQL, Redis, S3/MinIO
-- **Machine Learning**: XGBoost, scikit-learn, MLflow
-- **API**: FastAPI, Pydantic
-- **Frontend**: React, Recharts, Tailwind CSS
-- **Infrastructure**: Docker, Docker Compose
-
-## Prerequisites
+### Prerequisites
 
 - Docker & Docker Compose
-- Python 3.11+
+- Python 3.11+ (for local development)
 - Node.js 18+ (for frontend development)
-- 8GB RAM minimum (16GB recommended)
 
-## Quick Start
+### Setup
 
 1. **Clone the repository**
    ```bash
@@ -53,156 +37,105 @@ Telematics Simulator → Kafka → Spark Streaming → Feature Store (Redis)
    cd "Auto Insurance System"
    ```
 
-2. **Set up environment variables**
+2. **Start all services**
    ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
+   chmod +x bin/setup.sh
+   ./bin/setup.sh
+   docker compose up -d
    ```
 
-3. **Start all services**
+3. **Create demo users**
    ```bash
-   docker-compose up -d
+   docker compose exec backend python /app/scripts/create_demo_users.py
    ```
 
-4. **Verify services are running**
-   ```bash
-   docker-compose ps
-   ```
-
-5. **Access the application**
+4. **Access the application**
    - API Documentation: http://localhost:8000/docs
    - Dashboard: http://localhost:3000
-   - Kafka UI: http://localhost:9092
+   - Login: `admin` / `admin123`
 
-## Project Structure
+## 📋 Features
 
-```
-.
-├── backend/              # FastAPI application
-│   ├── app/
-│   │   ├── main.py      # Application entry point
-│   │   ├── config.py    # Configuration management
-│   │   ├── models/      # Database & Pydantic models
-│   │   ├── routers/     # API endpoints
-│   │   ├── services/    # Business logic
-│   │   ├── ml/          # ML model integration
-│   │   └── utils/       # Utilities
-│   ├── requirements.txt
-│   └── Dockerfile
-├── streaming/            # Spark Streaming jobs
-├── simulator/            # Telematics data simulator
-├── ml/                   # ML training pipeline
-├── frontend/             # React dashboard
-├── schemas/              # Avro schemas
-└── docker-compose.yml    # Service orchestration
-```
+### Core Functionality
+- ✅ Real-time telematics data ingestion via Kafka
+- ✅ ML-based risk scoring (XGBoost)
+- ✅ Dynamic pricing engine
+- ✅ Interactive dashboard
+- ✅ Admin panel with CRUD operations
+- ✅ RESTful API with JWT authentication
 
-## Development
+### Technology Stack
+- **Backend:** FastAPI, PostgreSQL, Redis, Kafka
+- **Frontend:** React, Vite, Tailwind CSS
+- **ML:** XGBoost, scikit-learn, SHAP
+- **Infrastructure:** Docker, Docker Compose, Terraform (AWS)
 
-### Running Individual Components
+## 📚 Documentation
 
-**Backend API:**
+See `/docs` directory for:
+- `README.md` - Main documentation
+- `QUICKSTART.md` - Quick start guide
+- `ADMIN_PANEL.md` - Admin panel documentation
+- `PROJECT_ANALYSIS.md` - Comprehensive project analysis
+- `terraform/` - AWS deployment documentation
+
+## 🔧 Development
+
+### Backend
 ```bash
-cd backend
+cd src/backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-**Frontend:**
+### Frontend
 ```bash
-cd frontend
+cd src/frontend
 npm install
-npm start
+npm run dev
 ```
 
-**Data Simulator:**
+### ML Training
 ```bash
-cd simulator
-python telematics_simulator.py
+cd src/ml
+python train_model.py --n-drivers 500
 ```
 
-### Running Tests
+## 📊 API Endpoints
 
-```bash
-# Backend tests
-cd backend
-pytest tests/ -v --cov=app
+- `GET /health` - Health check
+- `POST /api/v1/auth/login` - Authentication
+- `GET /api/v1/risk/{driver_id}/score` - Risk score
+- `GET /api/v1/pricing/{driver_id}/current` - Premium
+- `GET /api/v1/admin/dashboard/stats` - Admin stats
 
-# Frontend tests
-cd frontend
-npm test
-```
+Full API documentation: http://localhost:8000/docs
 
-## API Endpoints
-
-### Authentication
-- `POST /api/v1/auth/login` - User authentication
-- `POST /api/v1/auth/refresh` - Refresh token
-
-### Drivers
-- `GET /api/v1/drivers/{id}` - Get driver profile
-- `GET /api/v1/drivers/{id}/trips` - Get trip history
-- `GET /api/v1/drivers/{id}/statistics` - Driving statistics
-
-### Risk Scoring
-- `GET /api/v1/risk/{driver_id}/score` - Current risk score
-- `GET /api/v1/risk/{driver_id}/breakdown` - Score breakdown
-- `GET /api/v1/risk/{driver_id}/history` - Historical scores
-
-### Pricing
-- `GET /api/v1/pricing/{driver_id}/current` - Current premium
-- `GET /api/v1/pricing/{driver_id}/breakdown` - Premium breakdown
-- `POST /api/v1/pricing/{driver_id}/simulate` - What-if scenarios
-
-## Data Flow
-
-1. **Data Generation**: Simulator generates realistic telematics events
-2. **Ingestion**: Events published to Kafka topics
-3. **Stream Processing**: Spark Streaming processes events in real-time
-4. **Feature Engineering**: Calculate risk metrics and store in Redis
-5. **ML Scoring**: XGBoost model calculates risk scores
-6. **Pricing**: Dynamic premium calculation based on risk
-7. **Visualization**: React dashboard displays insights
-
-## Machine Learning
-
-### Risk Scoring Model
-
-The system uses XGBoost for risk scoring based on:
-- Driving behavior (speed, braking, acceleration)
-- Time patterns (night driving, rush hour)
-- Location risk factors
-- Historical claims data
-
-**Model Performance:**
-- R² Score: >0.70
-- RMSE: <10 (on 0-100 scale)
-- Feature importance via SHAP values
-
-### Training the Model
+## 🧪 Testing
 
 ```bash
-cd ml
-python train_model.py --data-path ../data/training --output-path ./models
+# Run tests
+docker compose exec backend pytest
+
+# Check services
+docker compose ps
+
+# View logs
+docker compose logs -f backend
 ```
 
-## Monitoring
-
-- **Prometheus**: Metrics collection (port 9090)
-- **Grafana**: Dashboards (port 3001)
-- **Kafka UI**: Topic monitoring
-
-## Contributing
-
-1. Create a feature branch
-2. Make your changes
-3. Write/update tests
-4. Submit a pull request
-
-## License
+## 📝 License
 
 MIT License
 
-## Contact
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📧 Contact
 
 For questions or support, please open an issue.
+
