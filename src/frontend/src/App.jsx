@@ -9,6 +9,7 @@ import Rewards from './pages/Rewards'
 import InsuranceAdvisor from './pages/InsuranceAdvisor'
 import LiveDriving from './pages/LiveDriving'
 import Login from './pages/Login'
+import Homepage from './pages/Homepage'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminDrivers from './pages/AdminDrivers'
 import AdminPolicies from './pages/AdminPolicies'
@@ -18,6 +19,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 function App() {
   return (
     <Routes>
+      <Route path="/home" element={<Homepage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route element={<Layout />}>
@@ -36,7 +38,7 @@ function App() {
         </Route>
       </Route>
       {/* Redirect any unknown routes to login */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   )
 }

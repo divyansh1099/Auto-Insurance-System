@@ -117,18 +117,6 @@ export default function Login() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
-
-        <div className="mt-6 text-center text-sm text-gray-600">
-          <p className="mb-2">Demo credentials:</p>
-          <p>
-            Username: <code className="bg-gray-100 px-2 py-1 rounded">demo</code>
-            {' '}Password: <code className="bg-gray-100 px-2 py-1 rounded">demo123</code>
-          </p>
-          <p className="mt-2">
-            Admin: <code className="bg-gray-100 px-2 py-1 rounded">admin</code>
-            {' '}/ <code className="bg-gray-100 px-2 py-1 rounded">admin123</code>
-          </p>
-        </div>
       </div>
     </div>
   )

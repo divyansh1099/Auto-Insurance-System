@@ -59,8 +59,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
-    # CORS
-    CORS_ORIGINS: list = ["http://localhost:3000", "http://localhost:8000", "*"]  # Allow all for demo
+    # CORS - restrict to specific origins in production
+    CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8000").split(",")
 
     # Feature Store (Redis) TTL
     FEATURE_STORE_TTL_SECONDS: int = 86400  # 24 hours

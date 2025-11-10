@@ -15,6 +15,8 @@ from app.config import get_settings
 from app.routers import drivers, telematics, risk, pricing, analytics, auth, admin, simulator, rewards, data_generator, realtime
 from app.utils.metrics import PrometheusMiddleware, get_metrics
 from app.utils.exceptions import BaseAPIException
+from app.utils.rate_limit import limiter
+from slowapi.errors import RateLimitExceeded
 from app.models.database import SessionLocal
 from app.services.redis_client import get_redis_client
 
@@ -39,13 +41,17 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Configure CORS
+# Configure rate limiting
+app.state.limiter = limiter
+
+# Configure CORS - must be added before other middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],  # Expose all headers for debugging
 )
 
 # Add Prometheus metrics middleware
@@ -236,7 +242,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         method=request.method
     )
     
-    return JSONResponse(
+    response = JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
             "detail": "Validation error",
@@ -307,6 +313,26 @@ async def database_error_handler(request: Request, exc: SQLAlchemyError):
             "error_code": "DATABASE_ERROR",
             "path": request.url.path
         }
+    )
+
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    """Handle rate limit exceeded exceptions."""
+    logger.warning(
+        "rate_limit_exceeded",
+        path=request.url.path,
+        method=request.method,
+        client_ip=request.client.host if request.client else "unknown"
+    )
+    return JSONResponse(
+        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+        content={
+            "detail": "Rate limit exceeded. Please try again later.",
+            "error_code": "RATE_LIMIT_EXCEEDED",
+            "path": request.url.path
+        },
+        headers={"Retry-After": str(exc.retry_after) if hasattr(exc, 'retry_after') else "60"}
     )
 
 

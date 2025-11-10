@@ -15,13 +15,16 @@ from app.utils.auth import (
     get_password_hash,
     get_current_user
 )
+from app.utils.rate_limit import limiter
+from fastapi import Request
 
 settings = get_settings()
 router = APIRouter()
 
 
 @router.post("/login", response_model=Token)
-async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")  # Rate limit: 5 login attempts per minute per IP
+async def login(request: Request, user_credentials: UserLogin, db: Session = Depends(get_db)):
     """Authenticate a user and return a JWT token."""
     # Input validation
     if not user_credentials.username or not user_credentials.username.strip():

@@ -14,21 +14,24 @@ import { CheckCircleIcon as CheckCircleSolid, StarIcon as StarSolid } from '@her
 
 export default function Rewards() {
   // Get current user to determine driver_id
-  const { data: currentUser } = useQuery(
+  const { data: currentUser, isLoading: isLoadingUser } = useQuery(
     ['currentUser'],
     () => authAPI.getCurrentUser(),
     { retry: false }
   )
   
-  const driverId = currentUser?.data?.driver_id || 'DRV-0001'
-
-  // Fetch rewards data
+  // Only use driver_id if user is logged in and has one
+  // Don't default to DRV-0001 - wait for user data
+  const driverId = currentUser?.data?.driver_id
+  
+  // Fetch rewards data - only if driverId is available
+  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
   const { data: rewardsSummary } = useQuery(
     ['rewardsSummary', driverId],
     () => rewardsAPI.getRewardsSummary(driverId),
     { 
       retry: false,
-      enabled: !!driverId,
+      enabled: !!driverId && !!currentUser?.data, // Only fetch if user is logged in and has driver_id
       // Fallback data if endpoint doesn't exist
       onError: () => {
         // Will use fallback data
@@ -39,13 +42,13 @@ export default function Rewards() {
   const { data: milestones } = useQuery(
     ['milestones', driverId],
     () => rewardsAPI.getMilestones(driverId),
-    { retry: false, enabled: !!driverId }
+    { retry: false, enabled: !!driverId && !!currentUser?.data }
   )
 
   const { data: achievements } = useQuery(
     ['achievements', driverId],
     () => rewardsAPI.getAchievements(driverId),
-    { retry: false, enabled: !!driverId }
+    { retry: false, enabled: !!driverId && !!currentUser?.data }
   )
 
   const { data: pointsRules } = useQuery(
@@ -58,15 +61,41 @@ export default function Rewards() {
   const { data: dashboardSummary } = useQuery(
     ['dashboardSummaryForRewards', driverId],
     () => dashboardAPI.getSummary(driverId),
-    { retry: false, enabled: !!driverId }
+    { retry: false, enabled: !!driverId && !!currentUser?.data }
   )
 
   // Fetch trip data for detailed metrics (perfect/excellent/good trips)
   const { data: tripsData } = useQuery(
     ['tripsForRewards', driverId],
     () => driverAPI.getTrips(driverId, 1, 100),
-    { retry: false, enabled: !!driverId }
+    { retry: false, enabled: !!driverId && !!currentUser?.data }
   )
+  
+  // Show loading or error state if user not logged in or doesn't have driver_id
+  // THIS MUST COME AFTER ALL HOOKS
+  if (isLoadingUser) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    )
+  }
+  
+  if (!currentUser?.data || !driverId) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Rewards & Achievements</h1>
+          <p className="text-gray-600 mt-1">Earn points and unlock rewards through safe driving</p>
+        </div>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <p className="text-yellow-800">
+            Please log in as a driver to view your rewards and achievements.
+          </p>
+        </div>
+      </div>
+    )
+  }
   
   // Calculate trip metrics - use summary for totals, trips list for breakdowns
   const trips = tripsData?.data?.trips || tripsData?.trips || []
@@ -92,14 +121,14 @@ export default function Rewards() {
     }
   }
 
-  const milestonesList = milestones?.data?.milestones || [
+  const milestonesList = milestones?.data || milestones || [
     { milestone_id: 1, points_threshold: 100, reward_name: '100 Points', reward_description: '5% Extra Discount', status: 'unlocked' },
     { milestone_id: 2, points_threshold: 250, reward_name: '250 Points', reward_description: 'Free Roadside Assistance', status: 'unlocked' },
     { milestone_id: 3, points_threshold: 500, reward_name: '500 Points', reward_description: '10% Extra Discount', status: 'pending' },
     { milestone_id: 4, points_threshold: 1000, reward_name: '1000 Points', reward_description: 'Premium Upgrade', status: 'pending' }
   ]
 
-  const achievementsList = achievements?.data?.achievements || [
+  const achievementsList = achievements?.data || achievements || [
     { achievement_id: 1, achievement_name: 'Safe Week', achievement_description: '7 consecutive days with no safety events', status: 'achieved' },
     { achievement_id: 2, achievement_name: 'Speed Demon Reformed', achievement_description: 'No speeding incidents in 30 days', status: 'pending' },
     { achievement_id: 3, achievement_name: 'Smooth Operator', achievement_description: '50 trips with perfect acceleration/braking', status: 'achieved' },
@@ -107,7 +136,7 @@ export default function Rewards() {
     { achievement_id: 5, achievement_name: 'Perfect Score', achievement_description: 'Achieve a trip score of 100', status: 'pending' }
   ]
 
-  const rulesList = pointsRules?.data?.rules || [
+  const rulesList = pointsRules?.data || pointsRules || [
     { rule_id: 1, rule_name: 'Excellent Trips', rule_description: 'Earn 10 points for trips scored 80+', min_score: 80, max_score: 100, points_awarded: 10 },
     { rule_id: 2, rule_name: 'Good Trips', rule_description: 'Earn 5 points for trips scored 60-79', min_score: 60, max_score: 79, points_awarded: 5 }
   ]
