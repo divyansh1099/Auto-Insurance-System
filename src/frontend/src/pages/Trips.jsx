@@ -154,12 +154,20 @@ export default function Trips() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-      <h1 className="text-3xl font-bold text-gray-900">Trip History</h1>
-        <p className="text-gray-600 mt-1">View and analyze all your trips</p>
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
       </div>
+
+      <div className="relative z-10 space-y-6 p-6">
+        {/* Header */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 p-6">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Trip History</h1>
+          <p className="text-gray-600 mt-1 text-lg">View and analyze all your trips</p>
+        </div>
 
       {/* Summary Cards - All on Same Line */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -387,6 +395,30 @@ export default function Trips() {
           </div>
         </div>
       )}
+      </div>
+
+      <style>{`
+        @keyframes blob {
+          0%, 100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+      `}</style>
     </div>
   )
 }

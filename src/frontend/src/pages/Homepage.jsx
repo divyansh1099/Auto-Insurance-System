@@ -298,21 +298,21 @@ export default function Homepage() {
 
           {/* Quick Feature Highlights */}
           <div className={`flex flex-wrap justify-center gap-4 mb-8 max-w-4xl mx-auto transition-all duration-1000 delay-350 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-cyan-200/50 shadow-md">
-              <ShieldCheckIcon className="w-4 h-4 text-cyan-600" />
-              <span className="text-sm font-medium text-gray-700">Real-Time Tracking</span>
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-cyan-200/50 shadow-md hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 hover:shadow-xl hover:shadow-cyan-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+              <ShieldCheckIcon className="w-4 h-4 text-cyan-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="text-sm font-medium text-gray-700 group-hover:text-cyan-700 group-hover:font-semibold transition-all duration-300">Real-Time Tracking</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-purple-200/50 shadow-md">
-              <CpuChipIcon className="w-4 h-4 text-purple-600" />
-              <span className="text-sm font-medium text-gray-700">AI-Powered</span>
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-purple-200/50 shadow-md hover:border-purple-400 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 hover:shadow-xl hover:shadow-purple-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+              <CpuChipIcon className="w-4 h-4 text-purple-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="text-sm font-medium text-gray-700 group-hover:text-purple-700 group-hover:font-semibold transition-all duration-300">AI-Powered</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-emerald-200/50 shadow-md">
-              <CurrencyDollarIcon className="w-4 h-4 text-emerald-600" />
-              <span className="text-sm font-medium text-gray-700">Save Up to 40%</span>
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-emerald-200/50 shadow-md hover:border-emerald-400 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:shadow-xl hover:shadow-emerald-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+              <CurrencyDollarIcon className="w-4 h-4 text-emerald-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="text-sm font-medium text-gray-700 group-hover:text-emerald-700 group-hover:font-semibold transition-all duration-300">Save Up to 40%</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-amber-200/50 shadow-md">
-              <TrophyIcon className="w-4 h-4 text-amber-600" />
-              <span className="text-sm font-medium text-gray-700">Earn Rewards</span>
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-amber-200/50 shadow-md hover:border-amber-400 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 hover:shadow-xl hover:shadow-amber-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+              <TrophyIcon className="w-4 h-4 text-amber-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="text-sm font-medium text-gray-700 group-hover:text-amber-700 group-hover:font-semibold transition-all duration-300">Earn Rewards</span>
             </div>
           </div>
 
@@ -339,16 +339,24 @@ export default function Homepage() {
                 </button>
               </>
             ) : (
-              <button
-                onClick={() => navigate('/login')}
-                className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  Get Started
-                  <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </button>
+              <>
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Get Your Quote
+                    <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="px-8 py-4 bg-white/90 backdrop-blur-sm text-gray-700 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl border-2 border-cyan-200 hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transform hover:scale-105 transition-all duration-300"
+                >
+                  Sign In
+                </button>
+              </>
             )}
           </div>
 
@@ -696,15 +704,15 @@ export default function Homepage() {
                     <PlayIcon className="w-5 h-5" />
                     Try Drive Simulator
                   </button>
-                ) : (
-                  <button
-                    onClick={() => navigate('/login')}
-                    className="px-8 py-4 bg-white text-cyan-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    Start Your Journey
-                    <ArrowRightIcon className="w-5 h-5" />
-                  </button>
-                )}
+              ) : (
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="px-8 py-4 bg-white text-cyan-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  Get Your Quote
+                  <ArrowRightIcon className="w-5 h-5" />
+                </button>
+              )}
               </div>
             </div>
           </div>

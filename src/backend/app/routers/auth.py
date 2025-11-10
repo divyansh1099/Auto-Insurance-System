@@ -2,13 +2,15 @@
 Authentication endpoints.
 """
 
-from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import timedelta, date
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
+import uuid
+import random
 
 from app.config import get_settings
 from app.models.database import get_db, User
-from app.models.schemas import Token, UserLogin, UserCreate, UserResponse
+from app.models.schemas import Token, UserLogin, UserCreate, UserResponse, QuoteRequest, QuoteResponse
 from app.utils.auth import (
     authenticate_user,
     create_access_token,
@@ -16,7 +18,6 @@ from app.utils.auth import (
     get_current_user
 )
 from app.utils.rate_limit import limiter
-from fastapi import Request
 
 settings = get_settings()
 router = APIRouter()
@@ -176,3 +177,87 @@ async def logout(current_user: User = Depends(get_current_user)):
     """Logout current user."""
     # In a real implementation, you might want to blacklist the token
     return {"message": "Successfully logged out"}
+
+
+@router.post("/quote-request", response_model=QuoteResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit("10/hour")  # Rate limit quote requests
+async def request_quote(request: Request, quote_data: QuoteRequest, db: Session = Depends(get_db)):
+    """
+    Submit a quote request for background check.
+    This does not create a user account, but collects information for quote generation.
+    """
+    # Generate a unique quote ID
+    quote_id = f"QUOTE-{uuid.uuid4().hex[:8].upper()}"
+    
+    # Simulate background check and quote calculation
+    # In a real system, this would:
+    # 1. Check driving record
+    # 2. Check credit score
+    # 3. Analyze risk factors
+    # 4. Calculate premium based on multiple factors
+    
+    # Base premium calculation (simplified)
+    base_premium = 150.0  # Base monthly premium
+    
+    # Age factor
+    today = date.today()
+    age = today.year - quote_data.date_of_birth.year - ((today.month, today.day) < (quote_data.date_of_birth.month, quote_data.date_of_birth.day))
+    
+    if age < 25:
+        age_factor = 1.5
+    elif age < 30:
+        age_factor = 1.3
+    elif age < 50:
+        age_factor = 1.0
+    else:
+        age_factor = 1.1
+    
+    # Experience factor
+    if quote_data.years_licensed < 1:
+        experience_factor = 1.4
+    elif quote_data.years_licensed < 3:
+        experience_factor = 1.2
+    elif quote_data.years_licensed < 5:
+        experience_factor = 1.1
+    else:
+        experience_factor = 1.0
+    
+    # Mileage factor
+    mileage_factor = 1.0
+    if quote_data.annual_mileage:
+        if quote_data.annual_mileage > 15000:
+            mileage_factor = 1.2
+        elif quote_data.annual_mileage > 12000:
+            mileage_factor = 1.1
+        elif quote_data.annual_mileage < 5000:
+            mileage_factor = 0.9
+    
+    # Calculate premium
+    monthly_premium = base_premium * age_factor * experience_factor * mileage_factor
+    annual_premium = monthly_premium * 12
+    
+    # Traditional insurance estimate (higher)
+    traditional_premium = monthly_premium * 1.4  # 40% more than telematics
+    discount_percentage = round(((traditional_premium - monthly_premium) / traditional_premium) * 100, 1)
+    
+    # Add some randomness to make it feel realistic (±5%)
+    variation = random.uniform(0.95, 1.05)
+    monthly_premium = round(monthly_premium * variation, 2)
+    annual_premium = round(monthly_premium * 12, 2)
+    
+    # In a real system, you would:
+    # 1. Store the quote request in a database
+    # 2. Queue it for background check processing
+    # 3. Send confirmation email
+    # 4. Schedule follow-up
+    
+    return QuoteResponse(
+        quote_id=quote_id,
+        estimated_monthly_premium=monthly_premium,
+        estimated_annual_premium=annual_premium,
+        discount_percentage=discount_percentage,
+        message=f"Thank you {quote_data.first_name}! We've received your information and will run a background check. "
+                f"Based on your initial profile, we estimate you could save up to {discount_percentage}% compared to traditional insurance. "
+                f"An agent will contact you within 24 hours with your personalized quote.",
+        status="pending_background_check"
+    )

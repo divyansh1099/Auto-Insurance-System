@@ -9,6 +9,7 @@ import Rewards from './pages/Rewards'
 import InsuranceAdvisor from './pages/InsuranceAdvisor'
 import LiveDriving from './pages/LiveDriving'
 import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Homepage from './pages/Homepage'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminDrivers from './pages/AdminDrivers'
@@ -21,6 +22,7 @@ function App() {
     <Routes>
       <Route path="/home" element={<Homepage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route element={<Layout />}>
           <Route index element={<Dashboard />} />

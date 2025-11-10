@@ -457,6 +457,37 @@ class UserUpdate(BaseModel):
     is_admin: Optional[bool] = None
 
 
+class QuoteRequest(BaseModel):
+    """Quote request schema for background check."""
+    first_name: str = Field(..., min_length=1, max_length=100)
+    last_name: str = Field(..., min_length=1, max_length=100)
+    email: EmailStr
+    phone: str = Field(..., min_length=10, max_length=20)
+    date_of_birth: date
+    license_number: str = Field(..., min_length=5, max_length=50)
+    license_state: str = Field(..., min_length=2, max_length=2)
+    years_licensed: int = Field(..., ge=0, le=80)
+    address: str = Field(..., min_length=5, max_length=200)
+    city: str = Field(..., min_length=2, max_length=100)
+    state: str = Field(..., min_length=2, max_length=2)
+    zip_code: str = Field(..., min_length=5, max_length=10)
+    vehicle_make: Optional[str] = None
+    vehicle_model: Optional[str] = None
+    vehicle_year: Optional[int] = None
+    annual_mileage: Optional[int] = Field(None, ge=0, le=1000000)
+    coverage_type: Optional[str] = None
+
+
+class QuoteResponse(BaseModel):
+    """Quote response schema."""
+    quote_id: str
+    estimated_monthly_premium: float
+    estimated_annual_premium: float
+    discount_percentage: float
+    message: str
+    status: str = "pending_background_check"
+
+
 class UserResponse(BaseModel):
     """User response."""
     user_id: int

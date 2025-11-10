@@ -77,6 +77,7 @@ export const authAPI = {
   register: (userData) => api.post("/auth/register", userData),
   logout: () => api.post("/auth/logout"),
   getCurrentUser: () => api.get("/auth/me"),
+  requestQuote: (quoteData) => api.post("/auth/quote-request", quoteData),
 };
 
 // Driver API
