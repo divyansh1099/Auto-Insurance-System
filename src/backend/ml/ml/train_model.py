@@ -131,12 +131,6 @@ class RiskScoringModel:
 
         else:
             print("Training with default hyperparameters...")
-            # Create validation set for early stopping
-            from sklearn.model_selection import train_test_split
-            X_train_fit, X_val_fit, y_train_fit, y_val_fit = train_test_split(
-                X_train, y_train, test_size=0.2, random_state=42
-            )
-            
             # Optimized XGBoost parameters for risk scoring
             self.model = xgb.XGBRegressor(
                 max_depth=6,  # Increased depth for better feature interactions
@@ -153,10 +147,12 @@ class RiskScoringModel:
                 n_jobs=-1  # Use all CPU cores
             )
 
+            eval_set = [(X_val, y_val)] if X_val is not None and y_val is not None else None
+
             self.model.fit(
-                X_train_fit,
-                y_train_fit,
-                eval_set=[(X_val_fit, y_val_fit)],
+                X_train,
+                y_train,
+                eval_set=eval_set,
                 early_stopping_rounds=20,  # Stop early if no improvement
                 verbose=False
             )
