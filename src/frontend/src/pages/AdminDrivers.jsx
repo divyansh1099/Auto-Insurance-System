@@ -1,19 +1,49 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { adminAPI } from '../services/api'
+import DriverForm from '../components/forms/DriverForm'
+import DriverDetailsModal from '../components/DriverDetailsModal'
+import {
+  UserGroupIcon,
+  PhoneIcon,
+  MapPinIcon,
+  EyeIcon,
+  EnvelopeIcon,
+} from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 
 export default function AdminDrivers() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [editingDriver, setEditingDriver] = useState(null)
+  const [viewingDriverId, setViewingDriverId] = useState(null)
   const limit = 20
 
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery(
     ['adminDrivers', page, search],
-    () => adminAPI.listDrivers((page - 1) * limit, limit, search)
+    () => adminAPI.listDrivers((page - 1) * limit, limit, search),
+    {
+      retry: false,
+      // Transform data to include enriched fields (will be replaced when backend is ready)
+      select: (data) => {
+        const drivers = data?.data || data || []
+        return drivers.map(driver => ({
+          ...driver,
+          // Mock enriched data - will be replaced by backend
+          safety_score: driver.safety_score || (100 - (driver.risk_score || 50)),
+          risk_score: driver.risk_score || 50,
+          total_trips: driver.total_trips || 0,
+          reward_points: driver.reward_points || Math.floor((driver.safety_score || 50) * 5),
+          policy_type: driver.policy_type || 'PHYD',
+          policy_status: driver.policy_status || 'active',
+          monthly_premium: driver.monthly_premium || 127.50,
+          discount_percentage: driver.discount_percentage || 15,
+        }))
+      }
+    }
   )
 
   const deleteMutation = useMutation(
@@ -25,7 +55,7 @@ export default function AdminDrivers() {
     }
   )
 
-  const drivers = data?.data || []
+  const drivers = data || []
   const total = drivers.length
 
   const handleDelete = async (driverId) => {
@@ -38,83 +68,200 @@ export default function AdminDrivers() {
     }
   }
 
+  const getInitials = (firstName, lastName) => {
+    const first = firstName?.charAt(0)?.toUpperCase() || ''
+    return first
+  }
+
+  const formatPhone = (phone) => {
+    if (!phone) return 'N/A'
+    // Format phone number if needed
+    return phone
+  }
+
+  const formatLocation = (city, state) => {
+    if (!city && !state) return 'N/A'
+    if (city && state) return `${city}, ${state}`
+    return city || state || 'N/A'
+  }
+
+  const formatPremium = (premium) => {
+    if (!premium) return 'N/A'
+    return `$${premium.toFixed(2)}/mo`
+  }
+
+  const getPolicyTypeColor = (policyType) => {
+    switch (policyType?.toUpperCase()) {
+      case 'PHYD':
+      case 'PAYD':
+        return 'bg-blue-100 text-blue-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'active':
+        return 'bg-green-100 text-green-800'
+      case 'inactive':
+        return 'bg-gray-100 text-gray-800'
+      default:
+        return 'bg-yellow-100 text-yellow-800'
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Manage Drivers</h1>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          + Add Driver
-        </button>
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <UserGroupIcon className="w-8 h-8 text-blue-600" />
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Driver Management</h1>
+          <p className="text-gray-600 mt-1">View and manage all drivers in the system</p>
+        </div>
       </div>
 
-      {/* Search */}
+      {/* Search Bar */}
       <div className="bg-white rounded-lg shadow p-4">
-        <input
-          type="text"
-          placeholder="Search drivers..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg"
-        />
+        <div className="relative">
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Driver Cards */}
+      <div className="space-y-4">
         {isLoading ? (
-          <div className="p-8 text-center">Loading...</div>
+          <div className="bg-white rounded-lg shadow p-12 text-center">
+            <p className="text-gray-500">Loading drivers...</p>
+          </div>
         ) : drivers.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No drivers found</div>
+          <div className="bg-white rounded-lg shadow p-12 text-center">
+            <p className="text-gray-500 mb-2">No drivers found</p>
+            <p className="text-sm text-gray-400">
+              {search ? 'Try adjusting your search criteria' : 'Get started by adding a driver'}
+            </p>
+          </div>
         ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Driver ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {drivers.map((driver) => (
-                <tr key={driver.driver_id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {driver.driver_id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {driver.first_name} {driver.last_name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {driver.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {driver.phone || '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(driver.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => setEditingDriver(driver)}
-                      className="text-blue-600 hover:text-blue-900 mr-4"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(driver.driver_id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          drivers.map((driver) => (
+            <div
+              key={driver.driver_id}
+              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow relative"
+            >
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Left Section - Profile & Contact */}
+                <div className="flex items-start gap-4 flex-1">
+                  {/* Avatar */}
+                  <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-2xl flex-shrink-0">
+                    {getInitials(driver.first_name, driver.last_name)}
+                  </div>
+                  
+                  {/* Name & Contact Info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      {driver.first_name} {driver.last_name}
+                    </h3>
+                    
+                    {/* Contact Information with Icons */}
+                    <div className="space-y-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2">
+                        <EnvelopeIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <span className="truncate">{driver.email || 'N/A'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <PhoneIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <span>{formatPhone(driver.phone)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPinIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <span>{formatLocation(driver.city, driver.state)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Middle Section - Performance Metrics (2x2 Grid) */}
+                <div className="grid grid-cols-2 gap-4 flex-1 max-w-md">
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Safety Score</p>
+                    <p className="text-3xl font-bold text-green-600">
+                      {driver.safety_score?.toFixed(0) || 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Risk Score</p>
+                    <p className="text-3xl font-bold text-orange-600">
+                      {driver.risk_score?.toFixed(0) || 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Total Trips</p>
+                    <p className="text-3xl font-bold text-gray-900">
+                      {driver.total_trips || 0}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Reward Points</p>
+                    <p className="text-3xl font-bold text-orange-600">
+                      {driver.reward_points || 0}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right Section - Policy Details */}
+                <div className="flex flex-col items-end justify-between gap-3 min-w-[200px]">
+                  {/* Policy Badges */}
+                  <div className="flex flex-wrap gap-2 justify-end">
+                    {driver.policy_type && (
+                      <span className="px-3 py-1 rounded text-xs font-semibold bg-blue-600 text-white">
+                        {driver.policy_type}
+                      </span>
+                    )}
+                    {driver.policy_status && (
+                      <span className={`px-3 py-1 rounded text-xs font-semibold ${getStatusColor(driver.policy_status)}`}>
+                        {driver.policy_status}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Premium & Discount */}
+                  {driver.monthly_premium && (
+                    <div className="text-right">
+                      <p className="text-sm text-gray-900 font-medium">
+                        Premium: <span className="font-semibold">{formatPremium(driver.monthly_premium)}</span>
+                      </p>
+                      {driver.discount_percentage && driver.discount_percentage > 0 && (
+                        <div className="flex items-center justify-end gap-1 mt-1">
+                          <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                          <span className="text-sm font-semibold text-green-600">
+                            {driver.discount_percentage.toFixed(0)}% discount
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* View Details Button */}
+                  <button
+                    onClick={() => setViewingDriverId(driver.driver_id)}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium shadow-sm"
+                  >
+                    <EyeIcon className="w-4 h-4" />
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
         )}
       </div>
 
@@ -128,14 +275,14 @@ export default function AdminDrivers() {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 border rounded-lg disabled:opacity-50"
+              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
               Previous
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={drivers.length < limit}
-              className="px-4 py-2 border rounded-lg disabled:opacity-50"
+              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
               Next
             </button>
@@ -143,31 +290,36 @@ export default function AdminDrivers() {
         </div>
       )}
 
+      {/* Driver Details Modal */}
+      {viewingDriverId && (
+        <DriverDetailsModal
+          driverId={viewingDriverId}
+          onClose={() => setViewingDriverId(null)}
+        />
+      )}
+
       {/* Create/Edit Modal */}
       {(showCreateModal || editingDriver) && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">
               {editingDriver ? 'Edit Driver' : 'Create Driver'}
             </h2>
-            <p className="text-gray-600 mb-4">
-              Driver creation form coming soon. Use API directly for now.
-            </p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  setShowCreateModal(false)
-                  setEditingDriver(null)
-                }}
-                className="px-4 py-2 border rounded-lg"
-              >
-                Close
-              </button>
-            </div>
+            <DriverForm
+              driver={editingDriver}
+              onSuccess={() => {
+                setShowCreateModal(false)
+                setEditingDriver(null)
+                queryClient.invalidateQueries('adminDrivers')
+              }}
+              onCancel={() => {
+                setShowCreateModal(false)
+                setEditingDriver(null)
+              }}
+            />
           </div>
         </div>
       )}
     </div>
   )
 }
-

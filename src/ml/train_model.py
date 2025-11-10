@@ -131,16 +131,20 @@ class RiskScoringModel:
 
         else:
             print("Training with default hyperparameters...")
+            # Optimized XGBoost parameters for risk scoring
             self.model = xgb.XGBRegressor(
-                max_depth=5,
-                learning_rate=0.1,
-                n_estimators=200,
+                max_depth=6,  # Increased depth for better feature interactions
+                learning_rate=0.05,  # Lower learning rate for better generalization
+                n_estimators=300,  # More trees for better accuracy
                 subsample=0.8,
                 colsample_bytree=0.8,
                 min_child_weight=3,
                 gamma=0.1,
+                reg_alpha=0.1,  # L1 regularization
+                reg_lambda=1.0,  # L2 regularization
                 objective='reg:squarederror',
-                random_state=42
+                random_state=42,
+                n_jobs=-1  # Use all CPU cores
             )
 
             eval_set = [(X_val, y_val)] if X_val is not None and y_val is not None else None
@@ -149,6 +153,7 @@ class RiskScoringModel:
                 X_train,
                 y_train,
                 eval_set=eval_set,
+                early_stopping_rounds=20,  # Stop early if no improvement
                 verbose=False
             )
 

@@ -12,9 +12,12 @@ from app.models.schemas import (
     PremiumBreakdown,
     PremiumResponse,
     PremiumSimulation,
-    PremiumComponent
+    PremiumComponent,
+    PolicyDetailsResponse
 )
 from app.utils.auth import get_current_user
+from app.services.ml_risk_scoring import calculate_premium_with_discount
+from app.services.discount_calculator import calculate_discount_score
 
 router = APIRouter()
 
@@ -60,27 +63,23 @@ def calculate_usage_multiplier(annual_mileage: float) -> float:
         return 1.30
 
 
-def calculate_discount_factor(driver_data: Dict[str, Any]) -> float:
-    """Calculate discount factor based on various criteria."""
-    discount = 0.0
-
-    # Data completeness bonus
-    if driver_data.get("data_completeness", 0) > 0.95:
-        discount += 0.02
-
-    # Improvement bonus
-    if driver_data.get("risk_score_trend", 0) < -5:
-        discount += 0.03
-
-    # Safety course
-    if driver_data.get("completed_safety_course", False):
-        discount += 0.05
-
-    # Device active
-    if driver_data.get("device_active_days", 0) > 90:
-        discount += 0.02
-
-    return max(1.0 - discount, 0.70)  # Max 30% total discount
+def calculate_discount_factor(driver_id: str, db: Session) -> float:
+    """
+    Calculate discount factor based on clean trips (new strict system).
+    
+    Uses the discount calculator which:
+    - Only counts trips with ZERO risk factors
+    - Each risky trip costs -5 points
+    - Maximum discount: 45%
+    """
+    discount_info = calculate_discount_score(driver_id, db, period_days=90)
+    discount_percent = discount_info.get('discount_percent', 0.0)
+    
+    # Convert percentage to factor (1.0 = no discount, 0.55 = 45% discount)
+    discount_factor = 1.0 - (discount_percent / 100)
+    
+    # Ensure minimum factor (max 45% discount)
+    return max(0.55, discount_factor)  # 0.55 = 45% discount max
 
 
 @router.get("/{driver_id}/current", response_model=PremiumResponse)
@@ -204,6 +203,200 @@ async def get_premium_breakdown(
         components=components,
         savings_vs_traditional=savings
     )
+
+
+@router.get("/{driver_id}/policy-details", response_model=PolicyDetailsResponse)
+async def get_policy_details(
+    driver_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get policy details for Policy page."""
+    # Check permissions
+    if not current_user.is_admin and current_user.driver_id != driver_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to view this driver's policy"
+        )
+    
+    # Get the latest active premium
+    premium = (
+        db.query(Premium)
+        .filter(
+            Premium.driver_id == driver_id,
+            Premium.status == "active"
+        )
+        .order_by(Premium.effective_date.desc())
+        .first()
+    )
+    
+    if not premium:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No active policy found for this driver"
+        )
+    
+    # Format policy number
+    policy_number = premium.policy_id or f"POL-{premium.premium_id}"
+    
+    # Get traditional premium (base rate for state)
+    driver = db.query(Driver).filter(Driver.driver_id == driver_id).first()
+    state = driver.state if driver else "default"
+    traditional_premium = BASE_RATES.get(state, BASE_RATES["default"]) / 12  # Monthly
+    
+    # Calculate savings
+    monthly_premium = premium.monthly_premium or premium.final_premium / 12
+    monthly_savings = traditional_premium - monthly_premium
+    annual_savings = monthly_savings * 12
+    discount_percentage = (monthly_savings / traditional_premium) * 100 if traditional_premium > 0 else 0.0
+    
+    # Get coverage details (handle if columns don't exist)
+    coverage_type = getattr(premium, 'coverage_type', None) or "Comprehensive"
+    coverage_limit = getattr(premium, 'coverage_limit', None) or 100000.0
+    deductible = getattr(premium, 'deductible', None) or 1000.0
+    
+    # Get policy type
+    try:
+        policy_type = getattr(premium, 'policy_type', None) or "PHYD"
+    except AttributeError:
+        policy_type = "PHYD"
+    
+    # Get last updated - fallback to created_at if updated_at and policy_last_updated are None
+    last_updated = (
+        getattr(premium, 'updated_at', None) or 
+        getattr(premium, 'policy_last_updated', None) or 
+        getattr(premium, 'created_at', None)
+    )
+    
+    return PolicyDetailsResponse(
+        policy_number=policy_number,
+        status=premium.status or "active",
+        policy_type=policy_type,
+        traditional_monthly_premium=round(traditional_premium, 2),
+        monthly_premium=round(monthly_premium, 2),
+        discount_percentage=round(discount_percentage, 1),
+        monthly_savings=round(monthly_savings, 2),
+        annual_savings=round(annual_savings, 2),
+        effective_date=premium.effective_date or date.today(),
+        expiration_date=premium.expiration_date or date.today(),
+        last_updated=last_updated,
+        coverage_type=coverage_type,
+        coverage_limit=coverage_limit,
+        deductible=deductible
+    )
+
+
+@router.post("/{driver_id}/recalculate-premium")
+async def recalculate_premium(
+    driver_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Recalculate premium for a driver."""
+    # Check permissions
+    if not current_user.is_admin and current_user.driver_id != driver_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to recalculate premium for this driver"
+        )
+    
+    try:
+        # Get driver
+        driver = db.query(Driver).filter(Driver.driver_id == driver_id).first()
+        if not driver:
+            raise HTTPException(status_code=404, detail="Driver not found")
+        
+        # Get latest risk score
+        from app.models.database import RiskScore
+        latest_risk_score = (
+            db.query(RiskScore)
+            .filter(RiskScore.driver_id == driver_id)
+            .order_by(RiskScore.calculation_date.desc())
+            .first()
+        )
+        
+        risk_score = latest_risk_score.risk_score if latest_risk_score else 50.0
+        
+        # Calculate multipliers
+        risk_multiplier = calculate_risk_multiplier(risk_score)
+        
+        # Get annual mileage (from trips or driver statistics)
+        from app.models.database import Trip
+        from sqlalchemy import func
+        total_miles = (
+            db.query(func.sum(Trip.distance_miles))
+            .filter(Trip.driver_id == driver_id)
+            .scalar() or 0.0
+        )
+        annual_mileage = total_miles * 12  # Estimate annual from total
+        
+        usage_multiplier = calculate_usage_multiplier(annual_mileage)
+        
+        # Calculate discount factor using new ML-based system
+        discount_factor = calculate_discount_factor(driver_id, db)
+        
+        # Get base premium
+        state = driver.state or "default"
+        base_premium = BASE_RATES.get(state, BASE_RATES["default"])
+        
+        # Calculate final premium
+        final_premium = base_premium * risk_multiplier * usage_multiplier * discount_factor
+        monthly_premium = final_premium / 12
+        
+        # Get or create premium record
+        premium = (
+            db.query(Premium)
+            .filter(
+                Premium.driver_id == driver_id,
+                Premium.status == "active"
+            )
+            .order_by(Premium.effective_date.desc())
+            .first()
+        )
+        
+        if premium:
+            # Update existing premium
+            premium.base_premium = base_premium
+            premium.risk_multiplier = risk_multiplier
+            premium.usage_multiplier = usage_multiplier
+            premium.discount_factor = discount_factor
+            premium.final_premium = final_premium
+            premium.monthly_premium = monthly_premium
+            premium.updated_at = datetime.utcnow()
+            if hasattr(premium, 'policy_last_updated'):
+                premium.policy_last_updated = datetime.utcnow()
+        else:
+            # Create new premium
+            from datetime import date, timedelta
+            premium = Premium(
+                driver_id=driver_id,
+                policy_id=f"POL-{datetime.now().year}-{premium.premium_id if premium else 1}",
+                base_premium=base_premium,
+                risk_multiplier=risk_multiplier,
+                usage_multiplier=usage_multiplier,
+                discount_factor=discount_factor,
+                final_premium=final_premium,
+                monthly_premium=monthly_premium,
+                effective_date=date.today(),
+                expiration_date=date.today() + timedelta(days=365),
+                status="active"
+            )
+            db.add(premium)
+        
+        db.commit()
+        db.refresh(premium)
+        
+        return {
+            "message": "Premium recalculated successfully",
+            "new_premium": round(monthly_premium, 2),
+            "recalculated_at": datetime.utcnow()
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error recalculating premium: {str(e)}"
+        )
 
 
 @router.post("/{driver_id}/simulate", response_model=PremiumSimulation)
@@ -391,4 +584,26 @@ async def get_premium_history(
         "driver_id": driver_id,
         "history": history,
         "total_records": len(history)
+    }
+
+
+@router.get("/{driver_id}/discount-info")
+async def get_discount_info(
+    driver_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get detailed discount information for a driver."""
+    # Check permissions
+    if not current_user.is_admin and current_user.driver_id != driver_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to view this driver's discount information"
+        )
+    
+    discount_info = calculate_discount_score(driver_id, db, period_days=90)
+    
+    return {
+        "driver_id": driver_id,
+        "discount_info": discount_info
     }

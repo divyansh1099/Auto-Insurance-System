@@ -125,6 +125,8 @@ services:
       - schema-registry
     volumes:
       - ./src/simulator:/app
+    # Install dependencies on startup (volume mount overwrites installed packages)
+    entrypoint: /bin/sh -c "pip install -q -r /app/requirements.txt && exec tail -f /dev/null"
     # Don't run automatically - we'll start it manually
     command: tail -f /dev/null
 

@@ -184,6 +184,18 @@ class TripResponse(TripBase):
     driver_id: str
     device_id: str
     created_at: datetime
+    
+    # Enhanced fields
+    origin_city: Optional[str] = None
+    origin_state: Optional[str] = None
+    destination_city: Optional[str] = None
+    destination_state: Optional[str] = None
+    trip_score: Optional[int] = None  # 0-100
+    risk_level: Optional[str] = None  # 'low', 'medium', 'high'
+    harsh_braking_count: Optional[int] = 0
+    rapid_accel_count: Optional[int] = 0
+    speeding_count: Optional[int] = 0
+    harsh_corner_count: Optional[int] = 0
 
     class Config:
         from_attributes = True
@@ -195,6 +207,13 @@ class TripListResponse(BaseModel):
     total: int
     page: int
     page_size: int
+
+
+class TripSummaryResponse(BaseModel):
+    """Trip summary statistics."""
+    total_trips: int
+    total_miles: float
+    avg_trip_score: Optional[float] = None
 
 
 # Risk Scoring Schemas
@@ -234,6 +253,57 @@ class RiskScoreHistory(BaseModel):
     trend: str  # improving, stable, declining
 
 
+# Risk Profile Schemas
+class RiskProfileSummaryResponse(BaseModel):
+    """Risk profile summary for Risk Profile page."""
+    overall_risk_score: float
+    overall_risk_trend_status: str  # 'improving', 'stable', 'declining'
+    behavior_score: float
+    last_updated_date: datetime
+    change_from_previous: float
+    previous_score: Optional[float] = None
+    # Trip statistics
+    total_trips: int = 0
+    total_miles: float = 0.0
+    avg_trip_score: Optional[float] = None
+    # Trip performance metrics
+    perfect_trips: int = 0  # Score >= 95
+    low_risk_trips: int = 0  # Score >= 80
+    high_risk_trips: int = 0  # Score < 60
+    total_incidents: int = 0  # All safety events
+
+
+class RiskScoreTrendPoint(BaseModel):
+    """Single point in risk score trend."""
+    date: str  # ISO format date
+    risk_score: float
+
+
+class RiskScoreTrendResponse(BaseModel):
+    """Risk score trend time series."""
+    scores: List[RiskScoreTrendPoint]
+    period: str
+    interval: str
+
+
+class RiskFactorBreakdownResponse(BaseModel):
+    """Risk factor breakdown for radar chart and detailed factors."""
+    # Category scores for radar chart
+    behavior: float
+    mileage: float
+    time_pattern: float
+    location: float
+    
+    # Detailed risk factors
+    speeding_frequency: float
+    acceleration_pattern: float
+    high_risk_area_exposure: float
+    weather_risk_exposure: float
+    hard_braking_frequency: float
+    night_driving_percentage: float
+    phone_usage_incidents: float
+
+
 # Pricing Schemas
 class PremiumComponent(BaseModel):
     """Individual premium component."""
@@ -263,6 +333,59 @@ class PremiumResponse(BaseModel):
     final_premium: float
     effective_date: date
     status: str
+
+
+# Policy Page Schemas
+class PolicyDetailsResponse(BaseModel):
+    """Policy details for Policy page."""
+    policy_number: str
+    status: str
+    policy_type: str
+    traditional_monthly_premium: float
+    monthly_premium: float
+    discount_percentage: float
+    monthly_savings: float
+    annual_savings: float
+    effective_date: date
+    expiration_date: date
+    last_updated: Optional[datetime] = None
+    coverage_type: Optional[str] = None
+    coverage_limit: Optional[float] = None
+    deductible: Optional[float] = None
+
+
+# Rewards Schemas
+class RewardsSummaryResponse(BaseModel):
+    """Rewards summary for Rewards page."""
+    current_points: int
+    next_milestone: dict  # Contains points_threshold, reward_description, points_needed, progress_percentage
+
+
+class MilestoneResponse(BaseModel):
+    """Reward milestone."""
+    milestone_id: int
+    points_threshold: int
+    reward_name: str
+    reward_description: str
+    status: str  # 'unlocked', 'pending'
+
+
+class AchievementResponse(BaseModel):
+    """Achievement."""
+    achievement_id: str
+    achievement_name: str
+    achievement_description: str
+    status: str  # 'achieved', 'pending'
+
+
+class PointsRuleResponse(BaseModel):
+    """Points earning rule."""
+    rule_id: int
+    rule_name: str
+    rule_description: str
+    min_score: Optional[int] = None
+    max_score: Optional[int] = None
+    points_awarded: int
 
 
 class PremiumSimulation(BaseModel):
@@ -382,3 +505,155 @@ class ErrorResponse(BaseModel):
     """Error response."""
     detail: str
     error_code: Optional[str] = None
+
+
+# Admin Dashboard Schemas
+class AdminDashboardSummary(BaseModel):
+    """Admin dashboard summary statistics."""
+    total_drivers: int
+    total_vehicles: int
+    monthly_revenue: float
+    avg_risk_score: float
+
+
+class DailyTripActivity(BaseModel):
+    """Daily trip activity data."""
+    date: str  # ISO format: "YYYY-MM-DD"
+    trip_count: int
+    avg_score: Optional[float] = None
+
+
+class RiskDistributionResponse(BaseModel):
+    """Risk distribution for admin dashboard."""
+    low_risk_percentage: float
+    medium_risk_percentage: float
+    high_risk_percentage: float
+    low_risk_count: int
+    medium_risk_count: int
+    high_risk_count: int
+    total_drivers: int
+
+
+class SafetyEventBreakdown(BaseModel):
+    """Safety event breakdown."""
+    event_type: str
+    count: int
+
+
+class PolicyTypeDistribution(BaseModel):
+    """Policy type distribution."""
+    policy_type: str
+    count: int
+
+
+# Admin Drivers Schemas
+class DriverCardResponse(BaseModel):
+    """Enriched driver card response for admin drivers page."""
+    driver_id: str
+    first_name: str
+    last_name: str
+    email: str
+    phone: Optional[str]
+    city: Optional[str]
+    state: Optional[str]
+    
+    # Performance Metrics
+    safety_score: float  # 0-100, higher is better
+    risk_score: float    # 0-100, lower is better
+    total_trips: int
+    reward_points: int
+    
+    # Policy Information
+    policy_type: Optional[str]  # "PHYD", "PAYD", "Traditional"
+    policy_status: Optional[str]  # "active", "inactive", "pending"
+    monthly_premium: Optional[float]
+    discount_percentage: Optional[float]  # e.g., 15.0 for 15%
+
+
+class DriverDetailsResponse(BaseModel):
+    """Comprehensive driver details for admin driver details modal."""
+    # Basic Information
+    driver_id: str
+    first_name: str
+    last_name: str
+    email: str
+    phone: Optional[str]
+    date_of_birth: Optional[date]
+    license_number: Optional[str]
+    license_state: Optional[str]
+    address: Optional[str]
+    city: Optional[str]
+    state: Optional[str]
+    zip_code: Optional[str]
+    
+    # Formatted Address
+    full_address: Optional[str]  # "123 Main St, San Francisco, CA 94102"
+    
+    # Performance Metrics
+    safety_score: float
+    risk_score: float
+    total_miles: float
+    total_trips: int
+    
+    # Policy Information (optional)
+    policy_type: Optional[str]
+    policy_status: Optional[str]
+    monthly_premium: Optional[float]
+    discount_percentage: Optional[float]
+    policy_number: Optional[str] = None
+    base_premium: Optional[float] = None
+    current_premium: Optional[float] = None
+    annual_savings: Optional[float] = None
+    coverage_type: Optional[str] = None
+    coverage_limit: Optional[float] = None
+    deductible: Optional[float] = None
+    effective_date: Optional[date] = None
+    expiration_date: Optional[date] = None
+    total_miles_allowed: Optional[float] = None
+    miles_used: Optional[float] = None
+    
+    # Rewards Information (optional)
+    reward_points: Optional[int] = None
+    achievements: Optional[List[dict]] = None
+    
+    # Additional fields
+    years_licensed: Optional[int]
+    gender: Optional[str]
+    marital_status: Optional[str]
+    created_at: datetime
+    updated_at: Optional[datetime]
+
+
+# Admin Policies Schemas
+class PoliciesSummaryResponse(BaseModel):
+    """Policy summary statistics."""
+    total_policies: int
+    active_policies: int
+    monthly_revenue: float
+    total_savings: float
+
+
+class PolicyCardResponse(BaseModel):
+    """Enriched policy card response for admin policies page."""
+    premium_id: int
+    policy_id: str
+    driver_id: str
+    driver_name: str  # "John Smith" (first_name + last_name)
+    policy_type: str  # "PHYD", "PAYD", "Hybrid"
+    status: str  # "active", "inactive", "pending"
+    
+    # Financial Details
+    base_premium: float
+    current_premium: float  # monthly_premium
+    discount_percentage: float  # Calculated: ((base_premium - monthly_premium) / base_premium) * 100
+    annual_savings: float  # (base_premium - monthly_premium) * 12
+    
+    # Coverage Details
+    coverage_type: Optional[str]  # "Comprehensive", "Full", etc.
+    coverage_limit: Optional[float]
+    effective_date: date
+    expiration_date: date
+    
+    # PAYD-Specific
+    miles_used: Optional[float]  # Only for PAYD policies
+    total_miles_allowed: Optional[float]  # Only for PAYD policies

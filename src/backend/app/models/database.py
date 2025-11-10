@@ -11,12 +11,19 @@ from app.config import get_settings
 
 settings = get_settings()
 
-# Create engine
+# Create engine with optimized settings
 engine = create_engine(
     settings.DATABASE_URL,
     pool_size=settings.DATABASE_POOL_SIZE,
     max_overflow=settings.DATABASE_MAX_OVERFLOW,
-    pool_pre_ping=True
+    pool_pre_ping=True,  # Verify connections before using
+    pool_recycle=3600,  # Recycle connections after 1 hour
+    echo=False,  # Set to True for SQL query logging in debug mode
+    future=True,  # Use SQLAlchemy 2.0 style
+    connect_args={
+        "connect_timeout": 10,
+        "application_name": "telematics_insurance_api"
+    }
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -127,6 +134,13 @@ class Trip(Base):
     harsh_corner_count = Column(Integer, default=0)
     phone_usage_detected = Column(Boolean, default=False)
     trip_type = Column(String(20))
+    # New columns from migration
+    origin_city = Column(String(100))
+    origin_state = Column(String(50))
+    destination_city = Column(String(100))
+    destination_state = Column(String(50))
+    trip_score = Column(Integer, CheckConstraint("trip_score IS NULL OR (trip_score >= 0 AND trip_score <= 100)"))
+    risk_level = Column(String(20), CheckConstraint("risk_level IS NULL OR risk_level IN ('low', 'medium', 'high')"))
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -147,6 +161,18 @@ class RiskScore(Base):
     calculation_date = Column(DateTime, default=datetime.utcnow)
     features = Column(JSON)
     shap_values = Column(JSON)
+    # New columns from migration
+    behavior_score = Column(Float, CheckConstraint("behavior_score IS NULL OR (behavior_score >= 0 AND behavior_score <= 100)"))
+    mileage_score = Column(Float, CheckConstraint("mileage_score IS NULL OR (mileage_score >= 0 AND mileage_score <= 100)"))
+    time_pattern_score = Column(Float, CheckConstraint("time_pattern_score IS NULL OR (time_pattern_score >= 0 AND time_pattern_score <= 100)"))
+    location_score = Column(Float, CheckConstraint("location_score IS NULL OR (location_score >= 0 AND location_score <= 100)"))
+    speeding_frequency = Column(Float)
+    acceleration_pattern = Column(Float)
+    high_risk_area_exposure = Column(Float)
+    weather_risk_exposure = Column(Float)
+    hard_braking_frequency = Column(Float)
+    night_driving_percentage = Column(Float)
+    phone_usage_incidents = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -169,6 +195,13 @@ class Premium(Base):
     effective_date = Column(Date)
     expiration_date = Column(Date)
     status = Column(String(20))
+    # New columns from migration
+    policy_type = Column(String(20))
+    coverage_type = Column(String(50))
+    coverage_limit = Column(Float)
+    total_miles_allowed = Column(Float)
+    deductible = Column(Float)
+    policy_last_updated = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

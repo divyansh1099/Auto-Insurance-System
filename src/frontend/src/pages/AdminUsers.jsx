@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { adminAPI } from '../services/api'
+import UserForm from '../components/forms/UserForm'
 
 export default function AdminUsers() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [editingUser, setEditingUser] = useState(null)
   const limit = 20
 
   const queryClient = useQueryClient()
@@ -41,7 +44,7 @@ export default function AdminUsers() {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900">Manage Users</h1>
         <button
-          onClick={() => alert('User creation form coming soon')}
+          onClick={() => setShowCreateModal(true)}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           + Add User
@@ -109,7 +112,7 @@ export default function AdminUsers() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
-                      onClick={() => alert('Edit form coming soon')}
+                      onClick={() => setEditingUser(user)}
                       className="text-blue-600 hover:text-blue-900 mr-4"
                     >
                       Edit
@@ -149,6 +152,29 @@ export default function AdminUsers() {
             >
               Next
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Create/Edit Modal */}
+      {(showCreateModal || editingUser) && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl font-bold mb-4">
+              {editingUser ? 'Edit User' : 'Create User'}
+            </h2>
+            <UserForm
+              user={editingUser}
+              onSuccess={() => {
+                setShowCreateModal(false)
+                setEditingUser(null)
+                queryClient.invalidateQueries('adminUsers')
+              }}
+              onCancel={() => {
+                setShowCreateModal(false)
+                setEditingUser(null)
+              }}
+            />
           </div>
         </div>
       )}

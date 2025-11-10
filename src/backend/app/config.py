@@ -2,6 +2,7 @@
 Configuration management for the application.
 """
 
+import os
 from functools import lru_cache
 from pydantic_settings import BaseSettings
 from typing import Optional
@@ -19,6 +20,13 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://insurance_user:insurance_pass@postgres:5432/telematics_db"
     DATABASE_POOL_SIZE: int = 10
     DATABASE_MAX_OVERFLOW: int = 20
+    DATABASE_POOL_RECYCLE: int = 3600  # Recycle connections after 1 hour
+    
+    # Caching
+    CACHE_ENABLED: bool = True
+    CACHE_DEFAULT_TTL: int = 300  # 5 minutes
+    CACHE_RISK_SCORE_TTL: int = 3600  # 1 hour
+    CACHE_STATISTICS_TTL: int = 1800  # 30 minutes
 
     # Redis
     REDIS_HOST: str = "redis"
@@ -28,7 +36,7 @@ class Settings(BaseSettings):
 
     # Kafka
     KAFKA_BOOTSTRAP_SERVERS: str = "kafka:29092"
-    KAFKA_CONSUMER_GROUP: str = "telematics-consumers"
+    KAFKA_CONSUMER_GROUP: str = os.getenv("KAFKA_CONSUMER_GROUP", "telematics-consumers-v2")
     SCHEMA_REGISTRY_URL: str = "http://schema-registry:8081"
 
     # Kafka Topics

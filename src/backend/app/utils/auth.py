@@ -27,13 +27,28 @@ security = HTTPBearer()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against a hash."""
-    if pwd_context:
-        try:
-            return pwd_context.verify(plain_password, hashed_password)
-        except Exception:
-            pass
-    # Fallback to bcrypt directly
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+    if not plain_password or not hashed_password:
+        return False
+    
+    try:
+        if pwd_context:
+            try:
+                return pwd_context.verify(plain_password, hashed_password)
+            except Exception:
+                pass
+        
+        # Fallback to bcrypt directly
+        # Ensure hashed_password is bytes if it's a string
+        if isinstance(hashed_password, str):
+            hashed_bytes = hashed_password.encode('utf-8')
+        else:
+            hashed_bytes = hashed_password
+            
+        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_bytes)
+    except (ValueError, TypeError, AttributeError) as e:
+        # Log error in production but don't expose details
+        # Invalid hash format or other errors
+        return False
 
 
 def get_password_hash(password: str) -> str:
@@ -136,10 +151,19 @@ async def get_current_admin_user(
 
 
 def authenticate_user(db: Session, username: str, password: str) -> Optional[User]:
-    """Authenticate a user."""
+    """Authenticate a user.
+    
+    This function prevents timing attacks by always performing password verification
+    even if the user doesn't exist, using a dummy hash comparison.
+    """
     user = db.query(User).filter(User.username == username).first()
 
+    # Always perform password verification to prevent timing attacks
+    # If user doesn't exist, verify against a dummy hash to maintain constant time
     if not user:
+        # Use a dummy bcrypt hash to maintain similar timing
+        dummy_hash = "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW"  # "dummy" hash
+        verify_password(password, dummy_hash)
         return None
 
     if not verify_password(password, user.hashed_password):

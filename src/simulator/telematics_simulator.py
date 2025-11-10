@@ -371,19 +371,37 @@ class TelematicsSimulator:
             return
 
         try:
+            # Convert numpy types to native Python types for JSON serialization
+            def convert_numpy_types(obj):
+                """Convert numpy types to native Python types."""
+                if isinstance(obj, (np.integer, np.int64, np.int32)):
+                    return int(obj)
+                elif isinstance(obj, (np.floating, np.float64, np.float32)):
+                    return float(obj)
+                elif isinstance(obj, np.ndarray):
+                    return obj.tolist()
+                elif isinstance(obj, dict):
+                    return {k: convert_numpy_types(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [convert_numpy_types(item) for item in obj]
+                return obj
+            
+            # Clean event data
+            clean_event = convert_numpy_types(event)
+            
             # Use driver_id as the key for partitioning
-            key = event['driver_id']
+            key = clean_event['driver_id']
             
             # Try Avro serialization first, fallback to JSON
             if self.avro_serializer:
                 try:
-                    serialized_value = self.avro_serializer(event, None)
+                    serialized_value = self.avro_serializer(clean_event, None)
                 except Exception:
                     # Fallback to JSON if Avro fails
-                    serialized_value = json.dumps(event).encode('utf-8')
+                    serialized_value = json.dumps(clean_event, default=str).encode('utf-8')
             else:
                 # Use JSON serialization as fallback
-                serialized_value = json.dumps(event).encode('utf-8')
+                serialized_value = json.dumps(clean_event, default=str).encode('utf-8')
 
             self.producer.produce(
                 topic=topic,
