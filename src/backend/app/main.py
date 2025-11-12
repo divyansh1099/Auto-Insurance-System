@@ -62,7 +62,7 @@ app.add_middleware(PrometheusMiddleware)
 async def startup_event():
     """Initialize services on startup."""
     logger.info("application_starting", app_name=settings.APP_NAME, version=settings.APP_VERSION)
-    
+
     # Start Kafka consumer in background
     try:
         from app.services.kafka_consumer import start_consumer_background
@@ -71,7 +71,7 @@ async def startup_event():
     except Exception as e:
         logger.warning("kafka_consumer_start_failed", error=str(e))
         # Continue without Kafka consumer if it fails
-    
+
     # Start Redis subscriber for real-time pub/sub updates (replaces polling)
     try:
         from app.services.redis_subscriber import start_redis_subscriber
@@ -86,6 +86,16 @@ async def startup_event():
             logger.info("realtime_poller_started_as_fallback")
         except Exception as poller_error:
             logger.warning("realtime_poller_fallback_failed", error=str(poller_error))
+
+    # Start metrics collector for business metrics (Phase 1 improvement)
+    try:
+        import asyncio
+        from app.services.metrics_collector import start_metrics_collector
+        asyncio.create_task(start_metrics_collector())
+        logger.info("metrics_collector_started")
+    except Exception as e:
+        logger.warning("metrics_collector_start_failed", error=str(e))
+        # Continue without metrics collector if it fails
 
 
 @app.on_event("shutdown")
