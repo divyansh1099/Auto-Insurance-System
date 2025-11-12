@@ -62,8 +62,8 @@ class SecurityTester:
         """Get JWT token for authentication"""
         try:
             response = requests.post(
-                f"{BASE_URL}/auth/token",
-                data={"username": username, "password": password}
+                f"{BASE_URL}/auth/login",
+                json={"username": username, "password": password}
             )
             if response.status_code == 200:
                 return response.json().get("access_token")

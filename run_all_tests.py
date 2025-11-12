@@ -109,7 +109,7 @@ class MasterTestRunner:
         for test_name, script_path in TEST_SCRIPTS.items():
             success = self.run_test(test_name, script_path)
             test_results.append((test_name, success))
-            time.sleep(1)  # Small delay between test suites
+            time.sleep(2)  # Delay between test suites to avoid rate limiting
 
         self.end_time = time.time()
 

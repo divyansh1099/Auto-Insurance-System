@@ -62,12 +62,26 @@ class APITester:
         # Get admin token
         try:
             response = requests.post(
-                f"{BASE_URL}/auth/token",
-                data={"username": ADMIN_USERNAME, "password": ADMIN_PASSWORD}
+                f"{BASE_URL}/auth/login",
+                json={"username": ADMIN_USERNAME, "password": ADMIN_PASSWORD}
             )
             if response.status_code == 200:
                 self.admin_token = response.json().get("access_token")
                 print(f"✅ Authenticated as {ADMIN_USERNAME}\n")
+            elif response.status_code == 429:
+                print(f"⚠️  Rate limit hit, waiting 10 seconds...")
+                time.sleep(10)
+                # Retry once
+                response = requests.post(
+                    f"{BASE_URL}/auth/login",
+                    json={"username": ADMIN_USERNAME, "password": ADMIN_PASSWORD}
+                )
+                if response.status_code == 200:
+                    self.admin_token = response.json().get("access_token")
+                    print(f"✅ Authenticated as {ADMIN_USERNAME} (after retry)\n")
+                else:
+                    print(f"❌ Authentication failed after retry: {response.status_code}")
+                    sys.exit(1)
             else:
                 print(f"❌ Authentication failed: {response.status_code}")
                 sys.exit(1)
