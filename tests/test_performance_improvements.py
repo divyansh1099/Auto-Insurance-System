@@ -60,7 +60,7 @@ API_BASE_URL = "http://localhost:8000"
 DB_CONFIG = {
     'host': 'localhost',
     'port': 5432,
-    'database': 'insurance_db',
+    'database': 'telematics_db',
     'user': 'insurance_user',
     'password': 'insurance_pass'
 }

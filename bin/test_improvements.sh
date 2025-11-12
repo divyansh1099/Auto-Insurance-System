@@ -65,7 +65,7 @@ fi
 
 # Test 4: Check database indexes
 echo -e "\n${BOLD}4. Checking database indexes...${NC}"
-INDEX_COUNT=$(docker compose exec -T postgres psql -U insurance_user -d insurance_db -t -c "
+INDEX_COUNT=$(docker compose exec -T postgres psql -U insurance_user -d telematics_db -t -c "
     SELECT COUNT(*)
     FROM pg_indexes
     WHERE schemaname = 'public'
@@ -78,13 +78,13 @@ elif [ "$INDEX_COUNT" -gt 0 ]; then
     echo -e "${YELLOW}⚠ Some indexes created (${INDEX_COUNT} indexes, expected 25+)${NC}"
 else
     echo -e "${RED}✗ No indexes found${NC}"
-    echo -e "${YELLOW}Run: docker compose exec postgres psql -U insurance_user -d insurance_db -f /app/migrations/001_add_performance_indexes.sql${NC}"
+    echo -e "${YELLOW}Run: docker compose exec postgres psql -U insurance_user -d telematics_db -f /app/migrations/001_add_performance_indexes.sql${NC}"
 fi
 
 # Test 5: Test query performance
 echo -e "\n${BOLD}5. Testing query performance...${NC}"
 START=$(date +%s%N)
-docker compose exec -T postgres psql -U insurance_user -d insurance_db -t -c "
+docker compose exec -T postgres psql -U insurance_user -d telematics_db -t -c "
     SELECT COUNT(*) FROM telematics_events LIMIT 1
 " > /dev/null 2>&1 || true
 END=$(date +%s%N)
@@ -151,7 +151,7 @@ echo -e "3. View metrics at: ${BLUE}http://localhost:8000/metrics${NC}"
 echo -e "4. View API docs at: ${BLUE}http://localhost:8000/docs${NC}"
 
 echo -e "\n${BOLD}If indexes are missing:${NC}"
-echo -e "${BLUE}docker compose exec postgres psql -U insurance_user -d insurance_db -f /app/migrations/001_add_performance_indexes.sql${NC}"
+echo -e "${BLUE}docker compose exec postgres psql -U insurance_user -d telematics_db -f /app/migrations/001_add_performance_indexes.sql${NC}"
 
 echo -e "\n${BOLD}To enable metrics collector:${NC}"
 echo -e "Add to src/backend/app/main.py startup event:"
