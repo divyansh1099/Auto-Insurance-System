@@ -25,9 +25,15 @@ export default function Login() {
   useEffect(() => {
     const token = localStorage.getItem('access_token')
     if (token) {
-      // Verify token is still valid
+      // Verify token is still valid and redirect based on user role
       authAPI.getCurrentUser()
-        .then(() => navigate('/'))
+        .then((userRes) => {
+          if (userRes.data?.is_admin) {
+            navigate('/admin')
+          } else {
+            navigate('/')
+          }
+        })
         .catch((err) => {
           console.log('Token invalid or expired, removing from storage')
           localStorage.removeItem('access_token')
@@ -60,7 +66,19 @@ export default function Login() {
       
       if (response.data?.access_token) {
         localStorage.setItem('access_token', response.data.access_token)
-        navigate('/')
+        // Check if user is admin and redirect accordingly
+        authAPI.getCurrentUser()
+          .then((userRes) => {
+            if (userRes.data?.is_admin) {
+              navigate('/admin')
+            } else {
+              navigate('/')
+            }
+          })
+          .catch(() => {
+            // If we can't get user info, default to regular dashboard
+            navigate('/')
+          })
       } else {
         setError('Invalid response from server')
         console.error('No access token in response:', response)

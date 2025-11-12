@@ -24,11 +24,17 @@ import {
 } from 'recharts'
 
 export default function AdminDashboard() {
+  // Debug: Log that AdminDashboard is rendering
+  console.log('AdminDashboard component is rendering')
+  
   // Fetch summary data (4 cards)
-  const { data: summary, isLoading: isLoadingSummary } = useQuery(
+  const { data: summary, isLoading: isLoadingSummary, error: summaryError } = useQuery(
     ['adminDashboardSummary'],
     () => adminAPI.getDashboardSummary(),
-    { retry: false }
+    { 
+      retry: false,
+      onError: (error) => console.error('AdminDashboard API Error:', error)
+    }
   )
 
   // Fetch trip activity data (7 days)
