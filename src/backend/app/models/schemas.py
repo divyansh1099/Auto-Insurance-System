@@ -86,10 +86,10 @@ class DriverBase(BaseModel):
     last_name: str
     email: EmailStr
     phone: Optional[str] = None
-    date_of_birth: date
-    license_number: str
-    license_state: str
-    years_licensed: int
+    date_of_birth: Optional[date] = None
+    license_number: Optional[str] = None
+    license_state: Optional[str] = None
+    years_licensed: Optional[int] = None
     gender: Optional[str] = None
     marital_status: Optional[str] = None
     address: Optional[str] = None
