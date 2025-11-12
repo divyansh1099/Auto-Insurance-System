@@ -19,6 +19,7 @@ from app.utils.rate_limit import limiter
 from slowapi.errors import RateLimitExceeded
 from app.models.database import SessionLocal
 from app.services.redis_client import get_redis_client
+from app.middleware.request_validation import RequestSizeLimitMiddleware
 
 # Configure structured logging
 structlog.configure(
@@ -56,6 +57,9 @@ app.add_middleware(
 
 # Add Prometheus metrics middleware
 app.add_middleware(PrometheusMiddleware)
+
+# Add request size limit middleware (1MB max to prevent DoS)
+app.add_middleware(RequestSizeLimitMiddleware)
 
 
 @app.on_event("startup")
