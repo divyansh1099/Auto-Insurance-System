@@ -84,21 +84,40 @@ def cache_response(ttl: int = 300, key_prefix: str = "cache"):
 def invalidate_cache_pattern(pattern: str):
     """
     Invalidate cache entries matching a pattern.
-    
+    Uses SCAN for production-safe non-blocking operation.
+
     Args:
-        pattern: Cache key pattern (e.g., "response_cache:driver:*")
+        pattern: Cache key pattern (e.g., "driver:*")
     """
     redis_client = get_redis_client()
     if not redis_client:
         return
-    
+
     try:
-        # Note: Redis SCAN is needed for pattern matching in production
-        # For now, we'll use a simple approach
-        keys = redis_client.keys(f"response_cache:{pattern}")
-        if keys:
-            redis_client.delete(*keys)
-            logger.info("cache_invalidated", pattern=pattern, count=len(keys))
+        # Use SCAN instead of KEYS for production-safe operation
+        # SCAN is non-blocking and won't freeze Redis
+        cursor = 0
+        deleted_count = 0
+        match_pattern = f"response_cache:{pattern}"
+
+        while True:
+            # Scan returns (cursor, [keys])
+            cursor, keys = redis_client.scan(
+                cursor=cursor,
+                match=match_pattern,
+                count=100  # Process 100 keys at a time
+            )
+
+            if keys:
+                redis_client.delete(*keys)
+                deleted_count += len(keys)
+
+            # cursor=0 means we've scanned all keys
+            if cursor == 0:
+                break
+
+        if deleted_count > 0:
+            logger.info("cache_invalidated", pattern=pattern, count=deleted_count)
     except Exception as e:
         logger.warning("cache_invalidation_error", error=str(e))
 

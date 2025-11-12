@@ -19,7 +19,10 @@ from app.models.database import SessionLocal, TelematicsEvent
 from app.utils.metrics import (
     kafka_messages_consumed_total,
     kafka_processing_duration_seconds,
-    events_processed_total
+    events_processed_total,
+    kafka_consumer_lag_messages,
+    kafka_consumer_errors_total,
+    kafka_processing_errors_total
 )
 from app.services.realtime_trip_detector import detect_trip_from_event
 from app.services.realtime_ml_inference import analyze_event_realtime
@@ -217,17 +220,87 @@ class TelematicsEventConsumer:
             )
             raise
 
+    def _monitor_consumer_lag(self, topic: str):
+        """
+        Monitor and report Kafka consumer lag to Prometheus.
+
+        Args:
+            topic: Kafka topic name
+        """
+        try:
+            # Get all assigned partitions
+            assignment = self.consumer.assignment()
+
+            if not assignment:
+                logger.debug("no_partitions_assigned_yet")
+                return
+
+            for partition in assignment:
+                try:
+                    # Get committed offset (where consumer is at)
+                    committed = self.consumer.committed([partition])
+                    if committed and len(committed) > 0:
+                        current_offset = committed[0].offset if committed[0].offset >= 0 else 0
+                    else:
+                        current_offset = 0
+
+                    # Get high water mark (latest offset available)
+                    low, high = self.consumer.get_watermark_offsets(partition)
+
+                    # Calculate lag
+                    lag = max(0, high - current_offset)
+
+                    # Report to Prometheus
+                    kafka_consumer_lag_messages.labels(
+                        topic=topic,
+                        partition=partition.partition,
+                        consumer_group=self.settings.KAFKA_CONSUMER_GROUP
+                    ).set(lag)
+
+                    # Log warning if lag is high
+                    if lag > 10000:
+                        logger.warning(
+                            "high_consumer_lag",
+                            topic=topic,
+                            partition=partition.partition,
+                            lag=lag,
+                            current_offset=current_offset,
+                            high_water_mark=high
+                        )
+                    else:
+                        logger.debug(
+                            "consumer_lag_checked",
+                            topic=topic,
+                            partition=partition.partition,
+                            lag=lag
+                        )
+
+                except Exception as e:
+                    logger.error(
+                        "lag_monitoring_error",
+                        topic=topic,
+                        partition=partition.partition,
+                        error=str(e)
+                    )
+                    kafka_consumer_errors_total.labels(
+                        topic=topic,
+                        error_type="lag_monitoring_error"
+                    ).inc()
+
+        except Exception as e:
+            logger.error("consumer_lag_monitoring_failed", topic=topic, error=str(e))
+
     def consume_events(self, topic: str = "telematics-events", batch_size: int = 100, batch_timeout_ms: int = 1000):
         """
         Consume events from Kafka topic with batch processing for better throughput.
-        
+
         Args:
             topic: Kafka topic name
             batch_size: Maximum number of events to process in a batch
             batch_timeout_ms: Maximum time to wait for batch to fill (milliseconds)
         """
         import time
-        
+
         self.consumer.subscribe([topic])
         self.running = True
 
@@ -239,13 +312,15 @@ class TelematicsEventConsumer:
         )
 
         db = SessionLocal()
+        message_count = 0
+        lag_check_interval = 100  # Check lag every 100 messages
 
         try:
             while self.running:
                 # Collect messages for batch processing
                 messages = []
                 batch_start_time = time.time()
-                
+
                 # Collect messages until batch is full or timeout
                 while len(messages) < batch_size and (time.time() - batch_start_time) * 1000 < batch_timeout_ms:
                     msg = self.consumer.poll(timeout=0.1)  # Short poll for batching
@@ -259,13 +334,22 @@ class TelematicsEventConsumer:
                             continue
                         else:
                             logger.error("kafka_error", error=msg.error())
+                            kafka_consumer_errors_total.labels(
+                                topic=topic,
+                                error_type=msg.error().name()
+                            ).inc()
                             continue
 
                     messages.append(msg)
+                    message_count += 1
 
                 # Process batch if we have messages
                 if messages:
                     self._process_batch(messages, db, topic)
+
+                # Monitor consumer lag periodically
+                if message_count % lag_check_interval == 0:
+                    self._monitor_consumer_lag(topic)
 
         except KeyboardInterrupt:
             logger.info("kafka_consumer_stopping")
