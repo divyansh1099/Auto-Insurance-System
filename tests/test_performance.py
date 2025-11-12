@@ -77,8 +77,8 @@ class PerformanceTester:
                 self.admin_token = response.json().get("access_token")
                 print(f"✅ Authenticated as {ADMIN_USERNAME}\n")
             elif response.status_code == 429:
-                print(f"⚠️  Rate limit hit, waiting 10 seconds...")
-                time.sleep(10)
+                print(f"⚠️  Rate limit hit, waiting 15 seconds...")
+                time.sleep(15)
                 # Retry once
                 response = requests.post(
                     f"{BASE_URL}/auth/login",
@@ -89,6 +89,7 @@ class PerformanceTester:
                     print(f"✅ Authenticated as {ADMIN_USERNAME} (after retry)\n")
                 else:
                     print(f"❌ Authentication failed after retry: {response.status_code}")
+                    print(f"   Response: {response.text[:200]}")
                     sys.exit(1)
             else:
                 print(f"❌ Authentication failed: {response.status_code}")
