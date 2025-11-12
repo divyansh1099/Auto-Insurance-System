@@ -76,3 +76,9 @@ docker-compose.override.yml
 *.tmp
 *.bak
 *.swp
+
+# Test artifacts
+/tmp/test_run_timestamp.pkl
+
+# Documentation backups (from cleanup script)
+docs_backup_*/
