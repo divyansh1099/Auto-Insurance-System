@@ -69,8 +69,17 @@ class APITester:
                 self.admin_token = response.json().get("access_token")
                 print(f"✅ Authenticated as {ADMIN_USERNAME}\n")
             elif response.status_code == 429:
-                print(f"⚠️  Rate limit hit, waiting 15 seconds...")
-                time.sleep(15)
+                print(f"⚠️  Rate limit hit on authentication")
+                print(f"   Auth endpoint limit: 5 requests/minute")
+                print(f"   Waiting 60 seconds for rate limit window to reset...")
+                print(f"   (This ensures the retry will succeed)\n")
+
+                # Wait for rate limit window to fully reset (60 seconds)
+                for remaining in range(60, 0, -5):
+                    print(f"   ⏱️  {remaining}s remaining...", flush=True)
+                    time.sleep(5)
+                print(f"   ✅ Rate limit window reset, retrying...\n")
+
                 # Retry once
                 response = requests.post(
                     f"{BASE_URL}/auth/login",
@@ -82,6 +91,7 @@ class APITester:
                 else:
                     print(f"❌ Authentication failed after retry: {response.status_code}")
                     print(f"   Response: {response.text[:200]}")
+                    print(f"\n💡 Tip: Wait 60 seconds between test runs to avoid rate limits")
                     sys.exit(1)
             else:
                 print(f"❌ Authentication failed: {response.status_code}")

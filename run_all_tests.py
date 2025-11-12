@@ -153,9 +153,12 @@ class MasterTestRunner:
         for test_name, script_path in TEST_SCRIPTS.items():
             success = self.run_test(test_name, script_path)
             test_results.append((test_name, success))
-            # Wait longer between test suites to avoid rate limiting (5 requests/minute limit)
+            # Wait between test suites to avoid rate limiting
+            # Rate limit: 5 requests/minute = 1 request every 12 seconds
+            # Wait 20 seconds to be safe (allows for auth + retries)
             if test_name != list(TEST_SCRIPTS.keys())[-1]:  # Don't wait after last test
-                time.sleep(15)  # Wait 15 seconds to allow rate limit to reset
+                print(f"\n⏱️  Waiting 20 seconds before next test suite (rate limit: 5/min)...")
+                time.sleep(20)
 
         self.end_time = time.time()
 
