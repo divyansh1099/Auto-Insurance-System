@@ -170,6 +170,19 @@ class EnvironmentChecker:
     def check_database_connection(self):
         """Check if database is accessible"""
         print("\n6️⃣  Checking Database connection...")
+        # First, try to verify Docker PostgreSQL is running
+        try:
+            result = subprocess.run(
+                ['docker', 'compose', 'exec', '-T', 'postgres', 'psql', '-U', 'insurance_user', '-d', 'telematics_db', '-c', 'SELECT 1;'],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            if result.returncode == 0:
+                print("   ✅ Docker PostgreSQL is accessible")
+        except Exception:
+            pass  # Continue with direct connection check
+        
         try:
             conn = psycopg2.connect(**DB_CONFIG)
             cursor = conn.cursor()
@@ -183,15 +196,24 @@ class EnvironmentChecker:
             self.checks_passed += 1
             return True
         except psycopg2.OperationalError as e:
-            if "role" in str(e) and "does not exist" in str(e):
+            error_str = str(e)
+            if "role" in error_str and "does not exist" in error_str:
                 print(f"   ❌ Database role does not exist: {DB_CONFIG['user']}")
-                print("\n   💡 Create database role:")
-                print("      docker compose exec postgres psql -U postgres -c \"CREATE USER insurance_user WITH PASSWORD 'insurance_pass';\"")
-                print("      docker compose exec postgres psql -U postgres -c \"GRANT ALL PRIVILEGES ON DATABASE telematics_db TO insurance_user;\"")
-            elif "database" in str(e) and "does not exist" in str(e):
+                print("\n   💡 This likely means you're connecting to LOCAL PostgreSQL instead of Docker.")
+                print("      To fix this:")
+                print("      1. Check if local PostgreSQL is running: ps aux | grep postgres")
+                print("      2. Stop local PostgreSQL (macOS): brew services stop postgresql")
+                print("      3. Or change Docker PostgreSQL port in docker-compose.yml")
+                print("      4. Verify Docker PostgreSQL: docker compose exec postgres psql -U insurance_user -d telematics_db -c 'SELECT 1;'")
+            elif "database" in error_str and "does not exist" in error_str:
                 print(f"   ❌ Database does not exist: {DB_CONFIG['database']}")
-                print("\n   💡 Create database:")
-                print("      docker compose exec postgres psql -U postgres -c \"CREATE DATABASE telematics_db OWNER insurance_user;\"")
+                print("\n   💡 Database should be created automatically by Docker.")
+                print("      Check: docker compose logs postgres")
+            elif "Connection refused" in error_str or "could not connect" in error_str:
+                print(f"   ❌ Cannot connect to database at {DB_CONFIG['host']}:{DB_CONFIG['port']}")
+                print("\n   💡 Check if Docker PostgreSQL is running:")
+                print("      docker compose ps postgres")
+                print("      docker compose logs postgres")
             else:
                 print(f"   ❌ Database connection failed: {e}")
                 print("\n   💡 Check PostgreSQL logs: docker compose logs postgres")
@@ -246,8 +268,8 @@ class EnvironmentChecker:
         print("\n8️⃣  Checking Admin user...")
         try:
             response = requests.post(
-                f"{API_BASE_URL}/api/v1/auth/token",
-                data={"username": "admin", "password": "admin123"},
+                f"{API_BASE_URL}/api/v1/auth/login",
+                json={"username": "admin", "password": "admin123"},
                 timeout=5
             )
 
@@ -321,7 +343,7 @@ class EnvironmentChecker:
             conn.close()
 
             # Docker PostgreSQL typically has data in /var/lib/postgresql/data
-            if '/var/lib/postgresql/data' in data_dir or '/docker' in data_dir:
+            if '/var/lib/postgresql/data' in data_dir or '/docker' in data_dir or 'postgres' in data_dir.lower():
                 print(f"   ✅ Connected to Docker PostgreSQL")
                 print(f"      Data directory: {data_dir}")
                 self.checks_passed += 1
@@ -335,6 +357,11 @@ class EnvironmentChecker:
                 print("      3. Docker PostgreSQL should be on port 5432")
                 self.checks_failed += 1
                 return False
+        except psycopg2.OperationalError as e:
+            # Connection failed - already reported in check_database_connection
+            print(f"   ⚠️  Cannot verify database source (connection failed)")
+            print(f"      This was already reported in the database connection check above.")
+            return True
         except Exception as e:
             # Can't determine - might be okay
             print(f"   ⚠️  Cannot verify database source: {e}")

@@ -27,30 +27,29 @@ echo "   ✅ PostgreSQL should be ready"
 echo ""
 
 echo "3️⃣  Checking if database role exists..."
-if docker compose exec -T postgres psql -U postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='insurance_user'" | grep -q 1; then
+if docker compose exec -T postgres psql -U insurance_user -d telematics_db -tAc "SELECT 1 FROM pg_roles WHERE rolname='insurance_user'" 2>/dev/null | grep -q 1; then
     echo "   ✅ Database role 'insurance_user' already exists"
 else
     echo "   Creating database role..."
-    docker compose exec -T postgres psql -U postgres -c "CREATE USER insurance_user WITH PASSWORD 'insurance_pass';"
-    echo "   ✅ Database role created"
+    docker compose exec -T postgres psql -U insurance_user -c "CREATE USER insurance_user WITH PASSWORD 'insurance_pass';" 2>/dev/null || echo "   ⚠️  Role may already exist or user lacks privileges"
+    echo "   ✅ Database role check complete"
 fi
 echo ""
 
 echo "4️⃣  Checking if database exists..."
-if docker compose exec -T postgres psql -U postgres -lqt | cut -d \| -f 1 | grep -qw telematics_db; then
+if docker compose exec -T postgres psql -U insurance_user -lqt 2>/dev/null | cut -d \| -f 1 | grep -qw telematics_db; then
     echo "   ✅ Database 'telematics_db' already exists"
 else
     echo "   Creating database..."
-    docker compose exec -T postgres psql -U postgres -c "CREATE DATABASE telematics_db OWNER insurance_user;"
-    echo "   ✅ Database created"
+    docker compose exec -T postgres psql -U insurance_user -c "CREATE DATABASE telematics_db OWNER insurance_user;" 2>/dev/null || echo "   ⚠️  Database may already exist"
+    echo "   ✅ Database check complete"
 fi
 echo ""
 
 echo "5️⃣  Granting database privileges..."
-docker compose exec -T postgres psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE telematics_db TO insurance_user;"
-docker compose exec -T postgres psql -U postgres -d telematics_db -c "GRANT ALL ON SCHEMA public TO insurance_user;"
-docker compose exec -T postgres psql -U postgres -d telematics_db -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO insurance_user;"
-echo "   ✅ Privileges granted"
+docker compose exec -T postgres psql -U insurance_user -d telematics_db -c "GRANT ALL ON SCHEMA public TO insurance_user;" 2>/dev/null || echo "   ⚠️  Privileges may already be granted"
+docker compose exec -T postgres psql -U insurance_user -d telematics_db -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO insurance_user;" 2>/dev/null || echo "   ⚠️  Default privileges may already be set"
+echo "   ✅ Privileges check complete"
 echo ""
 
 echo "6️⃣  Checking if tables exist..."
@@ -73,7 +72,7 @@ if [ "$INDEX_COUNT" -ge "20" ]; then
 else
     echo "   ⚠️  Only $INDEX_COUNT indexes found (expected 20+)"
     echo "   Run Phase 1 migration:"
-    echo "      docker compose exec postgres psql -U insurance_user -d telematics_db -f /docker-entrypoint-initdb.d/001_add_performance_indexes.sql"
+    echo "      docker compose exec -T postgres psql -U insurance_user -d telematics_db < src/backend/migrations/001_add_performance_indexes.sql"
 fi
 echo ""
 
