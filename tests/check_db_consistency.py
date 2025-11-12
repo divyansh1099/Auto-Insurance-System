@@ -412,12 +412,12 @@ class DatabaseConsistencyChecker:
         query = """
         SELECT
             schemaname,
-            tablename,
-            pg_size_pretty(pg_total_relation_size(quote_ident(schemaname)||'.'||quote_ident(tablename))) AS size,
+            relname AS tablename,
+            pg_size_pretty(pg_total_relation_size(quote_ident(schemaname)||'.'||quote_ident(relname))) AS size,
             n_live_tup AS row_count
         FROM pg_stat_user_tables
         WHERE schemaname = 'public'
-        ORDER BY pg_total_relation_size(quote_ident(schemaname)||'.'||quote_ident(tablename)) DESC;
+        ORDER BY pg_total_relation_size(quote_ident(schemaname)||'.'||quote_ident(relname)) DESC;
         """
 
         results = self.execute_query(query)

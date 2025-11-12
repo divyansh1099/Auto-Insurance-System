@@ -23,6 +23,8 @@ import time
 from datetime import datetime
 import argparse
 import os
+import pickle
+from pathlib import Path
 
 # Test scripts
 TEST_SCRIPTS = {
@@ -32,6 +34,10 @@ TEST_SCRIPTS = {
     "performance": "tests/test_performance.py"
 }
 
+# Rate limit configuration
+RATE_LIMIT_FILE = "/tmp/test_run_timestamp.pkl"
+RATE_LIMIT_COOLDOWN = 60  # seconds - matches 5/minute auth rate limit
+
 
 class MasterTestRunner:
     def __init__(self, skip_tests=None, only_tests=None):
@@ -40,6 +46,39 @@ class MasterTestRunner:
         self.results = {}
         self.start_time = None
         self.end_time = None
+
+    def check_rate_limit_cooldown(self):
+        """Check if enough time has passed since last test run to avoid rate limiting"""
+        if os.path.exists(RATE_LIMIT_FILE):
+            try:
+                with open(RATE_LIMIT_FILE, 'rb') as f:
+                    last_run_time = pickle.load(f)
+
+                time_since_last_run = time.time() - last_run_time
+
+                if time_since_last_run < RATE_LIMIT_COOLDOWN:
+                    wait_time = RATE_LIMIT_COOLDOWN - time_since_last_run
+                    print(f"\n⚠️  Rate Limit Cooldown Required")
+                    print(f"   Last test run: {int(time_since_last_run)}s ago")
+                    print(f"   Auth rate limit: 5 requests/minute")
+                    print(f"   Waiting {int(wait_time)}s to avoid rate limiting...")
+                    print(f"   (or press Ctrl+C to cancel)\n")
+
+                    # Countdown timer
+                    for remaining in range(int(wait_time), 0, -1):
+                        print(f"\r   ⏱️  {remaining}s remaining...", end='', flush=True)
+                        time.sleep(1)
+                    print("\r   ✅ Cooldown complete!             \n")
+            except Exception as e:
+                # If there's any issue reading the file, just continue
+                pass
+
+        # Update last run time
+        try:
+            with open(RATE_LIMIT_FILE, 'wb') as f:
+                pickle.dump(time.time(), f)
+        except Exception:
+            pass  # Non-critical if we can't write the timestamp
 
     def print_header(self, text):
         """Print section header"""
@@ -97,9 +136,14 @@ class MasterTestRunner:
 
     def run_all_tests(self):
         """Run all test suites"""
+        # Check rate limit cooldown first
+        self.check_rate_limit_cooldown()
+
         self.print_header("COMPREHENSIVE TESTING SUITE")
         print(f"Start Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"Test Scripts: {len([t for t in TEST_SCRIPTS if t not in self.skip_tests])}")
+        print(f"\nℹ️  Note: Tests use auth endpoint with 5 req/min rate limit")
+        print(f"   Automatic cooldown prevents rate limit errors\n")
 
         self.start_time = time.time()
 
