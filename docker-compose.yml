@@ -105,31 +105,6 @@ services:
       - ./src/backend/schemas:/app/schemas
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
-  # Telematics Data Simulator
-  simulator:
-    build:
-      context: ./src/simulator
-      dockerfile: Dockerfile
-    container_name: simulator
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      SCHEMA_PATH: /app/telematics_event.avsc
-      NUM_DRIVERS: ${NUM_DRIVERS:-10}
-      SIMULATION_DAYS: ${SIMULATION_DAYS:-1}
-      ENABLE_KAFKA: ${ENABLE_KAFKA:-true}
-      CONTINUOUS_MODE: ${CONTINUOUS_MODE:-false}
-      OUTPUT_FILE: ${OUTPUT_FILE:-}
-    depends_on:
-      - kafka
-      - schema-registry
-    volumes:
-      - ./src/simulator:/app
-    # Install dependencies on startup (volume mount overwrites installed packages)
-    entrypoint: /bin/sh -c "pip install -q -r /app/requirements.txt && exec tail -f /dev/null"
-    # Don't run automatically - we'll start it manually
-    command: tail -f /dev/null
-
   # Spark Streaming (commented out for now, will enable when ready)
   # spark-streaming:
   #   build:
