@@ -1,0 +1,6 @@
+# Test Dependencies
+# Install on your HOST machine (not in Docker):
+# pip install -r requirements-test.txt
+
+requests>=2.31.0
+psycopg2-binary>=2.9.9

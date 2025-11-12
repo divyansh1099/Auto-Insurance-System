@@ -298,13 +298,47 @@ class EnvironmentChecker:
             self.checks_passed += 1
             return True
         else:
-            print(f"\n   💡 Install missing packages:")
-            if 'psycopg2' in missing_packages:
-                print("      pip install requests psycopg2-binary")
-            else:
-                print(f"      pip install {' '.join(missing_packages)}")
+            print(f"\n   💡 Install missing packages ON YOUR HOST MACHINE:")
+            print("      pip install -r requirements-test.txt")
+            print("      # OR manually:")
+            print("      pip install requests psycopg2-binary")
             self.checks_failed += 1
             return False
+
+    def check_database_port_conflict(self):
+        """Check if connecting to Docker PostgreSQL or local PostgreSQL"""
+        print("\n🔟  Checking database port configuration...")
+        try:
+            # Try to connect and check PostgreSQL version string
+            conn = psycopg2.connect(**DB_CONFIG)
+            cursor = conn.cursor()
+
+            # Check if we're in Docker container by looking at data directory
+            cursor.execute("SHOW data_directory;")
+            data_dir = cursor.fetchone()[0]
+
+            cursor.close()
+            conn.close()
+
+            # Docker PostgreSQL typically has data in /var/lib/postgresql/data
+            if '/var/lib/postgresql/data' in data_dir or '/docker' in data_dir:
+                print(f"   ✅ Connected to Docker PostgreSQL")
+                print(f"      Data directory: {data_dir}")
+                self.checks_passed += 1
+                return True
+            else:
+                print(f"   ⚠️  May be connecting to LOCAL PostgreSQL instead of Docker!")
+                print(f"      Data directory: {data_dir}")
+                print("\n   💡 If you have local PostgreSQL running:")
+                print("      1. Stop local PostgreSQL: sudo systemctl stop postgresql")
+                print("      2. Or use different port in docker-compose.yml")
+                print("      3. Docker PostgreSQL should be on port 5432")
+                self.checks_failed += 1
+                return False
+        except Exception as e:
+            # Can't determine - might be okay
+            print(f"   ⚠️  Cannot verify database source: {e}")
+            return True
 
     def generate_report(self):
         """Generate environment check report"""
@@ -344,6 +378,7 @@ class EnvironmentChecker:
         self.check_database_tables()
         self.check_admin_user()
         self.check_test_dependencies()
+        self.check_database_port_conflict()
 
         # Generate report
         success = self.generate_report()

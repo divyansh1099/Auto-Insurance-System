@@ -119,12 +119,32 @@ else
 fi
 echo ""
 
-echo "🔟  Installing Python test dependencies..."
-if pip install -q requests psycopg2-binary 2>/dev/null; then
-    echo "   ✅ Test dependencies installed"
+echo "🔟  Checking backend dependencies..."
+# Check if slowapi is installed in backend container
+if docker compose exec -T backend python -c "import slowapi" 2>/dev/null; then
+    echo "   ✅ Backend dependencies OK (slowapi installed)"
 else
-    echo "   ⚠️  Could not install dependencies"
-    echo "   Try manually: pip install requests psycopg2-binary"
+    echo "   ⚠️  Missing slowapi in backend container"
+    echo "   Installing slowapi..."
+    docker compose exec -T backend pip install slowapi 2>/dev/null && echo "   ✅ slowapi installed" || echo "   ⚠️  Failed to install slowapi"
+    echo "   Restarting backend..."
+    docker compose restart backend
+    sleep 10
+fi
+echo ""
+
+echo "1️⃣1️⃣  Installing Python test dependencies ON HOST..."
+echo "   These packages must be installed on YOUR MACHINE (not in Docker):"
+echo ""
+if pip install -q -r requirements-test.txt 2>/dev/null; then
+    echo "   ✅ Test dependencies installed (requests, psycopg2-binary)"
+else
+    echo "   ⚠️  Could not install dependencies automatically"
+    echo ""
+    echo "   Please install manually:"
+    echo "   pip install -r requirements-test.txt"
+    echo "   # OR:"
+    echo "   pip install requests psycopg2-binary"
 fi
 echo ""
 
