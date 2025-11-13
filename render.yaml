@@ -1,0 +1,99 @@
+# Render.com Blueprint Configuration
+# Deploy entire Auto-Insurance-System to Render.com free tier
+#
+# Usage:
+# 1. Push this file to GitHub
+# 2. Go to render.com
+# 3. New → Blueprint
+# 4. Connect repo and deploy
+
+services:
+  # ============================================
+  # Backend API (FastAPI)
+  # ============================================
+  - type: web
+    name: telematics-backend
+    env: docker
+    dockerfilePath: ./src/backend/Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      # Database connection (auto-populated from database below)
+      - key: DATABASE_URL
+        fromDatabase:
+          name: telematics-db
+          property: connectionString
+
+      # Redis connection (auto-populated from redis below)
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: telematics-redis
+          property: host
+
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: telematics-redis
+          property: port
+
+      - key: REDIS_DB
+        value: 0
+
+      # App configuration
+      - key: SECRET_KEY
+        generateValue: true  # Auto-generate secure key
+
+      - key: ALGORITHM
+        value: HS256
+
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+
+      # Disable Kafka for free tier
+      - key: KAFKA_ENABLED
+        value: false
+
+      # API config
+      - key: API_V1_PREFIX
+        value: /api/v1
+
+      # CORS - allow frontend
+      - key: CORS_ORIGINS
+        value: https://telematics-frontend.onrender.com,http://localhost:3000
+
+  # ============================================
+  # Frontend (React)
+  # ============================================
+  - type: web
+    name: telematics-frontend
+    env: static
+    buildCommand: cd src/frontend && npm install && npm run build
+    staticPublishPath: ./src/frontend/build
+    plan: free
+    envVars:
+      # Backend API URL (auto-populated from backend service)
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: telematics-backend
+          envVarKey: RENDER_EXTERNAL_URL
+
+# ============================================
+# Databases
+# ============================================
+databases:
+  # PostgreSQL Database
+  - name: telematics-db
+    databaseName: telematics
+    plan: free
+    # Note: Free tier expires after 90 days
+    # Upgrade to paid plan ($7/mo) for persistence
+
+# ============================================
+# Redis Cache
+# ============================================
+  - name: telematics-redis
+    plan: free
+    # Note: Free tier has 25MB limit
+    maxmemoryPolicy: allkeys-lru
