@@ -53,13 +53,13 @@ echo ""
 
 # Step 3: Stop containers
 echo -e "${BLUE}[Step 3/6]${NC} Stopping Docker containers..."
-docker-compose stop
+docker compose stop
 echo -e "${GREEN}✅ Containers stopped${NC}"
 echo ""
 
 # Step 4: Remove containers (keeps data)
 echo -e "${BLUE}[Step 4/6]${NC} Removing containers..."
-docker-compose down
+docker compose down
 echo -e "${GREEN}✅ Containers removed (data preserved in bind mounts)${NC}"
 echo ""
 
@@ -72,7 +72,7 @@ echo "   - kafka_data"
 echo "   - zookeeper_data"
 echo ""
 
-docker-compose up -d
+docker compose up -d
 
 echo -e "${GREEN}✅ Containers started with named volumes${NC}"
 echo ""
@@ -142,7 +142,7 @@ echo ""
 
 # Check running containers
 echo -e "${BLUE}🐳 Running Containers:${NC}"
-docker-compose ps
+docker compose ps
 echo ""
 
 # Final status
