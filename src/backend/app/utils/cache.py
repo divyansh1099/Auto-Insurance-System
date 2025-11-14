@@ -7,8 +7,14 @@ from fastapi import Request
 import hashlib
 import json
 import structlog
+import time
 
 from app.services.redis_client import get_redis_client
+from app.utils.metrics import (
+    cache_hits_total,
+    cache_misses_total,
+    cache_operation_duration_seconds
+)
 
 logger = structlog.get_logger()
 
@@ -53,10 +59,32 @@ def cache_response(ttl: int = 300, key_prefix: str = "cache"):
             redis_client = get_redis_client()
             if redis_client:
                 try:
+                    cache_start_time = time.time()
                     cached_response = redis_client.get(full_cache_key)
+                    cache_duration = time.time() - cache_start_time
+
                     if cached_response:
                         logger.debug("cache_hit", key=full_cache_key)
+                        # Record cache hit metrics
+                        cache_hits_total.labels(
+                            cache_type="response",
+                            cache_key_pattern=key_prefix
+                        ).inc()
+                        cache_operation_duration_seconds.labels(
+                            operation="get",
+                            cache_type="response"
+                        ).observe(cache_duration)
                         return json.loads(cached_response)
+                    else:
+                        # Record cache miss metrics
+                        cache_misses_total.labels(
+                            cache_type="response",
+                            cache_key_pattern=key_prefix
+                        ).inc()
+                        cache_operation_duration_seconds.labels(
+                            operation="get",
+                            cache_type="response"
+                        ).observe(cache_duration)
                 except Exception as e:
                     logger.warning("cache_read_error", error=str(e))
             
@@ -66,12 +94,20 @@ def cache_response(ttl: int = 300, key_prefix: str = "cache"):
             # Cache result
             if redis_client:
                 try:
+                    set_start_time = time.time()
                     redis_client.setex(
                         full_cache_key,
                         ttl,
                         json.dumps(result, default=str)
                     )
+                    set_duration = time.time() - set_start_time
+
                     logger.debug("cache_set", key=full_cache_key, ttl=ttl)
+                    # Record cache set metrics
+                    cache_operation_duration_seconds.labels(
+                        operation="set",
+                        cache_type="response"
+                    ).observe(set_duration)
                 except Exception as e:
                     logger.warning("cache_write_error", error=str(e))
             

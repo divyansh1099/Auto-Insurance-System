@@ -25,11 +25,13 @@ from app.models.schemas import (
     DriverCardResponse, DriverDetailsResponse
 )
 from app.utils.auth import get_current_admin_user
+from app.utils.cache import cache_response, invalidate_cache_pattern
 
 router = APIRouter()
 
 
 @router.get("", response_model=List[DriverCardResponse])
+@cache_response(ttl=120, key_prefix="drivers_list")
 async def list_drivers(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -147,6 +149,7 @@ async def get_driver_admin(
 
 
 @router.get("/{driver_id}/details", response_model=DriverDetailsResponse)
+@cache_response(ttl=180, key_prefix="driver_detail")
 async def get_driver_details(
     driver_id: str,
     db: Session = Depends(get_db),
@@ -341,6 +344,11 @@ async def create_driver_admin(
     db.add(driver)
     db.commit()
     db.refresh(driver)
+
+    # Invalidate related caches
+    invalidate_cache_pattern("*drivers_list*")
+    invalidate_cache_pattern("*dashboard_*")
+
     return driver
 
 
@@ -363,6 +371,12 @@ async def update_driver_admin(
     driver.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(driver)
+
+    # Invalidate related caches
+    invalidate_cache_pattern(f"*driver_detail*{driver_id}*")
+    invalidate_cache_pattern("*drivers_list*")
+    invalidate_cache_pattern("*dashboard_*")
+
     return driver
 
 
@@ -379,4 +393,10 @@ async def delete_driver_admin(
 
     db.delete(driver)
     db.commit()
+
+    # Invalidate related caches
+    invalidate_cache_pattern(f"*driver_detail*{driver_id}*")
+    invalidate_cache_pattern("*drivers_list*")
+    invalidate_cache_pattern("*dashboard_*")
+
     return None

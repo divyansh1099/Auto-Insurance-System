@@ -27,11 +27,13 @@ from app.models.schemas import (
     PolicyTypeDistribution
 )
 from app.utils.auth import get_current_admin_user
+from app.utils.cache import cache_response
 
 router = APIRouter()
 
 
 @router.get("/stats")
+@cache_response(ttl=60, key_prefix="dashboard_stats")
 async def get_admin_dashboard_stats(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
@@ -63,6 +65,7 @@ async def get_admin_dashboard_stats(
 
 
 @router.get("/summary", response_model=AdminDashboardSummary)
+@cache_response(ttl=60, key_prefix="dashboard_summary")
 async def get_dashboard_summary(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
@@ -130,6 +133,7 @@ async def get_dashboard_summary(
 
 
 @router.get("/trip-activity", response_model=List[DailyTripActivity])
+@cache_response(ttl=300, key_prefix="trip_activity")
 async def get_trip_activity(
     days: int = Query(7, ge=1, le=30),
     db: Session = Depends(get_db),
@@ -202,6 +206,7 @@ async def get_trip_activity(
 
 
 @router.get("/risk-distribution", response_model=RiskDistributionResponse)
+@cache_response(ttl=300, key_prefix="risk_distribution")
 async def get_risk_distribution(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
@@ -270,6 +275,7 @@ async def get_risk_distribution(
 
 
 @router.get("/safety-events-breakdown", response_model=List[SafetyEventBreakdown])
+@cache_response(ttl=300, key_prefix="safety_events")
 async def get_safety_events_breakdown(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
