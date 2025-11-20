@@ -257,7 +257,7 @@ export default function Homepage() {
       {/* Hero Section */}
       <section
         ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center px-4 py-20"
+        className="relative min-h-screen flex items-center justify-center px-4"
       >
         {/* Decorative Floating Elements */}
         <div className="absolute top-20 left-10 opacity-20 animate-float">
@@ -322,7 +322,7 @@ export default function Homepage() {
               <>
                 <button
                   onClick={() => navigate('/')}
-                  className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600/95 via-blue-600/95 to-purple-600/95 backdrop-blur-xl text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     Go to Dashboard
@@ -342,7 +342,7 @@ export default function Homepage() {
               <>
                 <button
                   onClick={() => navigate('/signup')}
-                  className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600/95 via-blue-600/95 to-purple-600/95 backdrop-blur-xl text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     Get Your Quote
@@ -388,28 +388,28 @@ export default function Homepage() {
       </section>
 
       {/* Statistics Section */}
-      <section ref={statsRef} className="relative py-12 px-4 z-10 bg-gradient-to-br from-white/60 via-cyan-50/60 to-blue-50/60 dark:from-gray-800/60 dark:via-gray-800/60 dark:to-gray-900/60 backdrop-blur-sm">
+      <section ref={statsRef} className="relative py-12 px-4 z-10 bg-transparent backdrop-blur-sm">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-cyan-200/50 dark:border-cyan-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl border-2 border-cyan-200/30 dark:border-cyan-700/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-1">
                 {counters.users.toLocaleString()}+
               </div>
               <div className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300">Active Users</div>
             </div>
-            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-purple-200/50 dark:border-purple-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl border-2 border-purple-200/30 dark:border-purple-700/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-1">
                 ${(counters.savings / 1000000).toFixed(1)}M+
               </div>
               <div className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300">Total Savings</div>
             </div>
-            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-emerald-200/50 dark:border-emerald-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl border-2 border-emerald-200/30 dark:border-emerald-700/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-1">
                 {counters.trips.toLocaleString()}+
               </div>
               <div className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300">Trips Tracked</div>
             </div>
-            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-amber-200/50 dark:border-amber-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl border-2 border-amber-200/30 dark:border-amber-700/30 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-1">
                 {counters.score}%
               </div>
@@ -420,10 +420,10 @@ export default function Homepage() {
       </section>
 
       {/* Real-Time Monitoring Section */}
-      <section className="relative py-32 px-4 z-10 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 dark:from-gray-900 dark:via-gray-900/30 dark:to-gray-800/30">
+      <section className="relative py-24 px-4 z-10 bg-transparent">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-600/95 via-blue-600/95 to-purple-600/95 backdrop-blur-xl dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Real-Time Monitoring
             </h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
@@ -518,11 +518,11 @@ export default function Homepage() {
       {/* Features Section */}
       <section
         ref={featuresRef}
-        className="relative py-32 px-4 z-10"
+        className="relative py-24 px-4 z-10"
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-600/95 via-blue-600/95 to-purple-600/95 backdrop-blur-xl dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Powerful Features
             </h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
@@ -570,7 +570,7 @@ export default function Homepage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="relative py-20 px-4 z-10 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600">
+      <section className="relative py-20 px-4 z-10 bg-gradient-to-r from-cyan-600/95 via-blue-600/95 to-purple-600/95 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -597,7 +597,7 @@ export default function Homepage() {
       </section>
 
       {/* How It Works Section - Redesigned */}
-      <section ref={howItWorksRef} className="relative py-32 px-4 z-10 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200">
+      <section ref={howItWorksRef} className="relative py-24 px-4 z-10 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-pink-900/30 border border-indigo-200 dark:border-indigo-800 mb-6">
@@ -669,7 +669,7 @@ export default function Homepage() {
       </section>
 
       {/* Trust & Security Section */}
-      <section className="relative py-20 px-4 z-10 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <section className="relative py-20 px-4 z-10 bg-transparent">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -680,21 +680,21 @@ export default function Homepage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transform hover:scale-105 transition-all">
+            <div className="text-center p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl shadow-lg border-2 border-gray-200/30 dark:border-gray-700/30 hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl mb-4">
                 <LockClosedIcon className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Bank-Level Security</h3>
               <p className="text-gray-600">256-bit encryption protects your data</p>
             </div>
-            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transform hover:scale-105 transition-all">
+            <div className="text-center p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl shadow-lg border-2 border-gray-200/30 dark:border-gray-700/30 hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl mb-4">
                 <ShieldCheckIcon className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Privacy First</h3>
               <p className="text-gray-600">Your data is never sold or shared</p>
             </div>
-            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transform hover:scale-105 transition-all">
+            <div className="text-center p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl shadow-lg border-2 border-gray-200/30 dark:border-gray-700/30 hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mb-4">
                 <AcademicCapIcon className="w-8 h-8 text-white" />
               </div>
@@ -706,7 +706,7 @@ export default function Homepage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-32 px-4 z-10">
+      <section className="relative py-24 px-4 z-10">
         <div className="max-w-5xl mx-auto">
           <div className="bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 md:p-16 text-center text-white shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 relative overflow-hidden">
             <div
@@ -747,7 +747,7 @@ export default function Homepage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative py-12 px-4 border-t-2 border-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 dark:from-gray-900 dark:via-gray-900/30 dark:to-gray-800/30 backdrop-blur-sm z-10">
+      <footer className="relative py-12 px-4 border-t-2 border-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 bg-transparent backdrop-blur-sm z-10">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-10 h-10 bg-gradient-to-br from-cyan-600 via-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
