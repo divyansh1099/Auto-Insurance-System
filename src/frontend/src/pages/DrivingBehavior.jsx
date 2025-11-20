@@ -14,18 +14,18 @@ import {
 
 export default function DrivingBehavior() {
   const queryClient = useQueryClient()
-  
+
   // Get current user to determine driver_id
   const { data: currentUser, isLoading: isLoadingUser } = useQuery(
     ['currentUser'],
     () => authAPI.getCurrentUser(),
     { retry: false }
   )
-  
+
   // Only use driver_id from authenticated user - no fallback to prevent showing wrong user's data
   const driverId = currentUser?.data?.driver_id
   const [isRecalculating, setIsRecalculating] = useState(false)
-  
+
   // Debug logging to verify correct driver_id is being used
   if (currentUser?.data) {
     console.log('Risk Profile Debug:', {
@@ -40,7 +40,7 @@ export default function DrivingBehavior() {
   const { data: riskSummary } = useQuery(
     ['riskProfileSummary', driverId],
     () => riskAPI.getRiskProfileSummary(driverId),
-    { 
+    {
       retry: false,
       enabled: !!driverId,
       staleTime: 0, // Always consider stale to force refetch
@@ -65,7 +65,7 @@ export default function DrivingBehavior() {
   const { data: riskTrend } = useQuery(
     ['riskScoreTrend', driverId],
     () => riskAPI.getRiskScoreTrend(driverId, '30d', 'daily'),
-    { 
+    {
       retry: false,
       enabled: !!driverId,
       // Fallback to existing history endpoint
@@ -86,7 +86,7 @@ export default function DrivingBehavior() {
   const { data: riskBreakdown } = useQuery(
     ['riskFactorBreakdown', driverId],
     () => riskAPI.getRiskFactorBreakdown(driverId),
-    { 
+    {
       retry: false,
       enabled: !!driverId,
       // Fallback to existing breakdown endpoint
@@ -124,7 +124,7 @@ export default function DrivingBehavior() {
     setIsRecalculating(true)
     recalculateMutation.mutate()
   }
-  
+
   // Show loading state while user is being fetched
   if (isLoadingUser) {
     return (
@@ -136,7 +136,7 @@ export default function DrivingBehavior() {
       </div>
     )
   }
-  
+
   // Show error if user is not authenticated or doesn't have a driver_id
   if (!currentUser?.data || !driverId) {
     return (
@@ -164,7 +164,7 @@ export default function DrivingBehavior() {
     high_risk_trips: 0,
     total_incidents: 0
   }
-  
+
   // Trip metrics from risk profile summary (includes ALL trips, not just paginated subset)
   const tripMetrics = {
     totalTrips: summary.total_trips || 0,
@@ -239,20 +239,20 @@ export default function DrivingBehavior() {
   const trendInfo = getTrendIndicator(summary.overall_risk_trend_status)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 relative overflow-hidden transition-colors duration-200">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-200 dark:bg-cyan-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob" />
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-200 dark:bg-violet-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-200 dark:bg-fuchsia-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
       </div>
 
       <div className="relative z-10 space-y-6 p-6">
         {/* Header */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 p-6">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 dark:border-gray-700/30 p-6 transition-colors duration-200">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Risk Profile</h1>
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">Risk Profile</h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1 text-lg">Detailed analysis of your driving risk factors</p>
             </div>
             <button
@@ -266,228 +266,227 @@ export default function DrivingBehavior() {
           </div>
         </div>
 
-      {/* Top Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Overall Risk Score Card */}
-        <div className="bg-blue-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <ChartBarIcon className="w-6 h-6" />
-              <h2 className="text-lg font-semibold">Overall Risk Score</h2>
+        {/* Top Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Overall Risk Score Card */}
+          <div className="bg-blue-600 rounded-lg shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <ChartBarIcon className="w-6 h-6" />
+                <h2 className="text-lg font-semibold">Overall Risk Score</h2>
+              </div>
+              <div className={`px-3 py-1 rounded-full text-xs font-medium ${trendInfo.bgColor} ${trendInfo.color}`}>
+                <div className="flex items-center gap-1">
+                  <trendInfo.icon className="w-4 h-4" />
+                  <span>{trendInfo.label}</span>
+                </div>
+              </div>
             </div>
-            <div className={`px-3 py-1 rounded-full text-xs font-medium ${trendInfo.bgColor} ${trendInfo.color}`}>
-              <div className="flex items-center gap-1">
-                <trendInfo.icon className="w-4 h-4" />
-                <span>{trendInfo.label}</span>
+            <div className="text-5xl font-bold mb-2">{Math.round(summary.overall_risk_score || 35)}</div>
+            <p className="text-blue-100 text-sm">Lower score means lower risk</p>
+          </div>
+
+          {/* Behavior Score Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <ChartBarIcon className="w-5 h-5 text-gray-400" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Behavior Score</h2>
+            </div>
+            <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">{summary.behavior_score || 87}</div>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Driving behavior analysis</p>
+          </div>
+
+          {/* Trip Statistics Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPinIcon className="w-5 h-5 text-gray-400" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Trip Statistics</h2>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Total Trips</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalTrips || 0)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Total Miles</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalMiles || 0)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Avg Score</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.avgTripScore || 0)}</span>
               </div>
             </div>
           </div>
-          <div className="text-5xl font-bold mb-2">{Math.round(summary.overall_risk_score || 35)}</div>
-          <p className="text-blue-100 text-sm">Lower score means lower risk</p>
-        </div>
 
-        {/* Behavior Score Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <ChartBarIcon className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Behavior Score</h2>
-          </div>
-          <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">{summary.behavior_score || 87}</div>
-          <p className="text-gray-600 dark:text-gray-400 text-sm">Driving behavior analysis</p>
-        </div>
-
-        {/* Trip Statistics Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <MapPinIcon className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Trip Statistics</h2>
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Total Trips</span>
-              <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalTrips || 0)}</span>
+          {/* Last Updated Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <CalendarIcon className="w-5 h-5 text-gray-400" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Last Updated</h2>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Total Miles</span>
-              <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalMiles || 0)}</span>
+            <div className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              {formatLastUpdated(summary.last_updated_date || summary.last_updated)}
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Avg Score</span>
-              <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.avgTripScore || 0)}</span>
-            </div>
+            {summary.change_from_previous !== undefined && summary.change_from_previous !== 0 && (
+              <p className={`text-sm font-medium ${summary.change_from_previous < 0 ? 'text-green-600' : 'text-red-600'
+                }`}>
+                {summary.change_from_previous > 0 ? '+' : ''}{summary.change_from_previous} from previous
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Last Updated Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <CalendarIcon className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Last Updated</h2>
-          </div>
-          <div className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            {formatLastUpdated(summary.last_updated_date || summary.last_updated)}
-          </div>
-          {summary.change_from_previous !== undefined && summary.change_from_previous !== 0 && (
-            <p className={`text-sm font-medium ${
-              summary.change_from_previous < 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              {summary.change_from_previous > 0 ? '+' : ''}{summary.change_from_previous} from previous
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Risk Score Trend Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Risk Score Trend</h2>
-          <RiskTrendChart data={trendData} />
-        </div>
-
-        {/* Risk Factor Breakdown Radar Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Risk Factor Breakdown</h2>
-          <RiskFactorRadarChart data={categoryScores} />
-        </div>
-      </div>
-
-      {/* Trip Performance Summary */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Trip Performance Summary</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-green-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Perfect Trips</div>
-            <div className="text-3xl font-bold text-green-600">{tripMetrics.perfectTrips}</div>
-            <div className="text-xs text-gray-500">Score ≥ 95</div>
-          </div>
-          <div className="bg-blue-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Low Risk Trips</div>
-            <div className="text-3xl font-bold text-blue-600">{tripMetrics.lowRiskTrips}</div>
-            <div className="text-xs text-gray-500">Score ≥ 80</div>
-          </div>
-          <div className="bg-orange-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">High Risk Trips</div>
-            <div className="text-3xl font-bold text-orange-600">{tripMetrics.highRiskTrips}</div>
-            <div className="text-xs text-gray-500">Score &lt; 60</div>
-          </div>
-          <div className="bg-red-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Incidents</div>
-            <div className="text-3xl font-bold text-red-600">{tripMetrics.totalIncidents}</div>
-            <div className="text-xs text-gray-500">All safety events</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Detailed Risk Factors Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Detailed Risk Factors</h2>
+        {/* Charts Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left Column */}
-          <div className="space-y-6">
-            {/* Speeding Frequency */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Speeding Frequency</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.speeding_frequency?.toFixed(1) || 0.1}</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all"
-                  style={{ width: `${Math.min(100, (detailedFactors.speeding_frequency || 0.1) * 10)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Acceleration Pattern */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Acceleration Pattern</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.acceleration_pattern?.toFixed(1) || 0.1}</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all"
-                  style={{ width: `${Math.min(100, (detailedFactors.acceleration_pattern || 0.1) * 10)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* High Risk Area Exposure */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">High Risk Area Exposure</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.high_risk_area_exposure?.toFixed(1) || 25.0}</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-yellow-600 h-2 rounded-full transition-all"
-                  style={{ width: `${Math.min(100, detailedFactors.high_risk_area_exposure || 25.0)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Weather Risk Exposure */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Weather Risk Exposure</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.weather_risk_exposure?.toFixed(1) || 18.0}</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-orange-600 h-2 rounded-full transition-all"
-                  style={{ width: `${Math.min(100, detailedFactors.weather_risk_exposure || 18.0)}%` }}
-                />
-              </div>
-            </div>
+          {/* Risk Score Trend Chart */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Risk Score Trend</h2>
+            <RiskTrendChart data={trendData} />
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Hard Braking Frequency */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Hard Braking Frequency</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.hard_braking_frequency?.toFixed(1) || 0.1}</span>
+          {/* Risk Factor Breakdown Radar Chart */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Risk Factor Breakdown</h2>
+            <RiskFactorRadarChart data={categoryScores} />
+          </div>
+        </div>
+
+        {/* Trip Performance Summary */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors duration-200">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Trip Performance Summary</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Perfect Trips</div>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-400">{tripMetrics.perfectTrips}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Score ≥ 95</div>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Low Risk Trips</div>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{tripMetrics.lowRiskTrips}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Score ≥ 80</div>
+            </div>
+            <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">High Risk Trips</div>
+              <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">{tripMetrics.highRiskTrips}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Score &lt; 60</div>
+            </div>
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Incidents</div>
+              <div className="text-3xl font-bold text-red-600 dark:text-red-400">{tripMetrics.totalIncidents}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">All safety events</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Risk Factors Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors duration-200">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Detailed Risk Factors</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left Column */}
+            <div className="space-y-6">
+              {/* Speeding Frequency */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Speeding Frequency</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.speeding_frequency?.toFixed(1) || 0.1}</span>
+                </div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, (detailedFactors.speeding_frequency || 0.1) * 10)}%` }}
+                  />
+                </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all"
-                  style={{ width: `${Math.min(100, (detailedFactors.hard_braking_frequency || 0.1) * 10)}%` }}
-                />
+
+              {/* Acceleration Pattern */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Acceleration Pattern</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.acceleration_pattern?.toFixed(1) || 0.1}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, (detailedFactors.acceleration_pattern || 0.1) * 10)}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* High Risk Area Exposure */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">High Risk Area Exposure</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.high_risk_area_exposure?.toFixed(1) || 25.0}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-yellow-600 h-2 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, detailedFactors.high_risk_area_exposure || 25.0)}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Weather Risk Exposure */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Weather Risk Exposure</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.weather_risk_exposure?.toFixed(1) || 18.0}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-orange-600 h-2 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, detailedFactors.weather_risk_exposure || 18.0)}%` }}
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Night Driving Percentage */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Night Driving Percentage</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.night_driving_percentage?.toFixed(1) || 12.0}%</span>
+            {/* Right Column */}
+            <div className="space-y-6">
+              {/* Hard Braking Frequency */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Hard Braking Frequency</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.hard_braking_frequency?.toFixed(1) || 0.1}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, (detailedFactors.hard_braking_frequency || 0.1) * 10)}%` }}
+                  />
+                </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-purple-600 h-2 rounded-full transition-all"
-                  style={{ width: `${Math.min(100, detailedFactors.night_driving_percentage || 12.0)}%` }}
-                />
-              </div>
-            </div>
 
-            {/* Phone Usage Incidents */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Phone Usage Incidents</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.phone_usage_incidents || 0}</span>
+              {/* Night Driving Percentage */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Night Driving Percentage</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.night_driving_percentage?.toFixed(1) || 12.0}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-purple-600 h-2 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, detailedFactors.night_driving_percentage || 12.0)}%` }}
+                  />
+                </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-red-600 h-2 rounded-full transition-all"
-                  style={{ width: `${Math.min(100, (detailedFactors.phone_usage_incidents || 0) * 10)}%` }}
-                />
+
+              {/* Phone Usage Incidents */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Phone Usage Incidents</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.phone_usage_incidents || 0}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-red-600 h-2 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, (detailedFactors.phone_usage_incidents || 0) * 10)}%` }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
 
       <style>{`
