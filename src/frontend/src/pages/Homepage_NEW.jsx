@@ -218,174 +218,108 @@ export default function Homepage() {
                 </div>
             </section>
 
-            {/* Why Choose Us - Value Props */}
+            {/* Features Section - Modern Bento Box Layout */}
             <section className="relative py-24 px-4 z-10">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-purple-500/10 border border-purple-500/20 backdrop-blur-xl mb-6">
-                            <StarIcon className="w-5 h-5 text-purple-400" />
-                            <span className="text-sm font-semibold text-purple-300">Why SmartDrive</span>
-                        </div>
-                        <h2 className="text-5xl md:text-6xl font-black mb-6">
-                            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                                The Smarter Way to Insure
-                            </span>
-                        </h2>
-                    </div>
-
-                    {/* Value Props Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-                        <div className="relative group">
-                            <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative p-8 bg-slate-900/50 backdrop-blur-xl border border-green-500/20 rounded-3xl hover:border-green-500/40 transition-all duration-300 text-center">
-                                <div className="text-6xl font-black bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-4">40%</div>
-                                <h3 className="text-xl font-bold text-white mb-2">Average Savings</h3>
-                                <p className="text-gray-400">Safe drivers save up to 40% on premiums</p>
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative p-8 bg-slate-900/50 backdrop-blur-xl border border-blue-500/20 rounded-3xl hover:border-blue-500/40 transition-all duration-300 text-center">
-                                <div className="text-6xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-4">24/7</div>
-                                <h3 className="text-xl font-bold text-white mb-2">Real-Time Tracking</h3>
-                                <p className="text-gray-400">Continuous monitoring and instant feedback</p>
-                            </div>
-                        </div>
-                        <div className="relative group">
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative p-8 bg-slate-900/50 backdrop-blur-xl border border-purple-500/20 rounded-3xl hover:border-purple-500/40 transition-all duration-300 text-center">
-                                <div className="text-6xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">AI</div>
-                                <h3 className="text-xl font-bold text-white mb-2">Powered Analysis</h3>
-                                <p className="text-gray-400">Advanced ML for accurate risk assessment</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Section - Improved Bento Grid */}
-            <section className="relative py-24 px-4 z-10">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
+                    {/* Section Header */}
+                    <div className="text-center mb-20">
                         <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cyan-500/10 border border-cyan-500/20 backdrop-blur-xl mb-6">
                             <SparklesIcon className="w-5 h-5 text-cyan-400" />
-                            <span className="text-sm font-semibold text-cyan-300">Features</span>
+                            <span className="text-sm font-semibold text-cyan-300">Powerful Features</span>
                         </div>
                         <h2 className="text-5xl md:text-6xl font-black mb-6">
                             <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                                 Everything You Need
                             </span>
                         </h2>
+                        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                            Advanced technology meets simple, transparent insurance
+                        </p>
                     </div>
 
-                    {/* Redesigned Bento Grid - Better Layout */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        {/* Row 1: Large Feature (2 cols) + 2 Tall Cards */}
+                    {/* Bento Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Large Feature Card */}
                         <div className="md:col-span-2 md:row-span-2 relative group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative h-full p-10 bg-slate-900/50 backdrop-blur-xl border border-cyan-500/20 rounded-3xl hover:border-cyan-500/40 transition-all duration-300 flex flex-col justify-between">
-                                <div>
-                                    <div className="p-4 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl w-fit mb-6">
-                                        <CpuChipIcon className="w-12 h-12 text-white" />
-                                    </div>
-                                    <h3 className="text-4xl font-black mb-4 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
-                                        AI-Powered Risk Analysis
-                                    </h3>
-                                    <p className="text-lg text-gray-400 mb-6 leading-relaxed">
-                                        Machine learning algorithms analyze millions of data points to provide the most accurate risk assessment and personalized rates.
-                                    </p>
-                                </div>
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
-                                        <span className="text-sm text-gray-300">Real-time trip analysis</span>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
-                                        <span className="text-sm text-gray-300">Predictive risk modeling</span>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
-                                        <span className="text-sm text-gray-300">Privacy-first approach</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                            <div className="relative h-full p-10 bg-slate-900/50 backdrop-blur-xl border border-cyan-500/20 rounded-3xl hover:border-cyan-500/40 transition-all duration-300">
+                                <div className="flex items-start justify-between mb-6">
+                                    <div className="p-4 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl">
+                                        <CpuChipIcon className="w-10 h-10 text-white" />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="md:row-span-2 relative group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-purple-500/20 rounded-3xl hover:border-purple-500/40 transition-all duration-300 flex flex-col">
-                                <div className="p-4 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl w-fit mb-6">
-                                    <TrophyIcon className="w-10 h-10 text-white" />
-                                </div>
-                                <h3 className="text-2xl font-bold mb-3 text-white">
-                                    Rewards Program
+                                <h3 className="text-4xl font-black mb-4 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
+                                    AI-Powered Risk Analysis
                                 </h3>
-                                <p className="text-gray-400 mb-6 flex-grow">
-                                    Earn points for safe driving. Redeem for discounts, gift cards, and exclusive perks.
+                                <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+                                    Our advanced machine learning algorithms analyze millions of data points in real-time to give you the most accurate risk assessment and personalized rates.
                                 </p>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center p-3 bg-purple-500/10 rounded-xl">
-                                        <span className="text-sm text-gray-300">Safe trips</span>
-                                        <span className="text-sm font-bold text-purple-400">+50 pts</span>
-                                    </div>
-                                    <div className="flex justify-between items-center p-3 bg-purple-500/10 rounded-xl">
-                                        <span className="text-sm text-gray-300">Weekly goals</span>
-                                        <span className="text-sm font-bold text-purple-400">+100 pts</span>
-                                    </div>
+                                <div className="flex flex-wrap gap-2">
+                                    <span className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-sm text-cyan-300">Real-time Analysis</span>
+                                    <span className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-sm text-cyan-300">99.9% Accurate</span>
+                                    <span className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-sm text-cyan-300">Privacy First</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="md:row-span-2 relative group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-emerald-500/20 rounded-3xl hover:border-emerald-500/40 transition-all duration-300 flex flex-col">
-                                <div className="p-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl w-fit mb-6">
-                                    <CurrencyDollarIcon className="w-10 h-10 text-white" />
-                                </div>
-                                <h3 className="text-2xl font-bold mb-3 text-white">
-                                    Dynamic Pricing
-                                </h3>
-                                <p className="text-gray-400 mb-auto">
-                                    Your premium adjusts based on actual driving behavior, not demographics.
-                                </p>
-                                <div className="mt-6 p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-                                    <div className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
-                                        40%
-                                    </div>
-                                    <div className="text-sm text-gray-300">Average savings for safe drivers</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Row 2: 2 Wide Cards */}
-                        <div className="md:col-span-2 relative group">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                        {/* Small Feature Cards */}
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
                             <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-blue-500/20 rounded-3xl hover:border-blue-500/40 transition-all duration-300">
-                                <div className="flex items-start gap-6">
-                                    <div className="p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex-shrink-0">
-                                        <BoltIcon className="w-10 h-10 text-white" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-2xl font-bold mb-2 text-white">Instant Feedback</h3>
-                                        <p className="text-gray-400">Real-time alerts help you improve your driving habits and stay safe on the road.</p>
-                                    </div>
+                                <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl w-fit mb-4">
+                                    <BoltIcon className="w-8 h-8 text-white" />
                                 </div>
+                                <h3 className="text-2xl font-bold mb-3 text-white">
+                                    Instant Feedback
+                                </h3>
+                                <p className="text-gray-400">
+                                    Get real-time alerts and safety recommendations during every drive
+                                </p>
                             </div>
                         </div>
 
-                        <div className="md:col-span-2 relative group">
-                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-amber-500/20 rounded-3xl hover:border-amber-500/40 transition-all duration-300">
-                                <div className="flex items-start gap-6">
-                                    <div className="p-4 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex-shrink-0">
-                                        <ChartBarIcon className="w-10 h-10 text-white" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-2xl font-bold mb-2 text-white">Smart Analytics</h3>
-                                        <p className="text-gray-400">Detailed insights and reports help you understand your driving patterns and progress.</p>
-                                    </div>
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                            <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-purple-500/20 rounded-3xl hover:border-purple-500/40 transition-all duration-300">
+                                <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl w-fit mb-4">
+                                    <ChartBarIcon className="w-8 h-8 text-white" />
                                 </div>
+                                <h3 className="text-2xl font-bold mb-3 text-white">
+                                    Smart Analytics
+                                </h3>
+                                <p className="text-gray-400">
+                                    Comprehensive insights into your driving patterns and safety
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                            <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-emerald-500/20 rounded-3xl hover:border-emerald-500/40 transition-all duration-300">
+                                <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl w-fit mb-4">
+                                    <CurrencyDollarIcon className="w-8 h-8 text-white" />
+                                </div>
+                                <h3 className="text-2xl font-bold mb-3 text-white">
+                                    Save up to 40%
+                                </h3>
+                                <p className="text-gray-400">
+                                    Dynamic pricing rewards safe driving with lower premiums
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                            <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-amber-500/20 rounded-3xl hover:border-amber-500/40 transition-all duration-300">
+                                <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl w-fit mb-4">
+                                    <TrophyIcon className="w-8 h-8 text-white" />
+                                </div>
+                                <h3 className="text-2xl font-bold mb-3 text-white">
+                                    Earn Rewards
+                                </h3>
+                                <p className="text-gray-400">
+                                    Unlock exclusive rewards for safe driving habits
+                                </p>
                             </div>
                         </div>
                     </div>
