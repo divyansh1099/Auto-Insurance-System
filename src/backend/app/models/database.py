@@ -265,3 +265,20 @@ class User(Base):
     last_login = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class AuditLog(Base):
+    """Audit log model."""
+    __tablename__ = "audit_logs"
+
+    log_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"))
+    action = Column(String(50), nullable=False)  # CREATE, UPDATE, DELETE, LOGIN
+    resource_type = Column(String(50))  # Driver, User, Policy
+    resource_id = Column(String(50))
+    details = Column(JSON)  # Store changed fields
+    ip_address = Column(String(50))
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    user = relationship("User")

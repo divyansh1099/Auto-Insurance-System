@@ -210,3 +210,173 @@ def calculate_premium_with_discount(
         'calculated_at': datetime.utcnow().isoformat()
     }
 
+
+def calculate_ml_risk_score_batch(
+    driver_ids: List[str],
+    db: Session,
+    period_days: int = 30
+) -> Dict[str, Dict]:
+    """
+    Calculate risk scores for multiple drivers in batch.
+    Optimized for performance with single DB query and vectorized operations.
+    
+    Args:
+        driver_ids: List of driver IDs to process
+        db: Database session
+        period_days: Number of days to look back
+        
+    Returns:
+        Dictionary mapping driver_id to risk_data
+        
+    Example:
+        results = calculate_ml_risk_score_batch(['DRV-0001', 'DRV-0002'], db)
+        # {'DRV-0001': {...}, 'DRV-0002': {...}}
+    """
+    if not driver_ids:
+        return {}
+    
+    model = get_model()
+    batch_start_time = time.time()
+    
+    logger.info(
+        "batch_risk_scoring_started",
+        driver_count=len(driver_ids),
+        period_days=period_days
+    )
+    
+    # Calculate period
+    period_end = datetime.utcnow()
+    period_start = period_end - timedelta(days=period_days)
+    
+    # Single query to get all drivers
+    drivers = (
+        db.query(Driver)
+        .filter(Driver.driver_id.in_(driver_ids))
+        .all()
+    )
+    driver_map = {d.driver_id: d for d in drivers}
+    
+    # Single query to get all events for all drivers
+    all_events = (
+        db.query(TelematicsEvent)
+        .filter(
+            TelematicsEvent.driver_id.in_(driver_ids),
+            TelematicsEvent.timestamp >= period_start,
+            TelematicsEvent.timestamp <= period_end
+        )
+        .all()
+    )
+    
+    # Group events by driver
+    events_by_driver = {}
+    for event in all_events:
+        if event.driver_id not in events_by_driver:
+            events_by_driver[event.driver_id] = []
+        events_by_driver[event.driver_id].append(event)
+    
+    # Process each driver
+    results = {}
+    for driver_id in driver_ids:
+        driver = driver_map.get(driver_id)
+        if not driver:
+            logger.warning("driver_not_found_in_batch", driver_id=driver_id)
+            results[driver_id] = {
+                'error': 'Driver not found',
+                'risk_score': None
+            }
+            continue
+        
+        events = events_by_driver.get(driver_id, [])
+        
+        if not events:
+            # Return default score if no events
+            results[driver_id] = {
+                'risk_score': 50.0,
+                'confidence': 0.0,
+                'features': {},
+                'model_version': model.model_version,
+                'discount_info': None,
+                'events_used': 0
+            }
+            continue
+        
+        # Convert events to list of dicts
+        events_data = []
+        for event in events:
+            events_data.append({
+                'speed': event.speed or 0,
+                'acceleration': event.acceleration or 0,
+                'braking_force': event.braking_force or 0,
+                'event_type': event.event_type or 'normal',
+                'timestamp': event.timestamp,
+                'latitude': event.latitude or 0,
+                'longitude': event.longitude or 0,
+            })
+        
+        # Get driver info for features
+        driver_info = {
+            'age': driver.date_of_birth and (datetime.utcnow().year - driver.date_of_birth.year) or 35,
+            'years_licensed': driver.years_licensed or 10,
+            'gender': driver.gender,
+        }
+        
+        # Calculate features
+        features = model.calculate_features_from_events(events_data, driver_info)
+        
+        # Predict risk score
+        risk_score = model.predict(features)
+        
+        # Calculate confidence
+        total_events = len(events)
+        confidence = min(1.0, total_events / 1000.0)
+        
+        # Convert numpy types to native Python types
+        def convert_to_native(obj):
+            """Convert numpy types to native Python types."""
+            if isinstance(obj, (np.integer, np.int64, np.int32)):
+                return int(obj)
+            elif isinstance(obj, (np.floating, np.float64, np.float32)):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            elif isinstance(obj, dict):
+                return {k: convert_to_native(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_to_native(item) for item in obj]
+            elif isinstance(obj, float) and (np.isnan(obj) or np.isinf(obj)):
+                return None
+            try:
+                if pd.isna(obj):
+                    return None
+            except:
+                pass
+            return obj
+        
+        clean_features = convert_to_native(features)
+        
+        # Calculate discount information
+        discount_info = calculate_discount_score(driver_id, db, period_days=90)
+        
+        results[driver_id] = {
+            'risk_score': float(risk_score),
+            'confidence': float(confidence),
+            'features': clean_features,
+            'model_version': model.model_version,
+            'events_used': total_events,
+            'discount_info': discount_info
+        }
+        
+        # Track metrics for each driver
+        risk_score_calculations_total.labels(driver_id=driver_id).inc()
+    
+    batch_duration = time.time() - batch_start_time
+    
+    logger.info(
+        "batch_risk_scoring_completed",
+        driver_count=len(driver_ids),
+        successful=len([r for r in results.values() if 'error' not in r]),
+        duration_seconds=round(batch_duration, 2),
+        avg_per_driver=round(batch_duration / len(driver_ids), 3)
+    )
+    
+    return results

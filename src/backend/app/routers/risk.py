@@ -19,7 +19,8 @@ from app.models.schemas import (
     RiskProfileSummaryResponse,
     RiskScoreTrendResponse,
     RiskScoreTrendPoint,
-    RiskFactorBreakdownResponse
+    RiskFactorBreakdownResponse,
+    BatchRiskCalculateRequest
 )
 from app.utils.auth import get_current_user
 from app.services.redis_client import get_cached_risk_score
@@ -749,3 +750,64 @@ async def recalculate_risk(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error recalculating risk score: {str(e)}"
         )
+
+
+@router.post("/batch-calculate", response_model=dict)
+async def batch_calculate_risk_scores(
+    request: BatchRiskCalculateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Calculate risk scores for multiple drivers in batch (Admin only).
+    Optimized for performance with single DB query.
+    
+    Args:
+        request: Batch calculation request with driver_ids and period_days
+        
+    Returns:
+        Dictionary mapping driver_id to risk_score_data
+        
+    Example:
+        POST /api/v1/risk/batch-calculate
+        {
+            "driver_ids": ["DRV-0001", "DRV-0002", "DRV-0003"],
+            "period_days": 30
+        }
+    """
+    # Admin only
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required for batch operations"
+        )
+    
+    try:
+        from app.services.ml_risk_scoring import calculate_ml_risk_score_batch
+        
+        results = calculate_ml_risk_score_batch(
+            driver_ids=request.driver_ids,
+            db=db,
+            period_days=request.period_days
+        )
+        
+        # Calculate summary statistics
+        successful = [r for r in results.values() if 'error' not in r]
+        failed = [r for r in results.values() if 'error' in r]
+        
+        avg_risk_score = sum(r['risk_score'] for r in successful) / len(successful) if successful else 0
+        
+        return {
+            "total_requested": len(request.driver_ids),
+            "successful": len(successful),
+            "failed": len(failed),
+            "avg_risk_score": round(avg_risk_score, 2),
+            "results": results
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Batch processing error: {str(e)}"
+        )
+

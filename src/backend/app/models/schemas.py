@@ -688,3 +688,19 @@ class PolicyCardResponse(BaseModel):
     # PAYD-Specific
     miles_used: Optional[float]  # Only for PAYD policies
     total_miles_allowed: Optional[float]  # Only for PAYD policies
+
+
+# Batch Processing Schemas
+class BatchRiskCalculateRequest(BaseModel):
+    """Request schema for batch risk score calculation."""
+    driver_ids: List[str] = Field(..., min_items=1, max_items=1000)
+    period_days: int = Field(30, ge=1, le=365)
+
+
+class BatchRiskCalculateResponse(BaseModel):
+    """Response schema for batch risk score calculation."""
+    total_requested: int
+    successful: int
+    failed: int
+    avg_risk_score: float
+    results: Dict[str, Any]
