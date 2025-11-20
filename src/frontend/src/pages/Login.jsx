@@ -111,7 +111,7 @@ export default function Login() {
       {/* Homepage Button */}
       <Link
         to="/home"
-        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-md rounded-full shadow-xl hover:shadow-2xl border-2 border-white/50 hover:border-cyan-300 transition-all group transform hover:scale-105"
+        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-5 py-2.5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full shadow-xl hover:shadow-2xl border-2 border-white/50 hover:border-cyan-300 transition-all group transform hover:scale-105"
       >
         <HomeIcon className="w-5 h-5 text-cyan-600 group-hover:text-purple-600 transition-colors" />
         <span className="text-sm font-semibold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">Home</span>
@@ -119,7 +119,7 @@ export default function Login() {
 
       <div className="max-w-md w-full relative z-10">
         {/* Main Card with Enhanced Design */}
-        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/30 p-8 md:p-10 relative overflow-hidden">
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/30 p-8 md:p-10 relative overflow-hidden">
           {/* Decorative gradient overlay */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-200/30 to-purple-200/30 rounded-full blur-3xl -mr-32 -mt-32" />
           
