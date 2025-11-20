@@ -21,52 +21,51 @@ import {
 const InputField = ({ label, name, type = 'text', placeholder, required = false, icon: Icon, formData, focusedField, setFocusedField, handleChange, color = 'cyan', ...props }) => {
   const colorClasses = {
     cyan: {
-      border: 'border-cyan-500',
-      bg: 'bg-gradient-to-r from-cyan-50 to-blue-50',
+      border: 'border-cyan-500 dark:border-cyan-400',
+      bg: 'bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20',
       shadow: 'shadow-lg shadow-cyan-500/20',
       ring: 'focus:ring-cyan-500/30',
-      icon: 'text-cyan-600',
-      hover: 'hover:border-cyan-300'
+      icon: 'text-cyan-600 dark:text-cyan-400',
+      hover: 'hover:border-cyan-300 dark:hover:border-cyan-500'
     },
     purple: {
-      border: 'border-purple-500',
-      bg: 'bg-gradient-to-r from-purple-50 to-pink-50',
+      border: 'border-purple-500 dark:border-purple-400',
+      bg: 'bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20',
       shadow: 'shadow-lg shadow-purple-500/20',
       ring: 'focus:ring-purple-500/30',
-      icon: 'text-purple-600',
-      hover: 'hover:border-purple-300'
+      icon: 'text-purple-600 dark:text-purple-400',
+      hover: 'hover:border-purple-300 dark:hover:border-purple-500'
     },
     emerald: {
-      border: 'border-emerald-500',
-      bg: 'bg-gradient-to-r from-emerald-50 to-teal-50',
+      border: 'border-emerald-500 dark:border-emerald-400',
+      bg: 'bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20',
       shadow: 'shadow-lg shadow-emerald-500/20',
       ring: 'focus:ring-emerald-500/30',
-      icon: 'text-emerald-600',
-      hover: 'hover:border-emerald-300'
+      icon: 'text-emerald-600 dark:text-emerald-400',
+      hover: 'hover:border-emerald-300 dark:hover:border-emerald-500'
     },
     amber: {
-      border: 'border-amber-500',
-      bg: 'bg-gradient-to-r from-amber-50 to-orange-50',
+      border: 'border-amber-500 dark:border-amber-400',
+      bg: 'bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20',
       shadow: 'shadow-lg shadow-amber-500/20',
       ring: 'focus:ring-amber-500/30',
-      icon: 'text-amber-600',
-      hover: 'hover:border-amber-300'
+      icon: 'text-amber-600 dark:text-amber-400',
+      hover: 'hover:border-amber-300 dark:hover:border-amber-500'
     }
   }
-  
+
   const colors = colorClasses[color] || colorClasses.cyan
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-bold text-gray-700 flex items-center gap-2">
+      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
         {Icon && <Icon className={`w-4 h-4 ${colors.icon}`} />}
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative group">
         {Icon && (
-          <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-all duration-300 ${
-            focusedField === name ? `${colors.icon} scale-110` : 'text-gray-400'
-          }`}>
+          <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-all duration-300 ${focusedField === name ? `${colors.icon} scale-110` : 'text-gray-400 dark:text-gray-500'
+            }`}>
             <Icon className="w-5 h-5" />
           </div>
         )}
@@ -78,11 +77,10 @@ const InputField = ({ label, name, type = 'text', placeholder, required = false,
           onFocus={() => setFocusedField(name)}
           onBlur={() => setFocusedField(null)}
           placeholder={placeholder}
-          className={`w-full ${Icon ? 'pl-12' : 'pl-4'} pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium ${
-            focusedField === name
-              ? `${colors.border} ${colors.bg} ${colors.shadow} focus:ring-4 ${colors.ring}`
-              : `border-gray-200 bg-white ${colors.hover} hover:shadow-md focus:${colors.border} focus:ring-4 ${colors.ring}`
-          }`}
+          className={`w-full ${Icon ? 'pl-12' : 'pl-4'} pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${focusedField === name
+            ? `${colors.border} ${colors.bg} ${colors.shadow} focus:ring-4 ${colors.ring}`
+            : `border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 ${colors.hover} hover:shadow-md focus:${colors.border} focus:ring-4 ${colors.ring}`
+            }`}
           required={required}
           {...props}
         />
@@ -128,7 +126,7 @@ export default function Signup() {
   }
 
   const validateStep = (step) => {
-    switch(step) {
+    switch (step) {
       case 1:
         return formData.first_name && formData.last_name && formData.email && formData.phone && formData.date_of_birth
       case 2:
@@ -265,7 +263,7 @@ export default function Signup() {
                   coverage_type: 'full'
                 })
               }}
-              className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all"
+              className="flex-1 px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
             >
               Request Another Quote
             </button>
@@ -319,7 +317,7 @@ export default function Signup() {
             </div>
           </div>
           <div className="w-full bg-white/30 dark:bg-gray-700/30 backdrop-blur-sm rounded-full h-3 overflow-hidden shadow-inner border-2 border-white/30">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-cyan-400 via-blue-400 via-purple-400 to-pink-400 rounded-full transition-all duration-500 shadow-lg relative overflow-hidden"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
             >
@@ -615,15 +613,15 @@ export default function Signup() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                      <ShieldCheckIcon className="w-4 h-4 text-amber-600" />
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                      <ShieldCheckIcon className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                       Coverage Type
                     </label>
                     <select
                       name="coverage_type"
                       value={formData.coverage_type}
                       onChange={handleChange}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-amber-500 dark:focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 bg-white hover:border-amber-300 transition-all font-medium"
+                      className="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:border-amber-500 dark:focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:border-amber-300 dark:hover:border-amber-500 transition-all font-medium"
                     >
                       <option value="full">Full Coverage</option>
                       <option value="liability">Liability Only</option>
@@ -640,11 +638,10 @@ export default function Signup() {
                 type="button"
                 onClick={prevStep}
                 disabled={currentStep === 1}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
-                  currentStep === 1
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-gray-700 bg-white hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 border-2 border-gray-200 hover:border-gray-300 shadow-md hover:shadow-lg transform hover:scale-105'
-                }`}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${currentStep === 1
+                  ? 'text-gray-400 cursor-not-allowed dark:text-gray-600'
+                  : 'text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-700 dark:hover:to-gray-600 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 shadow-md hover:shadow-lg transform hover:scale-105'
+                  }`}
               >
                 <ArrowLeftIcon className="w-5 h-5" />
                 Previous
@@ -664,11 +661,10 @@ export default function Signup() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`group flex items-center gap-2 px-8 py-4 rounded-xl font-bold transition-all relative overflow-hidden ${
-                    loading
-                      ? 'bg-gray-400 cursor-not-allowed text-white'
-                      : 'bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 text-white hover:shadow-2xl hover:scale-105'
-                  }`}
+                  className={`group flex items-center gap-2 px-8 py-4 rounded-xl font-bold transition-all relative overflow-hidden ${loading
+                    ? 'bg-gray-400 cursor-not-allowed text-white'
+                    : 'bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 text-white hover:shadow-2xl hover:scale-105'
+                    }`}
                 >
                   {loading ? (
                     <>
