@@ -392,46 +392,138 @@ export default function Homepage() {
                 </div>
             </section>
 
-            {/* How It Works - Sleek Timeline */}
-            <section className="relative py-24 px-4 z-10">
+            {/* How It Works - Premium Redesign */}
+            <section className="relative py-32 px-4 z-10">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-20">
-                        <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-xl mb-6">
+                    <div className="text-center mb-24">
+                        <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 backdrop-blur-xl mb-6">
                             <RocketLaunchIcon className="w-5 h-5 text-blue-400" />
-                            <span className="text-sm font-semibold text-blue-300">Simple Process</span>
+                            <span className="text-sm font-semibold text-blue-300">Simple 4-Step Process</span>
                         </div>
-                        <h2 className="text-5xl md:text-6xl font-black mb-6">
-                            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                        <h2 className="text-5xl md:text-7xl font-black mb-6">
+                            <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
                                 Get Started in Minutes
                             </span>
                         </h2>
+                        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                            From signup to savings, our streamlined process makes it effortless
+                        </p>
                     </div>
 
                     <div className="relative">
-                        {/* Connection Line */}
-                        <div className="absolute top-16 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 hidden lg:block" />
+                        {/* Enhanced Connection Line */}
+                        <div className="absolute top-28 left-0 right-0 hidden lg:block">
+                            <div className="relative h-1 mx-auto" style={{ width: '85%' }}>
+                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 via-purple-500 to-pink-500 rounded-full opacity-20 blur-sm" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 via-purple-500 to-pink-500 rounded-full" />
+                            </div>
+                        </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {[
-                                { num: '01', title: 'Sign Up', desc: 'Create your account in 60 seconds', icon: CpuChipIcon, color: 'cyan' },
-                                { num: '02', title: 'Connect Device', desc: 'Link your telematics device or app', icon: BoltIcon, color: 'blue' },
-                                { num: '03', title: 'Start Driving', desc: 'Our AI tracks and analyzes your trips', icon: ChartBarIcon, color: 'purple' },
-                                { num: '04', title: 'Save Money', desc: 'Watch your premiums drop month by month', icon: TrophyIcon, color: 'pink' }
+                                {
+                                    num: '01',
+                                    title: 'Sign Up',
+                                    desc: 'Create your account in 60 seconds',
+                                    icon: CpuChipIcon,
+                                    gradient: 'from-cyan-500 to-blue-500',
+                                    shadow: 'cyan',
+                                    features: ['No credit card required', 'Email verification only']
+                                },
+                                {
+                                    num: '02',
+                                    title: 'Connect Device',
+                                    desc: 'Link your telematics device or app',
+                                    icon: BoltIcon,
+                                    gradient: 'from-blue-500 to-indigo-500',
+                                    shadow: 'blue',
+                                    features: ['Works with most devices', 'Mobile app available']
+                                },
+                                {
+                                    num: '03',
+                                    title: 'Start Driving',
+                                    desc: 'Our AI tracks and analyzes your trips',
+                                    icon: ChartBarIcon,
+                                    gradient: 'from-purple-500 to-fuchsia-500',
+                                    shadow: 'purple',
+                                    features: ['Real-time analysis', 'Privacy protected']
+                                },
+                                {
+                                    num: '04',
+                                    title: 'Save Money',
+                                    desc: 'Watch your premiums drop month by month',
+                                    icon: TrophyIcon,
+                                    gradient: 'from-pink-500 to-rose-500',
+                                    shadow: 'pink',
+                                    features: ['Up to 40% savings', 'Instant rewards']
+                                }
                             ].map((step, idx) => (
-                                <div key={idx} className="relative">
-                                    {/* Step Number Circle */}
-                                    <div className={`relative z-10 w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-${step.color}-500 to-${step.color}-600 rounded-full flex items-center justify-center text-2xl font-black shadow-lg shadow-${step.color}-500/50`}>
-                                        {step.num}
-                                    </div>
-
-                                    <div className="relative group">
-                                        <div className={`absolute inset-0 bg-gradient-to-r from-${step.color}-500 to-${step.color}-600 rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity`} />
-                                        <div className={`relative p-8 bg-slate-900/50 backdrop-blur-xl border border-${step.color}-500/20 rounded-3xl hover:border-${step.color}-500/40 transition-all duration-300 text-center`}>
-                                            <step.icon className="w-12 h-12 mx-auto mb-4 text-cyan-400" />
-                                            <h3 className="text-2xl font-bold mb-3 text-white">{step.title}</h3>
-                                            <p className="text-gray-400">{step.desc}</p>
+                                <div key={idx} className="relative group">
+                                    {/* Premium Number Circle */}
+                                    <div className="relative z-20 mb-8">
+                                        <div className="w-20 h-20 mx-auto relative">
+                                            {/* Outer glow ring */}
+                                            <div className={`absolute inset-0 bg-gradient-to-r ${step.gradient} rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity`} />
+                                            {/* Number circle */}
+                                            <div className={`relative w-full h-full bg-gradient-to-br ${step.gradient} rounded-full flex items-center justify-center shadow-2xl border-4 border-slate-900 transform group-hover:scale-110 transition-transform duration-300`}>
+                                                <span className="text-2xl font-black text-white">{step.num}</span>
+                                            </div>
+                                            {/* Pulse effect */}
+                                            <div className={`absolute inset-0 bg-gradient-to-r ${step.gradient} rounded-full opacity-0 group-hover:opacity-20 animate-ping`} />
                                         </div>
                                     </div>
+
+                                    {/* Enhanced Card */}
+                                    <div className="relative h-full">
+                                        {/* Glow effect */}
+                                        <div className={`absolute inset-0 bg-gradient-to-br ${step.gradient} rounded-3xl blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500`} />
+
+                                        {/* Card content */}
+                                        <div className="relative h-full p-8 bg-slate-900/60 backdrop-blur-xl border-2 border-slate-800 rounded-3xl hover:border-slate-700 transition-all duration-300 overflow-hidden">
+                                            {/* Top accent line */}
+                                            <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${step.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
+
+                                            {/* Icon */}
+                                            <div className="mb-6">
+                                                <div className={`inline-flex p-4 bg-gradient-to-br ${step.gradient} rounded-2xl shadow-lg transform group-hover:rotate-6 transition-transform duration-300`}>
+                                                    <step.icon className="w-10 h-10 text-white" />
+                                                </div>
+                                            </div>
+
+                                            {/* Title */}
+                                            <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 group-hover:bg-clip-text transition-all">
+                                                {step.title}
+                                            </h3>
+
+                                            {/* Description */}
+                                            <p className="text-gray-400 mb-6 leading-relaxed">
+                                                {step.desc}
+                                            </p>
+
+                                            {/* Features */}
+                                            <div className="space-y-2">
+                                                {step.features.map((feature, i) => (
+                                                    <div key={i} className="flex items-center gap-2 text-sm">
+                                                        <div className={`w-1.5 h-1.5 bg-gradient-to-r ${step.gradient} rounded-full`} />
+                                                        <span className="text-gray-500">{feature}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Bottom corner decoration */}
+                                            <div className={`absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl ${step.gradient} opacity-5 rounded-tl-full`} />
+                                        </div>
+                                    </div>
+
+                                    {/* Arrow connector - only show between cards */}
+                                    {idx < 3 && (
+                                        <div className="hidden lg:block absolute top-28 -right-4 z-10">
+                                            <div className="relative">
+                                                <div className={`absolute inset-0 bg-gradient-to-r ${step.gradient} blur-md opacity-40`} />
+                                                <ArrowRightIcon className="relative w-8 h-8 text-gray-600" />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
