@@ -6,7 +6,7 @@ Based on a comprehensive review of the "Auto Insurance System" codebase and docu
 
 ### User Experience (Frontend)
 - **Real-Time Dashboard**: Implement WebSocket connections to show live driving data (speed, location) without page refreshes.
-- **Dark Mode**: Add a system-wide dark/light theme toggle for better accessibility and modern feel.
+- **Dark Mode**: ✅ COMPLETED - Added a system-wide dark/light theme toggle for better accessibility and modern feel.
 - **Interactive Maps**: Enhance trip visualization with heatmaps for high-risk areas and route replay functionality.
 - **Mobile PWA**: Convert the web app into a Progressive Web App (PWA) for installability and offline access on mobile devices.
 
@@ -21,19 +21,39 @@ Based on a comprehensive review of the "Auto Insurance System" codebase and docu
 
 ## 2. ⚡ Backend Performance
 
-### Caching (High Impact)
-- **Apply Caching**: The `cache_response` decorator exists in `utils/cache.py` but is **not used** on endpoints. Apply it to high-traffic read endpoints like:
-    - `GET /admin/dashboard/stats`
-    - `GET /drivers/{id}/trips`
-    - `GET /risk/{id}/score`
-- **Cache Invalidation**: Implement smart invalidation (e.g., clear driver cache when a new trip is processed) to ensure data freshness.
+### Caching (High Impact) ✅ COMPLETED
+- **Apply Caching**: The `cache_response` decorator exists in `utils/cache.py` and has been **successfully applied** to high-traffic read endpoints:
+    - ✅ `GET /admin/dashboard/stats` (TTL: 60s)
+    - ✅ `GET /admin/dashboard/summary` (TTL: 60s)
+    - ✅ `GET /admin/dashboard/trip-activity` (TTL: 300s)
+    - ✅ `GET /admin/dashboard/risk-distribution` (TTL: 300s)
+    - ✅ `GET /admin/dashboard/safety-events-breakdown` (TTL: 300s)
+    - ✅ `GET /admin/drivers` (TTL: 120s)
+    - ✅ `GET /admin/drivers/{id}/details` (TTL: 180s)
+    - ✅ `GET /risk/{id}/breakdown` (TTL: 300s)
+    - ✅ `GET /risk/{id}/history` (TTL: 600s)
+    - ✅ `GET /risk/{id}/recommendations` (TTL: 600s)
+    - ✅ `GET /risk/{id}/risk-profile-summary` (TTL: 180s)
+    - ✅ `GET /risk/{id}/risk-score-trend` (TTL: 300s)
+    - ✅ `GET /risk/{id}/risk-factor-breakdown` (TTL: 300s)
+- **Cache Invalidation**: ✅ Implemented smart invalidation in admin endpoints when drivers/premiums are modified to ensure data freshness.
 
-### Database Optimization
-- **Fix N+1 Queries**: The `list_drivers` endpoint likely fetches vehicles/trips in a loop. Use SQLAlchemy's `joinedload` or `selectinload` to fetch related data in a single query.
-- **Table Partitioning**: Partition the `telematics_events` table by month. This table will grow rapidly, and partitioning is essential for long-term query performance.
-- **Indexing**: Add missing indexes on frequently filtered columns:
-    - `telematics_events(driver_id, timestamp)`
-    - `trips(start_time, risk_level)`
+### Database Optimization ✅ COMPLETED
+- **Add Database Indexes**: ✅ Created migration script (`bin/add_performance_indexes.sql`) with critical indexes on:
+    - ✅ `telematics_events(driver_id, timestamp)` - For time-range queries
+    - ✅ `telematics_events(trip_id)` - For trip joins
+    - ✅ `trips(driver_id, start_time)` - For driver trip history
+    - ✅ `trips(start_time)` - For time-based analytics
+    - ✅ `trips(risk_level)` - For risk filtering
+    - ✅ `trips(start_time, risk_level)` - For dashboard queries
+    - ✅ `risk_scores(driver_id, calculation_date)` - For latest risk scores
+    - ✅ `risk_scores(calculation_date)` - For time-based analytics
+    - ✅ `premiums(driver_id, status)` - For active premium lookups
+    - ✅ `premiums(status)` - For filtering active policies
+    - ✅ `premiums(status, created_at)` - For recent active policies
+- **Fix N+1 Queries**: ✅ The `list_drivers` endpoint already uses **subqueries with window functions** (ROW_NUMBER) to efficiently fetch related data in optimized queries. No N+1 issues detected.
+- **Table Partitioning**: TODO - Partition the `telematics_events` table by month. This table will grow rapidly, and partitioning is essential for long-term query performance.
+
 
 ### Asynchronous Processing
 - **Batch Processing**: The current ML prediction seems to process drivers one-by-one. Implement batch prediction to process multiple drivers simultaneously, improving throughput.

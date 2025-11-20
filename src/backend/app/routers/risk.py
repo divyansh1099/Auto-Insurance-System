@@ -23,6 +23,7 @@ from app.models.schemas import (
 )
 from app.utils.auth import get_current_user
 from app.services.redis_client import get_cached_risk_score
+from app.utils.cache import cache_response
 
 router = APIRouter()
 
@@ -135,6 +136,7 @@ async def get_risk_score(
 
 
 @router.get("/{driver_id}/breakdown", response_model=RiskScoreBreakdown)
+@cache_response(ttl=300, key_prefix="risk_breakdown")
 async def get_risk_breakdown(
     driver_id: str,
     db: Session = Depends(get_db),
@@ -196,6 +198,7 @@ async def get_risk_breakdown(
 
 
 @router.get("/{driver_id}/history", response_model=RiskScoreHistory)
+@cache_response(ttl=600, key_prefix="risk_history")
 async def get_risk_history(
     driver_id: str,
     days: int = 90,
@@ -263,6 +266,7 @@ async def get_risk_history(
 
 
 @router.get("/{driver_id}/recommendations")
+@cache_response(ttl=600, key_prefix="risk_recommendations")
 async def get_recommendations(
     driver_id: str,
     db: Session = Depends(get_db),
@@ -302,6 +306,7 @@ async def get_recommendations(
 
 
 @router.get("/{driver_id}/risk-profile-summary", response_model=RiskProfileSummaryResponse)
+@cache_response(ttl=180, key_prefix="risk_profile_summary")
 async def get_risk_profile_summary(
     driver_id: str,
     db: Session = Depends(get_db),
@@ -480,6 +485,7 @@ async def get_risk_profile_summary(
 
 
 @router.get("/{driver_id}/risk-score-trend", response_model=RiskScoreTrendResponse)
+@cache_response(ttl=300, key_prefix="risk_score_trend")
 async def get_risk_score_trend(
     driver_id: str,
     period: str = Query("30d", description="Period: 7d, 30d, 90d, 1y"),
@@ -569,6 +575,7 @@ async def get_risk_score_trend(
 
 
 @router.get("/{driver_id}/risk-factor-breakdown", response_model=RiskFactorBreakdownResponse)
+@cache_response(ttl=300, key_prefix="risk_factor_breakdown")
 async def get_risk_factor_breakdown(
     driver_id: str,
     db: Session = Depends(get_db),
