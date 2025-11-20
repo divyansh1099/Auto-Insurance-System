@@ -63,7 +63,7 @@ export default function Login() {
       console.log('Attempting login with:', { username: username.trim() })
       const response = await authAPI.login({ username: username.trim(), password })
       console.log('Login response:', response)
-      
+
       if (response.data?.access_token) {
         localStorage.setItem('access_token', response.data.access_token)
         // Check if user is admin and redirect accordingly
@@ -86,7 +86,7 @@ export default function Login() {
     } catch (err) {
       console.error('Login error:', err)
       console.error('Error response:', err.response)
-      
+
       const errorMessage = err.response?.data?.detail || err.response?.data?.message || err.message || 'Login failed. Please check your credentials.'
       setError(errorMessage)
     } finally {
@@ -95,43 +95,43 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center px-4 relative overflow-hidden transition-colors duration-200">
       {/* Enhanced Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
-        <div className="absolute top-1/2 right-1/3 w-80 h-80 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-6000" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-200 dark:bg-cyan-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob" />
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-200 dark:bg-violet-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-200 dark:bg-fuchsia-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
+        <div className="absolute top-1/2 right-1/3 w-80 h-80 bg-emerald-200 dark:bg-emerald-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-15 animate-blob animation-delay-6000" />
         {/* Floating particles */}
-        <div className="absolute top-20 left-20 w-2 h-2 bg-yellow-200 rounded-full animate-float opacity-40" />
-        <div className="absolute top-40 right-32 w-3 h-3 bg-pink-200 rounded-full animate-float-delay opacity-40" />
-        <div className="absolute bottom-32 left-40 w-2 h-2 bg-cyan-200 rounded-full animate-float-delay-2 opacity-40" />
+        <div className="absolute top-20 left-20 w-2 h-2 bg-yellow-200 dark:bg-yellow-600 rounded-full animate-float opacity-40" />
+        <div className="absolute top-40 right-32 w-3 h-3 bg-pink-200 dark:bg-pink-600 rounded-full animate-float-delay opacity-40" />
+        <div className="absolute bottom-32 left-40 w-2 h-2 bg-cyan-200 dark:bg-cyan-600 rounded-full animate-float-delay-2 opacity-40" />
       </div>
 
       {/* Homepage Button */}
       <Link
         to="/home"
-        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-5 py-2.5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full shadow-xl hover:shadow-2xl border-2 border-white/50 hover:border-cyan-300 transition-all group transform hover:scale-105"
+        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-5 py-2.5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full shadow-xl hover:shadow-2xl border-2 border-white/50 dark:border-gray-700/50 hover:border-cyan-300 dark:hover:border-cyan-600 transition-all group transform hover:scale-105"
       >
-        <HomeIcon className="w-5 h-5 text-cyan-600 group-hover:text-purple-600 transition-colors" />
-        <span className="text-sm font-semibold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">Home</span>
+        <HomeIcon className="w-5 h-5 text-cyan-600 dark:text-cyan-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />
+        <span className="text-sm font-semibold bg-gradient-to-r from-cyan-600 to-purple-600 dark:from-cyan-400 dark:to-purple-400 bg-clip-text text-transparent">Home</span>
       </Link>
 
       <div className="max-w-md w-full relative z-10">
         {/* Main Card with Enhanced Design */}
-        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/30 p-8 md:p-10 relative overflow-hidden">
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/30 p-8 md:p-10 relative overflow-hidden transition-colors duration-200">
           {/* Decorative gradient overlay */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-200/30 to-purple-200/30 rounded-full blur-3xl -mr-32 -mt-32" />
-          
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-200/30 dark:from-cyan-900/30 to-purple-200/30 dark:to-purple-900/30 rounded-full blur-3xl -mr-32 -mt-32" />
+
           {/* Logo/Branding */}
           <div className="text-center mb-8 relative z-10">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-500 via-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-4 shadow-xl transform hover:scale-110 transition-transform duration-300">
               <ShieldCheckIcon className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 dark:from-cyan-400 dark:via-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-2">
               SmartDrive
             </h1>
-            <p className="text-gray-600 font-medium">Welcome back! Sign in to continue</p>
+            <p className="text-gray-600 dark:text-gray-400 font-medium">Welcome back! Sign in to continue</p>
           </div>
 
           {/* Error Message */}
@@ -152,14 +152,13 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
             {/* Username Field */}
             <div className="space-y-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                <UserIcon className="w-4 h-4 text-cyan-600" />
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                <UserIcon className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 Username
               </label>
               <div className="relative group">
-                <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-all duration-300 ${
-                  focusedField === 'username' ? 'text-cyan-600 scale-110' : 'text-gray-400'
-                }`}>
+                <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-all duration-300 ${focusedField === 'username' ? 'text-cyan-600 dark:text-cyan-400 scale-110' : 'text-gray-400 dark:text-gray-500'
+                  }`}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
@@ -170,11 +169,10 @@ export default function Login() {
                   onChange={(e) => setUsername(e.target.value)}
                   onFocus={() => setFocusedField('username')}
                   onBlur={() => setFocusedField(null)}
-                  className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium ${
-                    focusedField === 'username'
-                      ? 'border-cyan-500 bg-gradient-to-r from-cyan-50 to-blue-50 shadow-lg shadow-cyan-500/20 focus:ring-4 focus:ring-cyan-500/30'
-                      : 'border-gray-200 bg-white hover:border-cyan-300 hover:shadow-md focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/20'
-                  }`}
+                  className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl transition-all duration-300 font-medium bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${focusedField === 'username'
+                      ? 'border-cyan-500 dark:border-cyan-400 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 shadow-lg shadow-cyan-500/20 focus:ring-4 focus:ring-cyan-500/30'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-cyan-300 dark:hover:border-cyan-600 hover:shadow-md focus:border-cyan-500 dark:focus:border-cyan-400 focus:ring-4 focus:ring-cyan-500/20'
+                    }`}
                   placeholder="Enter your username"
                   required
                 />
@@ -183,14 +181,13 @@ export default function Login() {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                <LockClosedIcon className="w-4 h-4 text-purple-600" />
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                <LockClosedIcon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                 Password
               </label>
               <div className="relative group">
-                <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-all duration-300 ${
-                  focusedField === 'password' ? 'text-purple-600 scale-110' : 'text-gray-400'
-                }`}>
+                <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-all duration-300 ${focusedField === 'password' ? 'text-purple-600 dark:text-purple-400 scale-110' : 'text-gray-400 dark:text-gray-500'
+                  }`}>
                   <LockClosedIcon className="w-5 h-5" />
                 </div>
                 <input
@@ -199,18 +196,17 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
-                  className={`w-full pl-12 pr-12 py-4 border-2 rounded-xl transition-all duration-300 font-medium ${
-                    focusedField === 'password'
-                      ? 'border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 shadow-lg shadow-purple-500/20 focus:ring-4 focus:ring-purple-500/30'
-                      : 'border-gray-200 bg-white hover:border-purple-300 hover:shadow-md focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20'
-                  }`}
+                  className={`w-full pl-12 pr-12 py-4 border-2 rounded-xl transition-all duration-300 font-medium bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${focusedField === 'password'
+                      ? 'border-purple-500 dark:border-purple-400 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 shadow-lg shadow-purple-500/20 focus:ring-4 focus:ring-purple-500/30'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md focus:border-purple-500 dark:focus:border-purple-400 focus:ring-4 focus:ring-purple-500/20'
+                    }`}
                   placeholder="Enter your password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-purple-600 transition-colors hover:scale-110"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 dark:text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors hover:scale-110"
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,11 +226,10 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className={`group relative w-full py-4 rounded-xl font-bold text-lg shadow-xl transition-all duration-300 overflow-hidden transform hover:scale-[1.02] ${
-                loading
+              className={`group relative w-full py-4 rounded-xl font-bold text-lg shadow-xl transition-all duration-300 overflow-hidden transform hover:scale-[1.02] ${loading
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 text-white hover:shadow-2xl'
-              }`}
+                }`}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? (
@@ -261,10 +256,10 @@ export default function Login() {
           {/* Divider */}
           <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t-2 border-gradient-to-r from-cyan-200 via-purple-200 to-pink-200"></div>
+              <div className="w-full border-t-2 border-gray-200 dark:border-gray-700"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500 font-medium">New to SmartDrive?</span>
+              <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium">New to SmartDrive?</span>
             </div>
           </div>
 
