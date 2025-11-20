@@ -423,7 +423,7 @@ export default function Homepage() {
       <section className="relative py-32 px-4 z-10 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 dark:from-gray-900 dark:via-gray-900/30 dark:to-gray-800/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-700 via-blue-700 to-purple-700 bg-clip-text text-transparent">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Real-Time Monitoring
             </h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
@@ -522,7 +522,7 @@ export default function Homepage() {
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-700 via-blue-700 to-purple-700 bg-clip-text text-transparent">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Powerful Features
             </h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
@@ -596,15 +596,19 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section ref={howItWorksRef} className="relative py-32 px-4 z-10">
+      {/* How It Works Section - Redesigned */}
+      <section ref={howItWorksRef} className="relative py-32 px-4 z-10 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 bg-clip-text text-transparent">
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-pink-900/30 border border-indigo-200 dark:border-indigo-800 mb-6">
+              <SparklesIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <span className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">Simple Process</span>
+            </div>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
               How It Works
             </h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-              Get started in minutes and start saving today
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+              Get started in minutes and start saving today with our simple 4-step process
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -619,19 +623,42 @@ export default function Homepage() {
                     animation: isVisible ? 'fadeInUp 0.6s ease-out forwards' : 'none'
                   }}
                 >
-                  <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 border-2 border-gray-200 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 h-full">
-                    <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${step.color} mb-6 shadow-lg`}>
-                      <Icon className="w-8 h-8 text-white" />
+                  <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border-2 border-gray-200/50 dark:border-gray-700/50 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-2 transition-all duration-500 h-full overflow-hidden">
+                    {/* Gradient overlay on hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-5 dark:group-hover:opacity-10 transition-opacity duration-500`} />
+
+                    {/* Icon with animated background */}
+                    <div className="relative mb-6">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-20 dark:opacity-30 blur-xl rounded-full`} />
+                      <div className={`relative inline-flex p-5 rounded-2xl bg-gradient-to-br ${step.color} shadow-lg transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300`}>
+                        <Icon className="w-8 h-8 text-white" />
+                      </div>
                     </div>
-                    <div className={`text-5xl font-bold mb-4 bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
+
+                    {/* Step number */}
+                    <div className={`text-6xl font-black mb-4 bg-gradient-to-r ${step.color} bg-clip-text text-transparent opacity-80`}>
                       {step.step}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{step.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{step.description}</p>
+
+                    {/* Content */}
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-gray-900 group-hover:to-gray-700 dark:group-hover:from-white dark:group-hover:to-gray-300 group-hover:bg-clip-text transition-all">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                      {step.description}
+                    </p>
+
+                    {/* Bottom accent line */}
+                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${step.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
                   </div>
+
+                  {/* Connection arrow */}
                   {idx < howItWorks.length - 1 && (
-                    <div className="hidden lg:block absolute top-1/2 -right-4 z-0">
-                      <ArrowRightIcon className="w-8 h-8 text-gray-300" />
+                    <div className="hidden lg:block absolute top-1/2 -right-4 z-0 transform -translate-y-1/2">
+                      <div className="relative">
+                        <div className={`absolute inset-0 bg-gradient-to-r ${step.color} opacity-20 blur-lg`} />
+                        <ArrowRightIcon className="relative w-8 h-8 text-gray-300 dark:text-gray-600 group-hover:text-gray-400 dark:group-hover:text-gray-500 transition-colors" />
+                      </div>
                     </div>
                   )}
                 </div>
