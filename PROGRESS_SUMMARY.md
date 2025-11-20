@@ -73,6 +73,11 @@
    - Better visual hierarchy
    - File: `src/frontend/src/components/DriverDetailsModal.jsx`
 
+3. **Signup/Quote Form Dark Mode** ✅
+   - Fixed input fields background/text for dark mode
+   - Updated select inputs and buttons
+   - File: `src/frontend/src/pages/Signup.jsx`
+
 ---
 
 ## 📊 Key Achievements
