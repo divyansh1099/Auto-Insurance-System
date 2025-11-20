@@ -361,7 +361,11 @@ async def process_event_realtime(
     await manager.send_driving_update(driver_id, {
         'risk_score': analysis['risk_score'],
         'safety_score': analysis['safety_score'],
-        'behavior_metrics': analysis['behavior_metrics']
+        'behavior_metrics': analysis['behavior_metrics'],
+        'location': {
+            'latitude': event.get('latitude'),
+            'longitude': event.get('longitude')
+        }
     })
 
     # Send safety alerts if any

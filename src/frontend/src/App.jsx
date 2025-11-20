@@ -17,31 +17,35 @@ import AdminPolicies from './pages/AdminPolicies'
 import Profile from './pages/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
 
+import { ThemeProvider } from './contexts/ThemeContext'
+
 function App() {
   return (
-    <Routes>
-      <Route path="/home" element={<Homepage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/" element={<ProtectedRoute />}>
-        <Route element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="driving" element={<DrivingBehavior />} />
-          <Route path="trips" element={<Trips />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="simulator" element={<DriveSimulator />} />
-          <Route path="rewards" element={<Rewards />} />
-          <Route path="live" element={<LiveDriving />} />
-          <Route path="advisor" element={<InsuranceAdvisor />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="admin" element={<AdminDashboard />} />
-          <Route path="admin/drivers" element={<AdminDrivers />} />
-          <Route path="admin/policies" element={<AdminPolicies />} />
+    <ThemeProvider>
+      <Routes>
+        <Route path="/home" element={<Homepage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="driving" element={<DrivingBehavior />} />
+            <Route path="trips" element={<Trips />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="simulator" element={<DriveSimulator />} />
+            <Route path="rewards" element={<Rewards />} />
+            <Route path="live" element={<LiveDriving />} />
+            <Route path="advisor" element={<InsuranceAdvisor />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="admin" element={<AdminDashboard />} />
+            <Route path="admin/drivers" element={<AdminDrivers />} />
+            <Route path="admin/policies" element={<AdminPolicies />} />
+          </Route>
         </Route>
-      </Route>
-      {/* Redirect any unknown routes to login */}
-      <Route path="*" element={<Navigate to="/home" replace />} />
-    </Routes>
+        {/* Redirect any unknown routes to login */}
+        <Route path="*" element={<Navigate to="/home" replace />} />
+      </Routes>
+    </ThemeProvider>
   )
 }
 

@@ -131,7 +131,7 @@ export default function DrivingBehavior() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your risk profile...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading your risk profile...</p>
         </div>
       </div>
     )
@@ -143,7 +143,7 @@ export default function DrivingBehavior() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <p className="text-red-600 text-lg font-semibold">Unable to load your risk profile</p>
-          <p className="text-gray-600 mt-2">Please ensure you are logged in and have a valid driver account.</p>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">Please ensure you are logged in and have a valid driver account.</p>
         </div>
       </div>
     )
@@ -230,8 +230,8 @@ export default function DrivingBehavior() {
     }
     return {
       icon: ArrowTrendingUpIcon,
-      color: 'text-gray-600',
-      bgColor: 'bg-gray-100',
+      color: 'text-gray-600 dark:text-gray-400',
+      bgColor: 'bg-gray-100 dark:bg-gray-700',
       label: 'Stable'
     }
   }
@@ -253,7 +253,7 @@ export default function DrivingBehavior() {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Risk Profile</h1>
-              <p className="text-gray-600 mt-1 text-lg">Detailed analysis of your driving risk factors</p>
+              <p className="text-gray-600 dark:text-gray-400 mt-1 text-lg">Detailed analysis of your driving risk factors</p>
             </div>
             <button
               onClick={handleRecalculate}
@@ -287,44 +287,44 @@ export default function DrivingBehavior() {
         </div>
 
         {/* Behavior Score Card */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex items-center gap-2 mb-4">
             <ChartBarIcon className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900">Behavior Score</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Behavior Score</h2>
           </div>
-          <div className="text-5xl font-bold text-gray-900 mb-2">{summary.behavior_score || 87}</div>
-          <p className="text-gray-600 text-sm">Driving behavior analysis</p>
+          <div className="text-5xl font-bold text-gray-900 dark:text-white mb-2">{summary.behavior_score || 87}</div>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">Driving behavior analysis</p>
         </div>
 
         {/* Trip Statistics Card */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex items-center gap-2 mb-4">
             <MapPinIcon className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900">Trip Statistics</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Trip Statistics</h2>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Total Trips</span>
-              <span className="text-lg font-bold text-gray-900">{Math.round(tripMetrics.totalTrips || 0)}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Total Trips</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalTrips || 0)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Total Miles</span>
-              <span className="text-lg font-bold text-gray-900">{Math.round(tripMetrics.totalMiles || 0)}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Total Miles</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalMiles || 0)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Avg Score</span>
-              <span className="text-lg font-bold text-gray-900">{Math.round(tripMetrics.avgTripScore || 0)}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Avg Score</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.avgTripScore || 0)}</span>
             </div>
           </div>
         </div>
 
         {/* Last Updated Card */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex items-center gap-2 mb-4">
             <CalendarIcon className="w-5 h-5 text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900">Last Updated</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Last Updated</h2>
           </div>
-          <div className="text-xl font-semibold text-gray-900 mb-2">
+          <div className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             {formatLastUpdated(summary.last_updated_date || summary.last_updated)}
           </div>
           {summary.change_from_previous !== undefined && summary.change_from_previous !== 0 && (
@@ -340,39 +340,39 @@ export default function DrivingBehavior() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Risk Score Trend Chart */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Risk Score Trend</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Risk Score Trend</h2>
           <RiskTrendChart data={trendData} />
         </div>
 
         {/* Risk Factor Breakdown Radar Chart */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Risk Factor Breakdown</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Risk Factor Breakdown</h2>
           <RiskFactorRadarChart data={categoryScores} />
         </div>
       </div>
 
       {/* Trip Performance Summary */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Trip Performance Summary</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Trip Performance Summary</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-green-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Perfect Trips</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Perfect Trips</div>
             <div className="text-3xl font-bold text-green-600">{tripMetrics.perfectTrips}</div>
             <div className="text-xs text-gray-500">Score ≥ 95</div>
           </div>
           <div className="bg-blue-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Low Risk Trips</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Low Risk Trips</div>
             <div className="text-3xl font-bold text-blue-600">{tripMetrics.lowRiskTrips}</div>
             <div className="text-xs text-gray-500">Score ≥ 80</div>
           </div>
           <div className="bg-orange-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">High Risk Trips</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">High Risk Trips</div>
             <div className="text-3xl font-bold text-orange-600">{tripMetrics.highRiskTrips}</div>
             <div className="text-xs text-gray-500">Score &lt; 60</div>
           </div>
           <div className="bg-red-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Total Incidents</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Incidents</div>
             <div className="text-3xl font-bold text-red-600">{tripMetrics.totalIncidents}</div>
             <div className="text-xs text-gray-500">All safety events</div>
           </div>
@@ -380,16 +380,16 @@ export default function DrivingBehavior() {
       </div>
 
       {/* Detailed Risk Factors Section */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Detailed Risk Factors</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Detailed Risk Factors</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Left Column */}
           <div className="space-y-6">
             {/* Speeding Frequency */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Speeding Frequency</span>
-                <span className="text-sm font-semibold text-gray-900">{detailedFactors.speeding_frequency?.toFixed(1) || 0.1}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Speeding Frequency</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.speeding_frequency?.toFixed(1) || 0.1}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
@@ -402,8 +402,8 @@ export default function DrivingBehavior() {
             {/* Acceleration Pattern */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Acceleration Pattern</span>
-                <span className="text-sm font-semibold text-gray-900">{detailedFactors.acceleration_pattern?.toFixed(1) || 0.1}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Acceleration Pattern</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.acceleration_pattern?.toFixed(1) || 0.1}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
@@ -416,8 +416,8 @@ export default function DrivingBehavior() {
             {/* High Risk Area Exposure */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">High Risk Area Exposure</span>
-                <span className="text-sm font-semibold text-gray-900">{detailedFactors.high_risk_area_exposure?.toFixed(1) || 25.0}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">High Risk Area Exposure</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.high_risk_area_exposure?.toFixed(1) || 25.0}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
@@ -430,8 +430,8 @@ export default function DrivingBehavior() {
             {/* Weather Risk Exposure */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Weather Risk Exposure</span>
-                <span className="text-sm font-semibold text-gray-900">{detailedFactors.weather_risk_exposure?.toFixed(1) || 18.0}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Weather Risk Exposure</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.weather_risk_exposure?.toFixed(1) || 18.0}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
@@ -447,8 +447,8 @@ export default function DrivingBehavior() {
             {/* Hard Braking Frequency */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Hard Braking Frequency</span>
-                <span className="text-sm font-semibold text-gray-900">{detailedFactors.hard_braking_frequency?.toFixed(1) || 0.1}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Hard Braking Frequency</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.hard_braking_frequency?.toFixed(1) || 0.1}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
@@ -461,8 +461,8 @@ export default function DrivingBehavior() {
             {/* Night Driving Percentage */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Night Driving Percentage</span>
-                <span className="text-sm font-semibold text-gray-900">{detailedFactors.night_driving_percentage?.toFixed(1) || 12.0}%</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Night Driving Percentage</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.night_driving_percentage?.toFixed(1) || 12.0}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
@@ -475,8 +475,8 @@ export default function DrivingBehavior() {
             {/* Phone Usage Incidents */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Phone Usage Incidents</span>
-                <span className="text-sm font-semibold text-gray-900">{detailedFactors.phone_usage_incidents || 0}</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Phone Usage Incidents</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{detailedFactors.phone_usage_incidents || 0}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 

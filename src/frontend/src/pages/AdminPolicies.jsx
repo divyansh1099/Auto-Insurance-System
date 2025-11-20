@@ -156,10 +156,10 @@ export default function AdminPolicies() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <DocumentTextIcon className="w-8 h-8 text-blue-600" />
+        <DocumentTextIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Policy Management</h1>
-          <p className="text-gray-600 mt-1">View and manage insurance policies</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Policy Management</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">View and manage insurance policies</p>
         </div>
       </div>
 
@@ -168,21 +168,21 @@ export default function AdminPolicies() {
         {summaryCards.map((card, index) => (
           <div
             key={index}
-            className={`${card.bgColor} rounded-xl shadow-lg p-6 flex items-center justify-between`}
+            className={`${card.bgColor} dark:bg-gray-800 rounded-xl shadow-lg p-6 flex items-center justify-between transition-colors duration-200`}
           >
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">{card.title}</p>
-              <p className={`text-3xl font-bold ${card.textColor}`}>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{card.title}</p>
+              <p className={`text-3xl font-bold ${card.textColor} dark:text-white`}>
                 {isLoadingSummary ? '...' : card.value}
               </p>
             </div>
-            <card.icon className={`w-10 h-10 ${card.textColor} opacity-50`} />
+            <card.icon className={`w-10 h-10 ${card.textColor} dark:text-gray-500 opacity-50`} />
           </div>
         ))}
       </div>
 
       {/* Search and Filter */}
-      <div className="bg-white rounded-lg shadow p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 transition-colors duration-200">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search Bar */}
           <div className="flex-1 relative">
@@ -192,7 +192,7 @@ export default function AdminPolicies() {
               placeholder="Search by policy number or driver name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
 
@@ -202,11 +202,10 @@ export default function AdminPolicies() {
               <button
                 key={filter}
                 onClick={() => setPolicyTypeFilter(filter)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  policyTypeFilter === filter
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${policyTypeFilter === filter
+                    ? 'bg-gray-900 dark:bg-blue-600 text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
               >
                 {filter}
               </button>
@@ -218,13 +217,13 @@ export default function AdminPolicies() {
       {/* Policy Cards */}
       <div className="space-y-4">
         {isLoadingPolicies ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <p className="text-gray-500">Loading policies...</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center transition-colors duration-200">
+            <p className="text-gray-500 dark:text-gray-400">Loading policies...</p>
           </div>
         ) : filteredPolicies.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <p className="text-gray-500 mb-2">No policies found</p>
-            <p className="text-sm text-gray-400">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center transition-colors duration-200">
+            <p className="text-gray-500 dark:text-gray-400 mb-2">No policies found</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">
               {search || policyTypeFilter !== 'All'
                 ? 'Try adjusting your search or filter criteria'
                 : 'Policies will appear here once created'}
@@ -234,7 +233,7 @@ export default function AdminPolicies() {
           filteredPolicies.map((policy) => (
             <div
               key={policy.premium_id}
-              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-200"
             >
               <div className="flex flex-col lg:flex-row gap-6">
                 {/* Left Section - Policy Info */}
@@ -254,43 +253,43 @@ export default function AdminPolicies() {
                   </div>
 
                   {/* Policy ID */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                     Policy #{policy.policy_id}
                   </h3>
 
                   {/* Driver Name */}
-                  <p className="text-lg text-gray-700 mb-6">{policy.driver_name}</p>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">{policy.driver_name}</p>
 
                   {/* Financial Details - 4 Boxes */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {/* Base Premium */}
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                      <p className="text-xs text-gray-500 mb-1">Base Premium</p>
-                      <p className="text-xl font-bold text-gray-900">
+                    <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Base Premium</p>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">
                         {formatCurrency(policy.base_premium)}
                       </p>
                     </div>
 
                     {/* Current Premium */}
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <p className="text-xs text-gray-500 mb-1">Current Premium</p>
-                      <p className="text-xl font-bold text-gray-900">
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Current Premium</p>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">
                         {formatCurrency(policy.current_premium)}
                       </p>
                     </div>
 
                     {/* Discount */}
-                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                      <p className="text-xs text-gray-500 mb-1">Discount</p>
-                      <p className="text-xl font-bold text-gray-900">
+                    <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Discount</p>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">
                         {policy.discount_percentage?.toFixed(0) || 0}%
                       </p>
                     </div>
 
                     {/* Annual Savings */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <p className="text-xs text-gray-500 mb-1">Annual Savings</p>
-                      <p className="text-xl font-bold text-gray-900">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Annual Savings</p>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">
                         {formatCurrency(policy.annual_savings)}
                       </p>
                     </div>
@@ -299,16 +298,16 @@ export default function AdminPolicies() {
 
                 {/* Right Section - Coverage Details (Consolidated) */}
                 <div className="lg:w-56">
-                  <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 space-y-3">
                     {/* Coverage */}
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
                           <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                         </div>
-                        <label className="text-xs font-medium text-gray-500">Coverage</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Coverage</label>
                       </div>
-                      <p className="text-sm font-semibold text-gray-900 ml-6">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white ml-6">
                         {policy.coverage_type || 'N/A'}
                       </p>
                     </div>
@@ -317,9 +316,9 @@ export default function AdminPolicies() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <CurrencyDollarIcon className="w-4 h-4 text-gray-400" />
-                        <label className="text-xs font-medium text-gray-500">Limit</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Limit</label>
                       </div>
-                      <p className="text-sm font-semibold text-gray-900 ml-6">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white ml-6">
                         {formatCurrency(policy.coverage_limit)}
                       </p>
                     </div>
@@ -328,9 +327,9 @@ export default function AdminPolicies() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <CalendarIcon className="w-4 h-4 text-gray-400" />
-                        <label className="text-xs font-medium text-gray-500">Period</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Period</label>
                       </div>
-                      <p className="text-sm font-semibold text-gray-900 ml-6">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white ml-6">
                         {formatPolicyPeriod(policy.effective_date, policy.expiration_date)}
                       </p>
                     </div>
@@ -338,8 +337,8 @@ export default function AdminPolicies() {
                     {/* Miles Used (PAYD only) */}
                     {policy.policy_type === 'PAYD' && policy.total_miles_allowed && (
                       <div>
-                        <label className="text-xs font-medium text-gray-500 mb-1 block">Miles Used</label>
-                        <p className="text-sm font-semibold text-gray-900 ml-6">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Miles Used</label>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white ml-6">
                           {formatMiles(policy.miles_used || 0)} / {formatMiles(policy.total_miles_allowed)}
                         </p>
                       </div>
@@ -355,21 +354,21 @@ export default function AdminPolicies() {
       {/* Pagination */}
       {filteredPolicies.length > 0 && (
         <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-700">
+          <div className="text-sm text-gray-700 dark:text-gray-300">
             Showing {(page - 1) * limit + 1} to {Math.min(page * limit, filteredPolicies.length)} of {filteredPolicies.length}
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800"
             >
               Previous
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={filteredPolicies.length < limit}
-              className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800"
             >
               Next
             </button>

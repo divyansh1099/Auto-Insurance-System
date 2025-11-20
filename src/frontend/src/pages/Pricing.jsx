@@ -155,7 +155,7 @@ export default function Pricing() {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Insurance Policy</h1>
-              <p className="text-gray-600 mt-1 text-lg">Your usage-based insurance details</p>
+              <p className="text-gray-600 dark:text-gray-400 mt-1 text-lg">Your usage-based insurance details</p>
             </div>
             <button
               onClick={handleRecalculate}
@@ -189,10 +189,10 @@ export default function Pricing() {
       {/* Policy Details Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Monthly Premium Card */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <CurrencyDollarIcon className="w-6 h-6 text-gray-400" />
-            <h2 className="text-xl font-semibold text-gray-900">$ Monthly Premium</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">$ Monthly Premium</h2>
           </div>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -212,13 +212,13 @@ export default function Pricing() {
         </div>
 
         {/* Your Savings Card */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Savings</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Your Savings</h2>
           <div className="space-y-4">
             {/* Discount Progress Bar */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Discount Earned</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Discount Earned</span>
                 <span className="text-sm font-bold text-green-600">{policy.discount_percentage.toFixed(0)}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
@@ -230,57 +230,57 @@ export default function Pricing() {
             </div>
             <div className="grid grid-cols-2 gap-4 pt-2">
               <div>
-                <p className="text-sm text-gray-600">Monthly Savings</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(policy.monthly_savings)}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Monthly Savings</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(policy.monthly_savings)}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Annual Savings</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(policy.annual_savings)}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Annual Savings</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(policy.annual_savings)}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Policy Period Card */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <CalendarIcon className="w-6 h-6 text-gray-400" />
-            <h2 className="text-xl font-semibold text-gray-900">Policy Period</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Policy Period</h2>
           </div>
           <div className="space-y-3">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Start Date</p>
-              <p className="text-lg font-semibold text-gray-900">{formatDate(policy.start_date)}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Start Date</p>
+              <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatDate(policy.start_date)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">End Date</p>
-              <p className="text-lg font-semibold text-gray-900">{formatDate(policy.end_date)}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">End Date</p>
+              <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatDate(policy.end_date)}</p>
             </div>
-            <div className="pt-2 border-t border-gray-200">
-              <p className="text-sm text-gray-600 mb-1">Last Updated</p>
-              <p className="text-sm font-medium text-gray-900">{formatDate(policy.last_updated)}</p>
+            <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Last Updated</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">{formatDate(policy.last_updated)}</p>
             </div>
           </div>
         </div>
 
         {/* Coverage Details Card */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <ShieldCheckIcon className="w-6 h-6 text-gray-400" />
-            <h2 className="text-xl font-semibold text-gray-900">Coverage Details</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Coverage Details</h2>
           </div>
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Coverage Type</p>
-              <p className="text-lg font-semibold text-gray-900">{policy.coverage_type}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Coverage Type</p>
+              <p className="text-lg font-semibold text-gray-900 dark:text-white">{policy.coverage_type}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Coverage Limit</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(policy.coverage_limit)}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Coverage Limit</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(policy.coverage_limit)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Deductible</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(policy.deductible)}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Deductible</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(policy.deductible)}</p>
             </div>
           </div>
         </div>

@@ -59,11 +59,11 @@ export default function Profile() {
         {/* Header */}
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 p-6">
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">My Profile</h1>
-          <p className="mt-2 text-gray-600 text-lg">Manage your account information and preferences</p>
+          <p className="mt-2 text-gray-600 dark:text-gray-400 text-lg">Manage your account information and preferences</p>
         </div>
 
       {/* Profile Card */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
         {/* Profile Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-12">
           <div className="flex items-center">
@@ -92,47 +92,47 @@ export default function Profile() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Personal Information */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <UserIcon className="w-5 h-5 mr-2 text-blue-600" />
                 Personal Information
               </h3>
               <div className="space-y-4">
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Full Name</div>
-                  <div className="flex-1 font-medium text-gray-900">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white">
                     {driver.first_name || 'N/A'} {driver.last_name || ''}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Email</div>
-                  <div className="flex-1 font-medium text-gray-900 flex items-center">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white flex items-center">
                     <EnvelopeIcon className="w-4 h-4 mr-2 text-gray-400" />
                     {driver.email || currentUser?.data?.email || 'N/A'}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Phone</div>
-                  <div className="flex-1 font-medium text-gray-900 flex items-center">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white flex items-center">
                     <PhoneIcon className="w-4 h-4 mr-2 text-gray-400" />
                     {driver.phone || 'N/A'}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Date of Birth</div>
-                  <div className="flex-1 font-medium text-gray-900 flex items-center">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white flex items-center">
                     <CalendarIcon className="w-4 h-4 mr-2 text-gray-400" />
                     {formatDate(driver.date_of_birth)}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Gender</div>
-                  <div className="flex-1 font-medium text-gray-900">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white">
                     {driver.gender || 'N/A'}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Marital Status</div>
-                  <div className="flex-1 font-medium text-gray-900">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white">
                     {driver.marital_status || 'N/A'}
                   </div>
                 </div>
@@ -141,39 +141,39 @@ export default function Profile() {
 
             {/* License & Address Information */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <IdentificationIcon className="w-5 h-5 mr-2 text-blue-600" />
                 License & Address
               </h3>
               <div className="space-y-4">
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">License Number</div>
-                  <div className="flex-1 font-medium text-gray-900">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white">
                     {driver.license_number || 'N/A'}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">License State</div>
-                  <div className="flex-1 font-medium text-gray-900">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white">
                     {driver.license_state || 'N/A'}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Years Licensed</div>
-                  <div className="flex-1 font-medium text-gray-900">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white">
                     {driver.years_licensed || 'N/A'} {driver.years_licensed ? 'years' : ''}
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="w-32 text-gray-500 text-sm">Address</div>
-                  <div className="flex-1 font-medium text-gray-900 flex items-start">
+                  <div className="flex-1 font-medium text-gray-900 dark:text-white flex items-start">
                     <MapPinIcon className="w-4 h-4 mr-2 text-gray-400 mt-0.5 flex-shrink-0" />
                     <div>
                       {driver.address && (
                         <div>{driver.address}</div>
                       )}
                       {(driver.city || driver.state || driver.zip_code) && (
-                        <div className="text-gray-600">
+                        <div className="text-gray-600 dark:text-gray-400">
                           {[driver.city, driver.state, driver.zip_code].filter(Boolean).join(', ')}
                         </div>
                       )}
@@ -186,30 +186,30 @@ export default function Profile() {
           </div>
 
           {/* Account Information */}
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
+          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Account Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-start">
                 <div className="w-32 text-gray-500 text-sm">Driver ID</div>
-                <div className="flex-1 font-medium text-gray-900 font-mono">
+                <div className="flex-1 font-medium text-gray-900 dark:text-white font-mono">
                   {driverId}
                 </div>
               </div>
               <div className="flex items-start">
                 <div className="w-32 text-gray-500 text-sm">Username</div>
-                <div className="flex-1 font-medium text-gray-900">
+                <div className="flex-1 font-medium text-gray-900 dark:text-white">
                   {currentUser?.data?.username || 'N/A'}
                 </div>
               </div>
               <div className="flex items-start">
                 <div className="w-32 text-gray-500 text-sm">Account Created</div>
-                <div className="flex-1 font-medium text-gray-900">
+                <div className="flex-1 font-medium text-gray-900 dark:text-white">
                   {formatDate(driver.created_at)}
                 </div>
               </div>
               <div className="flex items-start">
                 <div className="w-32 text-gray-500 text-sm">Last Updated</div>
-                <div className="flex-1 font-medium text-gray-900">
+                <div className="flex-1 font-medium text-gray-900 dark:text-white">
                   {formatDate(driver.updated_at)}
                 </div>
               </div>

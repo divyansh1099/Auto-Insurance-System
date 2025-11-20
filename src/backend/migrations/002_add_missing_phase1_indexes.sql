@@ -78,3 +78,5 @@ ANALYZE users;
 ANALYZE driver_statistics;
 ANALYZE telematics_events;
 
+
+

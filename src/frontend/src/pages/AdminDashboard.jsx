@@ -412,11 +412,11 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-1 flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
             <span>System-wide metrics and analytics</span>
             {lastUpdated && (
-              <span className="text-xs text-gray-500 flex items-center gap-1">
+              <span className="text-xs text-gray-500 dark:text-gray-500 flex items-center gap-1">
                 <ClockIcon className="w-3 h-3" />
                 Updated {lastUpdated.toLocaleTimeString()}
               </span>
@@ -425,7 +425,7 @@ export default function AdminDashboard() {
         </div>
         <div className="flex flex-wrap gap-3">
           {/* Auto-refresh indicator */}
-          <div className="inline-flex items-center px-3 py-2 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white">
+          <div className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800">
             <ArrowPathIcon className="w-4 h-4 mr-2 animate-spin-slow" />
             Auto-refresh in {autoRefreshCountdown}s
           </div>
@@ -433,7 +433,7 @@ export default function AdminDashboard() {
           {/* Refresh button */}
           <button
             onClick={handleRefreshAll}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
           >
             <ArrowPathIcon className="w-4 h-4 mr-2" />
             Refresh Now
@@ -475,9 +475,8 @@ export default function AdminDashboard() {
                   <p className="text-sm text-white/70">{card.subtitle}</p>
                   {card.trend && (
                     <span
-                      className={`text-xs font-semibold px-2 py-1 rounded ${
-                        card.trendPositive === false ? 'bg-red-500/20' : 'bg-green-500/20'
-                      }`}
+                      className={`text-xs font-semibold px-2 py-1 rounded ${card.trendPositive === false ? 'bg-red-500/20' : 'bg-green-500/20'
+                        }`}
                     >
                       {card.trend}
                     </span>
@@ -492,15 +491,15 @@ export default function AdminDashboard() {
       {/* Middle Row - Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Trip Activity - Line Chart */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Trip Activity ({tripActivityDays} Days)
             </h2>
             <select
               value={tripActivityDays}
               onChange={(e) => setTripActivityDays(Number(e.target.value))}
-              className="px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value={7}>7 Days</option>
               <option value={14}>14 Days</option>
@@ -510,12 +509,12 @@ export default function AdminDashboard() {
           {isLoadingTripActivity ? (
             <ChartSkeleton />
           ) : tripActivityError ? (
-            <div className="h-64 flex flex-col items-center justify-center text-gray-500">
+            <div className="h-64 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
               <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mb-2" />
               <p>Failed to load trip activity</p>
               <button
                 onClick={() => refetchTripActivity()}
-                className="mt-2 text-sm text-blue-600 hover:underline"
+                className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Try again
               </button>
@@ -523,14 +522,16 @@ export default function AdminDashboard() {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={tripActivityData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                <YAxis domain={[0, 'dataMax + 10']} tick={{ fontSize: 12 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
+                <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9CA3AF' }} />
+                <YAxis domain={[0, 'dataMax + 10']} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
                 <Tooltip
+                  contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F3F4F6' }}
+                  itemStyle={{ color: '#F3F4F6' }}
                   formatter={(value) => [value, 'Trips']}
                   labelFormatter={(label) => `Date: ${label}`}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ color: '#9CA3AF' }} />
                 <Line
                   type="monotone"
                   dataKey="trip_count"
@@ -545,23 +546,23 @@ export default function AdminDashboard() {
         </div>
 
         {/* Risk Distribution - Pie Chart */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Risk Distribution</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Risk Distribution</h2>
           {isLoadingRiskDistribution ? (
             <ChartSkeleton />
           ) : riskDistributionError ? (
-            <div className="h-64 flex flex-col items-center justify-center text-gray-500">
+            <div className="h-64 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
               <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mb-2" />
               <p>Failed to load risk distribution</p>
               <button
                 onClick={() => refetchRiskDistribution()}
-                className="mt-2 text-sm text-blue-600 hover:underline"
+                className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Try again
               </button>
             </div>
           ) : riskDistributionData.length === 0 ? (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400">
               No risk distribution data available
             </div>
           ) : (
@@ -582,12 +583,14 @@ export default function AdminDashboard() {
                   ))}
                 </Pie>
                 <Tooltip
+                  contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F3F4F6' }}
+                  itemStyle={{ color: '#F3F4F6' }}
                   formatter={(value, name, props) => [
                     `${value} drivers (${props.payload.percentage.toFixed(0)}%)`,
                     props.payload.name,
                   ]}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ color: '#9CA3AF' }} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -597,20 +600,20 @@ export default function AdminDashboard() {
       {/* Bottom Row - Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Safety Events Breakdown - Bar Chart */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <span className="text-orange-500">▲</span>
             Safety Events Breakdown
           </h2>
           {isLoadingSafetyEvents ? (
             <ChartSkeleton />
           ) : safetyEventsError ? (
-            <div className="h-64 flex flex-col items-center justify-center text-gray-500">
+            <div className="h-64 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
               <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mb-2" />
               <p>Failed to load safety events</p>
               <button
                 onClick={() => refetchSafetyEvents()}
-                className="mt-2 text-sm text-blue-600 hover:underline"
+                className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Try again
               </button>
@@ -618,17 +621,21 @@ export default function AdminDashboard() {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={safetyEventsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.2} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: '#9CA3AF' }}
                   angle={-45}
                   textAnchor="end"
                   height={80}
                 />
-                <YAxis domain={[0, 'dataMax + 2']} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(value) => [value, 'Events']} />
-                <Legend />
+                <YAxis domain={[0, 'dataMax + 2']} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F3F4F6' }}
+                  itemStyle={{ color: '#F3F4F6' }}
+                  formatter={(value) => [value, 'Events']}
+                />
+                <Legend wrapperStyle={{ color: '#9CA3AF' }} />
                 <Bar dataKey="count" fill="#F59E0B" name="Event Count" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -636,23 +643,23 @@ export default function AdminDashboard() {
         </div>
 
         {/* Policy Type Distribution - Pie Chart */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Policy Type Distribution</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Policy Type Distribution</h2>
           {isLoadingPolicyTypes ? (
             <ChartSkeleton />
           ) : policyTypesError ? (
-            <div className="h-64 flex flex-col items-center justify-center text-gray-500">
+            <div className="h-64 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
               <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mb-2" />
               <p>Failed to load policy types</p>
               <button
                 onClick={() => refetchPolicyTypes()}
-                className="mt-2 text-sm text-blue-600 hover:underline"
+                className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Try again
               </button>
             </div>
           ) : policyTypeData.length === 0 ? (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400">
               No policy type data available
             </div>
           ) : (
@@ -673,9 +680,11 @@ export default function AdminDashboard() {
                   ))}
                 </Pie>
                 <Tooltip
+                  contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F3F4F6' }}
+                  itemStyle={{ color: '#F3F4F6' }}
                   formatter={(value, name, props) => [`${value} policies`, props.payload.name]}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ color: '#9CA3AF' }} />
               </PieChart>
             </ResponsiveContainer>
           )}

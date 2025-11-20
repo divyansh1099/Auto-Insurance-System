@@ -40,7 +40,74 @@ async def list_drivers(
     current_user: User = Depends(get_current_admin_user)
 ):
     """List all drivers with enriched data (performance metrics and policy info)."""
-    query = db.query(Driver)
+    
+    # 1. Subquery for latest risk score
+    risk_sub = (
+        db.query(
+            RiskScore.driver_id,
+            RiskScore.risk_score,
+            func.row_number().over(
+                partition_by=RiskScore.driver_id,
+                order_by=RiskScore.calculation_date.desc()
+            ).label('rn')
+        ).subquery()
+    )
+    
+    # 2. Subquery for total trips
+    trips_sub = (
+        db.query(
+            Trip.driver_id,
+            func.count(Trip.trip_id).label('total_trips')
+        ).group_by(Trip.driver_id).subquery()
+    )
+    
+    # 3. Subquery for active premium
+    premium_sub_inner = (
+        db.query(
+            Premium.driver_id,
+            Premium.monthly_premium,
+            Premium.final_premium,
+            Premium.base_premium,
+            Premium.policy_type,
+            Premium.status,
+            func.row_number().over(
+                partition_by=Premium.driver_id,
+                order_by=Premium.created_at.desc()
+            ).label('rn')
+        )
+        .filter(Premium.status == 'active')
+        .subquery()
+    )
+    
+    premium_sub = (
+        db.query(
+            premium_sub_inner.c.driver_id,
+            premium_sub_inner.c.monthly_premium,
+            premium_sub_inner.c.final_premium,
+            premium_sub_inner.c.base_premium,
+            premium_sub_inner.c.policy_type,
+            premium_sub_inner.c.status
+        )
+        .filter(premium_sub_inner.c.rn == 1)
+        .subquery()
+    )
+
+    # Main query joining everything
+    query = (
+        db.query(
+            Driver,
+            risk_sub.c.risk_score,
+            func.coalesce(trips_sub.c.total_trips, 0).label('total_trips'),
+            premium_sub.c.monthly_premium,
+            premium_sub.c.final_premium,
+            premium_sub.c.base_premium,
+            premium_sub.c.policy_type,
+            premium_sub.c.status
+        )
+        .outerjoin(risk_sub, (Driver.driver_id == risk_sub.c.driver_id) & (risk_sub.c.rn == 1))
+        .outerjoin(trips_sub, Driver.driver_id == trips_sub.c.driver_id)
+        .outerjoin(premium_sub, Driver.driver_id == premium_sub.c.driver_id)
+    )
 
     # Filter to only show drivers DRV-0001 through DRV-0007
     allowed_driver_ids = [f"DRV-{i:04d}" for i in range(1, 8)]  # DRV-0001 to DRV-0007
@@ -54,65 +121,29 @@ async def list_drivers(
             (Driver.email.ilike(f"%{search}%"))
         )
 
-    drivers = query.order_by(Driver.driver_id.asc()).offset(skip).limit(limit).all()
+    results = query.order_by(Driver.driver_id.asc()).offset(skip).limit(limit).all()
 
     # Enrich each driver with performance metrics and policy info
     enriched_drivers = []
-    for driver in drivers:
-        # Get latest risk score
-        latest_risk_score = (
-            db.query(RiskScore.risk_score)
-            .filter(RiskScore.driver_id == driver.driver_id)
-            .order_by(RiskScore.calculation_date.desc())
-            .first()
-        )
-
-        risk_score = latest_risk_score[0] if latest_risk_score else 50.0
-        safety_score = max(0, min(100, 100 - risk_score))  # Inverse of risk score
-
-        # Get total trips count
-        total_trips = (
-            db.query(func.count(Trip.trip_id))
-            .filter(Trip.driver_id == driver.driver_id)
-            .scalar() or 0
-        )
-
-        # Calculate reward points (mock calculation: safety_score * 5 + trips * 2)
+    for row in results:
+        driver = row.Driver
+        risk_score = row.risk_score if row.risk_score is not None else 50.0
+        safety_score = max(0, min(100, 100 - risk_score))
+        total_trips = row.total_trips
+        
+        # Calculate reward points
         reward_points = int(safety_score * 5 + total_trips * 2)
-
-        # Get active policy information
-        active_premium = (
-            db.query(Premium)
-            .filter(
-                Premium.driver_id == driver.driver_id,
-                Premium.status == 'active'
-            )
-            .order_by(Premium.created_at.desc())
-            .first()
-        )
-
-        policy_type = None
-        policy_status = None
-        monthly_premium = None
-        discount_percentage = None
-
-        if active_premium:
-            policy_status = active_premium.status
-            monthly_premium = active_premium.monthly_premium or active_premium.final_premium
-
-            # Try to get policy_type, default to PHYD if not available
-            try:
-                policy_type = getattr(active_premium, 'policy_type', None) or 'PHYD'
-            except AttributeError:
-                policy_type = 'PHYD'
-
-            # Calculate discount percentage
-            if active_premium.base_premium and monthly_premium:
-                discount_percentage = (
-                    (active_premium.base_premium - monthly_premium) / active_premium.base_premium
-                ) * 100
-            else:
-                discount_percentage = 0.0
+        
+        # Policy info
+        policy_status = row.status
+        monthly_premium = row.monthly_premium or row.final_premium
+        policy_type = row.policy_type or 'PHYD'
+        
+        discount_percentage = 0.0
+        if row.base_premium and monthly_premium:
+            discount_percentage = (
+                (row.base_premium - monthly_premium) / row.base_premium
+            ) * 100
 
         enriched_drivers.append(DriverCardResponse(
             driver_id=driver.driver_id,

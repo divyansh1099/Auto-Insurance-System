@@ -85,8 +85,8 @@ export default function Rewards() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Rewards & Achievements</h1>
-          <p className="text-gray-600 mt-1">Earn points and unlock rewards through safe driving</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Rewards & Achievements</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Earn points and unlock rewards through safe driving</p>
         </div>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
           <p className="text-yellow-800">
@@ -175,7 +175,7 @@ export default function Rewards() {
         {/* Header */}
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 p-6">
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Rewards & Achievements</h1>
-          <p className="text-gray-600 mt-1 text-lg">Earn points and unlock rewards through safe driving</p>
+          <p className="text-gray-600 dark:text-gray-400 mt-1 text-lg">Earn points and unlock rewards through safe driving</p>
         </div>
 
       {/* Current Reward Points Card */}
@@ -190,7 +190,7 @@ export default function Rewards() {
               <p className="text-6xl font-bold mb-3">{summary.current_points}</p>
               <div className="w-64 bg-white/20 rounded-full h-2 mb-2">
                 <div 
-                  className="bg-white h-2 rounded-full transition-all"
+                  className="bg-white dark:bg-gray-800 h-2 rounded-full transition-all"
                   style={{ width: `${summary.next_milestone?.progress_percentage || 90}%` }}
                 />
               </div>
@@ -208,32 +208,32 @@ export default function Rewards() {
       </div>
 
       {/* Trip Performance Metrics */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="flex items-center gap-2 mb-4">
           <MapPinIcon className="w-6 h-6 text-gray-400" />
-          <h2 className="text-2xl font-bold text-gray-900">Trip Performance</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Trip Performance</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Total Trips</div>
-            <div className="text-2xl font-bold text-gray-900">{Math.round(tripMetrics.totalTrips || 0)}</div>
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Trips</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalTrips || 0)}</div>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Total Miles</div>
-            <div className="text-2xl font-bold text-gray-900">{Math.round(tripMetrics.totalMiles || 0)}</div>
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Miles</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{Math.round(tripMetrics.totalMiles || 0)}</div>
           </div>
           <div className="bg-green-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Perfect Trips</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Perfect Trips</div>
             <div className="text-2xl font-bold text-green-600">{Math.round(tripMetrics.perfectTrips || 0)}</div>
             <div className="text-xs text-gray-500">Score ≥ 95</div>
           </div>
           <div className="bg-blue-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Excellent Trips</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Excellent Trips</div>
             <div className="text-2xl font-bold text-blue-600">{Math.round(tripMetrics.excellentTrips || 0)}</div>
             <div className="text-xs text-gray-500">Score ≥ 80</div>
           </div>
           <div className="bg-yellow-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-1">Avg Score</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Avg Score</div>
             <div className="text-2xl font-bold text-yellow-600">{Math.round(tripMetrics.avgTripScore || 0)}</div>
           </div>
         </div>
@@ -243,7 +243,7 @@ export default function Rewards() {
       <div>
         <div className="flex items-center gap-2 mb-4">
           <SparklesIcon className="w-6 h-6 text-gray-400" />
-          <h2 className="text-2xl font-bold text-gray-900">Reward Milestones</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Reward Milestones</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {milestonesList.map((milestone) => {
@@ -252,7 +252,7 @@ export default function Rewards() {
               <div
                 key={milestone.milestone_id}
                 className={`rounded-xl shadow-lg p-6 ${
-                  isUnlocked ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-700'
+                  isUnlocked ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                 }`}
               >
                 <div className="flex items-center justify-between mb-4">
@@ -273,10 +273,10 @@ export default function Rewards() {
                     <span className="px-2 py-1 bg-white/20 rounded text-xs font-semibold">Unlocked</span>
                   )}
                 </div>
-                <p className={`text-2xl font-bold mb-2 ${isUnlocked ? 'text-white' : 'text-gray-900'}`}>
+                <p className={`text-2xl font-bold mb-2 ${isUnlocked ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
                   {milestone.points_threshold} Points
                 </p>
-                <p className={`text-sm ${isUnlocked ? 'text-green-100' : 'text-gray-600'}`}>
+                <p className={`text-sm ${isUnlocked ? 'text-green-100' : 'text-gray-600 dark:text-gray-400'}`}>
                   {milestone.reward_description}
                 </p>
               </div>
@@ -289,15 +289,15 @@ export default function Rewards() {
       <div>
         <div className="flex items-center gap-2 mb-4">
           <AcademicCapIcon className="w-6 h-6 text-gray-400" />
-          <h2 className="text-2xl font-bold text-gray-900">Achievements</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Achievements</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {achievementsList.map((achievement) => {
             const isAchieved = achievement.status === 'achieved'
             const bgColor = isAchieved 
               ? (achievement.achievement_name === 'Smooth Operator' ? 'bg-blue-500' : 'bg-emerald-500')
-              : 'bg-gray-100'
-            const textColor = isAchieved ? 'text-white' : 'text-gray-700'
+              : 'bg-gray-100 dark:bg-gray-700'
+            const textColor = isAchieved ? 'text-white' : 'text-gray-700 dark:text-gray-300'
             
             return (
               <div
@@ -312,10 +312,10 @@ export default function Rewards() {
                     <CheckCircleSolid className={`w-5 h-5 ${isAchieved ? 'text-white' : 'text-gray-400'} flex-shrink-0`} />
                   )}
                 </div>
-                <p className={`text-base font-bold mb-1 ${isAchieved ? 'text-white' : 'text-gray-900'}`}>
+                <p className={`text-base font-bold mb-1 ${isAchieved ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
                   {achievement.achievement_name}
                 </p>
-                <p className={`text-xs leading-tight ${isAchieved ? 'text-white/90' : 'text-gray-600'}`}>
+                <p className={`text-xs leading-tight ${isAchieved ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'}`}>
                   {achievement.achievement_description}
                 </p>
               </div>
@@ -326,10 +326,10 @@ export default function Rewards() {
 
       {/* How to Earn Points Section */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Earn Points</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">How to Earn Points</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {rulesList.map((rule) => (
-            <div key={rule.rule_id} className="bg-white rounded-xl shadow-lg p-6">
+            <div key={rule.rule_id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <div className="flex items-center gap-3 mb-4">
                 {rule.rule_name === 'Excellent Trips' ? (
                   <StarIcon className="w-8 h-8 text-blue-500" />
@@ -339,17 +339,17 @@ export default function Rewards() {
                   <TrophyIcon className="w-8 h-8 text-purple-500" />
                 )}
               </div>
-              <p className="text-lg font-bold text-gray-900 mb-2">{rule.rule_name}</p>
-              <p className="text-sm text-gray-600">{rule.rule_description}</p>
+              <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">{rule.rule_name}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{rule.rule_description}</p>
             </div>
           ))}
           {/* Achievements Card */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <div className="flex items-center gap-3 mb-4">
               <TrophyIcon className="w-8 h-8 text-purple-500" />
             </div>
-            <p className="text-lg font-bold text-gray-900 mb-2">Achievements</p>
-            <p className="text-sm text-gray-600">Unlock special achievements for bonus points</p>
+            <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">Achievements</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Unlock special achievements for bonus points</p>
           </div>
         </div>
       </div>

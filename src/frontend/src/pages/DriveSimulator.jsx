@@ -107,8 +107,8 @@ export default function DriveSimulator() {
       <div className="flex items-center gap-3">
         <TruckIcon className="w-8 h-8 text-blue-600" />
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Drive Simulator</h1>
-          <p className="text-gray-600 mt-1">Simulate driving scenarios for POC and testing</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Drive Simulator</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Simulate driving scenarios for POC and testing</p>
         </div>
       </div>
 
@@ -116,15 +116,15 @@ export default function DriveSimulator() {
         {/* Left Side - Input Cards */}
         <div className="lg:col-span-2 space-y-6">
           {/* Select Driver & Vehicle Card */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Select Driver & Vehicle</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Select Driver & Vehicle</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Driver</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Driver</label>
                 <select
                   value={params.driver_id}
                   onChange={(e) => handleSelectChange('driver_id', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value={driverId}>Current Driver</option>
                   {driversData?.data?.map((driver) => (
@@ -135,11 +135,11 @@ export default function DriveSimulator() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Vehicle</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Vehicle</label>
                 <select
                   value={params.vehicle_id}
                   onChange={(e) => handleSelectChange('vehicle_id', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">Select a vehicle</option>
                   {vehiclesData?.data?.map((vehicle) => (
@@ -153,8 +153,8 @@ export default function DriveSimulator() {
           </div>
 
           {/* Trip Parameters Card */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Trip Parameters</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Trip Parameters</h2>
             
             {error && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
@@ -166,8 +166,8 @@ export default function DriveSimulator() {
               {/* Distance Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-gray-700">Distance (miles)</label>
-                  <span className="text-lg font-semibold text-gray-900">{params.distance_miles}</span>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Distance (miles)</label>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{params.distance_miles}</span>
                 </div>
                 <input
                   type="range"
@@ -183,8 +183,8 @@ export default function DriveSimulator() {
               {/* Duration Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-gray-700">Duration (minutes)</label>
-                  <span className="text-lg font-semibold text-gray-900">{params.duration_minutes}</span>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes)</label>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{params.duration_minutes}</span>
                 </div>
                 <input
                   type="range"
@@ -200,8 +200,8 @@ export default function DriveSimulator() {
               {/* Average Speed Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-gray-700">Average Speed (mph)</label>
-                  <span className="text-lg font-semibold text-gray-900">{params.average_speed_mph}</span>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Average Speed (mph)</label>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{params.average_speed_mph}</span>
                 </div>
                 <input
                   type="range"
@@ -217,8 +217,8 @@ export default function DriveSimulator() {
               {/* Max Speed Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-gray-700">Max Speed (mph)</label>
-                  <span className="text-lg font-semibold text-gray-900">{params.max_speed_mph}</span>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Max Speed (mph)</label>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{params.max_speed_mph}</span>
                 </div>
                 <input
                   type="range"
@@ -233,11 +233,11 @@ export default function DriveSimulator() {
 
               {/* Time of Day Dropdown */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Time of Day</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Time of Day</label>
                 <select
                   value={params.time_of_day}
                   onChange={(e) => handleSelectChange('time_of_day', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="morning">Morning</option>
                   <option value="afternoon">Afternoon</option>
@@ -249,11 +249,11 @@ export default function DriveSimulator() {
 
               {/* Weather Dropdown */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Weather</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Weather</label>
                 <select
                   value={params.weather}
                   onChange={(e) => handleSelectChange('weather', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="clear">Clear</option>
                   <option value="rain">Rain</option>
@@ -266,15 +266,15 @@ export default function DriveSimulator() {
           </div>
 
           {/* Safety Events Card */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Safety Events</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Safety Events</h2>
             
             <div className="space-y-6">
               {/* Rapid Acceleration Count Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-gray-700">Rapid Acceleration Count</label>
-                  <span className="text-lg font-semibold text-gray-900">{params.rapid_acceleration_count}</span>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rapid Acceleration Count</label>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{params.rapid_acceleration_count}</span>
                 </div>
                 <input
                   type="range"
@@ -290,8 +290,8 @@ export default function DriveSimulator() {
               {/* Sharp Turn Count Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-gray-700">Sharp Turn Count</label>
-                  <span className="text-lg font-semibold text-gray-900">{params.sharp_turn_count}</span>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Sharp Turn Count</label>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{params.sharp_turn_count}</span>
                 </div>
                 <input
                   type="range"
@@ -307,8 +307,8 @@ export default function DriveSimulator() {
               {/* Speeding Incidents Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-gray-700">Speeding Incidents</label>
-                  <span className="text-lg font-semibold text-gray-900">{params.speeding_incidents}</span>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Speeding Incidents</label>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{params.speeding_incidents}</span>
                 </div>
                 <input
                   type="range"
