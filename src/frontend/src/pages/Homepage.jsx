@@ -43,8 +43,8 @@ export default function Homepage() {
   const { data: summary } = useQuery(
     ['dashboardSummary', driverId],
     () => dashboardAPI.getSummary(driverId),
-    { 
-      retry: false, 
+    {
+      retry: false,
       enabled: isAuthenticated && !!driverId,
       staleTime: 30000
     }
@@ -98,7 +98,7 @@ export default function Homepage() {
     const duration = 2000
     const steps = 60
     const stepTime = duration / steps
-    
+
     const targetValues = {
       users: 50000,
       savings: 2500000,
@@ -111,7 +111,7 @@ export default function Homepage() {
       currentStep++
       const progress = currentStep / steps
       const easeOut = 1 - Math.pow(1 - progress, 3)
-      
+
       setCounters({
         users: Math.floor(targetValues.users * easeOut),
         savings: Math.floor(targetValues.savings * easeOut),
@@ -225,29 +225,29 @@ export default function Homepage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 overflow-hidden transition-colors duration-200">
       {/* Animated Background Elements - More vibrant colors */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"
+        <div
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400 dark:bg-cyan-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 animate-blob"
           style={{
             transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px)`
           }}
         />
-        <div 
-          className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"
+        <div
+          className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-400 dark:bg-violet-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000"
           style={{
             transform: `translate(${-mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px)`
           }}
         />
-        <div 
-          className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"
+        <div
+          className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-400 dark:bg-fuchsia-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-4000"
           style={{
             transform: `translate(${mousePosition.x * 0.4}px, ${-mousePosition.y * 0.4}px)`
           }}
         />
-        <div 
-          className="absolute top-1/2 right-1/3 w-80 h-80 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-blob animation-delay-6000"
+        <div
+          className="absolute top-1/2 right-1/3 w-80 h-80 bg-emerald-300 dark:bg-emerald-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-25 animate-blob animation-delay-6000"
           style={{
             transform: `translate(${-mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px)`
           }}
@@ -255,7 +255,7 @@ export default function Homepage() {
       </div>
 
       {/* Hero Section */}
-      <section 
+      <section
         ref={heroRef}
         className="relative min-h-screen flex items-center justify-center px-4 py-20"
       >
@@ -274,45 +274,45 @@ export default function Homepage() {
         </div>
         <div className="max-w-7xl mx-auto text-center z-10">
           {/* Animated Badge */}
-          <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 backdrop-blur-md border border-cyan-300/50 shadow-xl mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <SparklesIcon className="w-5 h-5 text-cyan-600 animate-pulse" />
-            <span className="text-sm font-semibold bg-gradient-to-r from-cyan-700 to-blue-700 bg-clip-text text-transparent">AI-Powered Telematics Insurance</span>
+          <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 dark:from-cyan-900/40 dark:via-blue-900/40 dark:to-purple-900/40 backdrop-blur-md border border-cyan-300/50 dark:border-cyan-700/50 shadow-xl mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <SparklesIcon className="w-5 h-5 text-cyan-600 dark:text-cyan-400 animate-pulse" />
+            <span className="text-sm font-semibold bg-gradient-to-r from-cyan-700 to-blue-700 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">AI-Powered Telematics Insurance</span>
           </div>
 
           {/* Main Heading */}
           <h1 className={`text-6xl md:text-7xl lg:text-8xl font-bold mb-6 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 dark:from-cyan-400 dark:via-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent animate-gradient">
               Drive Smarter,
             </span>
             <br />
-            <span className="bg-gradient-to-r from-indigo-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent animate-gradient-delay">
+            <span className="bg-gradient-to-r from-indigo-600 via-cyan-600 to-teal-600 dark:from-indigo-400 dark:via-cyan-400 dark:to-teal-400 bg-clip-text text-transparent animate-gradient-delay">
               Save More
             </span>
           </h1>
 
           {/* Subheading */}
-          <p className={`text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            Experience the future of auto insurance with real-time driving analytics, 
+          <p className={`text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            Experience the future of auto insurance with real-time driving analytics,
             personalized pricing, and rewards for safe driving.
           </p>
 
           {/* Quick Feature Highlights */}
           <div className={`flex flex-wrap justify-center gap-4 mb-8 max-w-4xl mx-auto transition-all duration-1000 delay-350 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-cyan-200/50 shadow-md hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 hover:shadow-xl hover:shadow-cyan-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full border border-cyan-200/50 dark:border-cyan-700/50 shadow-md hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 hover:shadow-xl hover:shadow-cyan-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
               <ShieldCheckIcon className="w-4 h-4 text-cyan-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
-              <span className="text-sm font-medium text-gray-700 group-hover:text-cyan-700 group-hover:font-semibold transition-all duration-300">Real-Time Tracking</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-cyan-700 dark:group-hover:text-cyan-400 group-hover:font-semibold transition-all duration-300">Real-Time Tracking</span>
             </div>
-            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-purple-200/50 shadow-md hover:border-purple-400 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 hover:shadow-xl hover:shadow-purple-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full border border-purple-200/50 dark:border-purple-700/50 shadow-md hover:border-purple-400 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 hover:shadow-xl hover:shadow-purple-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
               <CpuChipIcon className="w-4 h-4 text-purple-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
-              <span className="text-sm font-medium text-gray-700 group-hover:text-purple-700 group-hover:font-semibold transition-all duration-300">AI-Powered</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-purple-700 dark:group-hover:text-purple-400 group-hover:font-semibold transition-all duration-300">AI-Powered</span>
             </div>
-            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-emerald-200/50 shadow-md hover:border-emerald-400 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:shadow-xl hover:shadow-emerald-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full border border-emerald-200/50 dark:border-emerald-700/50 shadow-md hover:border-emerald-400 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:shadow-xl hover:shadow-emerald-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
               <CurrencyDollarIcon className="w-4 h-4 text-emerald-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
-              <span className="text-sm font-medium text-gray-700 group-hover:text-emerald-700 group-hover:font-semibold transition-all duration-300">Save Up to 40%</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 group-hover:font-semibold transition-all duration-300">Save Up to 40%</span>
             </div>
-            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-amber-200/50 shadow-md hover:border-amber-400 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 hover:shadow-xl hover:shadow-amber-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
+            <div className="group flex items-center gap-2 px-4 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full border border-amber-200/50 dark:border-amber-700/50 shadow-md hover:border-amber-400 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 hover:shadow-xl hover:shadow-amber-500/20 hover:scale-110 transition-all duration-300 cursor-pointer">
               <TrophyIcon className="w-4 h-4 text-amber-600 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300" />
-              <span className="text-sm font-medium text-gray-700 group-hover:text-amber-700 group-hover:font-semibold transition-all duration-300">Earn Rewards</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-amber-700 dark:group-hover:text-amber-400 group-hover:font-semibold transition-all duration-300">Earn Rewards</span>
             </div>
           </div>
 
@@ -332,7 +332,7 @@ export default function Homepage() {
                 </button>
                 <button
                   onClick={() => navigate('/live')}
-                  className="px-8 py-4 bg-white/90 backdrop-blur-sm text-gray-700 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl border-2 border-cyan-200 hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+                  className="px-8 py-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-700 dark:text-gray-200 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl border-2 border-cyan-200 hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
                 >
                   <BoltIcon className="w-5 h-5 text-cyan-600" />
                   Live Driving
@@ -352,7 +352,7 @@ export default function Homepage() {
                 </button>
                 <button
                   onClick={() => navigate('/login')}
-                  className="px-8 py-4 bg-white/90 backdrop-blur-sm text-gray-700 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl border-2 border-cyan-200 hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transform hover:scale-105 transition-all duration-300"
+                  className="px-8 py-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-700 dark:text-gray-200 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl border-2 border-cyan-200 hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transform hover:scale-105 transition-all duration-300"
                 >
                   Sign In
                 </button>
@@ -366,13 +366,13 @@ export default function Homepage() {
               {stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="group bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                  className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-gray-700/20 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
                   <div className={`text-3xl md:text-4xl font-bold mb-2 ${stat.color}`}>
                     {stat.value}
                     {stat.suffix && <span className="text-lg text-gray-500">/100</span>}
                   </div>
-                  <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400 font-medium">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -381,53 +381,53 @@ export default function Homepage() {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse" />
+          <div className="w-6 h-10 border-2 border-gray-400 dark:border-gray-600 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-gray-400 dark:bg-gray-600 rounded-full mt-2 animate-pulse" />
           </div>
         </div>
       </section>
 
       {/* Statistics Section */}
-      <section ref={statsRef} className="relative py-12 px-4 z-10 bg-gradient-to-br from-white/60 via-cyan-50/60 to-blue-50/60 backdrop-blur-sm">
+      <section ref={statsRef} className="relative py-12 px-4 z-10 bg-gradient-to-br from-white/60 via-cyan-50/60 to-blue-50/60 dark:from-gray-800/60 dark:via-gray-800/60 dark:to-gray-900/60 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-white/80 backdrop-blur-md rounded-xl border border-cyan-200/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-cyan-200/50 dark:border-cyan-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-1">
                 {counters.users.toLocaleString()}+
               </div>
-              <div className="text-xs md:text-sm font-semibold text-gray-700">Active Users</div>
+              <div className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300">Active Users</div>
             </div>
-            <div className="text-center p-4 bg-white/80 backdrop-blur-md rounded-xl border border-purple-200/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-purple-200/50 dark:border-purple-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-1">
                 ${(counters.savings / 1000000).toFixed(1)}M+
               </div>
-              <div className="text-xs md:text-sm font-semibold text-gray-700">Total Savings</div>
+              <div className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300">Total Savings</div>
             </div>
-            <div className="text-center p-4 bg-white/80 backdrop-blur-md rounded-xl border border-emerald-200/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-emerald-200/50 dark:border-emerald-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-1">
                 {counters.trips.toLocaleString()}+
               </div>
-              <div className="text-xs md:text-sm font-semibold text-gray-700">Trips Tracked</div>
+              <div className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300">Trips Tracked</div>
             </div>
-            <div className="text-center p-4 bg-white/80 backdrop-blur-md rounded-xl border border-amber-200/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
+            <div className="text-center p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl border border-amber-200/50 dark:border-amber-700/50 shadow-md hover:shadow-lg transform hover:scale-105 transition-all">
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-1">
                 {counters.score}%
               </div>
-              <div className="text-xs md:text-sm font-semibold text-gray-700">Avg Safety Score</div>
+              <div className="text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300">Avg Safety Score</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Real-Time Monitoring Section */}
-      <section className="relative py-32 px-4 z-10 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30">
+      <section className="relative py-32 px-4 z-10 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 dark:from-gray-900 dark:via-gray-900/30 dark:to-gray-800/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-700 via-blue-700 to-purple-700 bg-clip-text text-transparent">
               Real-Time Monitoring
             </h2>
-            <p className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto">
-              Our advanced telematics system tracks your driving behavior in real-time, 
+            <p className="text-xl text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
+              Our advanced telematics system tracks your driving behavior in real-time,
               providing instant feedback and helping you become a safer driver.
             </p>
           </div>
@@ -435,8 +435,8 @@ export default function Homepage() {
           {/* Simple Car Illustration - Static but elegant */}
           <div className="mb-16 flex justify-center">
             <div className="relative">
-              <svg 
-                viewBox="0 0 400 200" 
+              <svg
+                viewBox="0 0 400 200"
                 className="w-full max-w-3xl mx-auto"
                 style={{
                   filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.1))'
@@ -466,7 +466,7 @@ export default function Homepage() {
                   </circle>
                   <path d="M 200 50 L 200 100" stroke="#10b981" strokeWidth="2" strokeDasharray="5,5" />
                 </g>
-                
+
                 {/* Gradient Definitions */}
                 <defs>
                   <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -494,21 +494,21 @@ export default function Homepage() {
               <div className="inline-flex p-4 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl mb-6">
                 <CpuChipIcon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">AI Analysis</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">AI Analysis</h3>
               <p className="text-gray-600">Machine learning algorithms analyze every trip in real-time for accurate risk assessment</p>
             </div>
             <div className="p-8 bg-white/80 backdrop-blur-md rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl mb-6">
                 <BoltIcon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Instant Feedback</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Instant Feedback</h3>
               <p className="text-gray-600">Get real-time alerts and recommendations to improve your driving habits</p>
             </div>
             <div className="p-8 bg-white/80 backdrop-blur-md rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl mb-6">
                 <ChartBarIcon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Detailed Insights</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Detailed Insights</h3>
               <p className="text-gray-600">Comprehensive analytics and reports help you understand your driving patterns</p>
             </div>
           </div>
@@ -516,7 +516,7 @@ export default function Homepage() {
       </section>
 
       {/* Features Section */}
-      <section 
+      <section
         ref={featuresRef}
         className="relative py-32 px-4 z-10"
       >
@@ -525,7 +525,7 @@ export default function Homepage() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-700 via-blue-700 to-purple-700 bg-clip-text text-transparent">
               Powerful Features
             </h2>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
               Everything you need to monitor, improve, and save on your insurance
             </p>
           </div>
@@ -536,7 +536,7 @@ export default function Homepage() {
               return (
                 <div
                   key={idx}
-                  className="group relative bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-md rounded-3xl p-8 border-2 border-gray-200/50 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+                  className="group relative bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900/50 backdrop-blur-md rounded-3xl p-8 border-2 border-gray-200/50 dark:border-gray-700/50 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-2 transition-all duration-500 overflow-hidden"
                   style={{
                     animationDelay: `${feature.delay}ms`,
                     animation: isVisible ? 'fadeInUp 0.6s ease-out forwards' : 'none'
@@ -544,17 +544,17 @@ export default function Homepage() {
                 >
                   {/* Gradient Background on Hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-15 transition-opacity duration-500`} />
-                  
+
                   {/* Icon */}
                   <div className={`relative z-10 inline-flex p-5 rounded-2xl bg-gradient-to-br ${feature.color} mb-6 transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg`}>
                     <Icon className="w-8 h-8 text-white" />
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 relative z-10 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-gray-900 group-hover:to-gray-700 group-hover:bg-clip-text transition-all">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 relative z-10 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-gray-900 group-hover:to-gray-700 group-hover:bg-clip-text transition-all">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed relative z-10">
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed relative z-10">
                     {feature.description}
                   </p>
 
@@ -603,7 +603,7 @@ export default function Homepage() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 bg-clip-text text-transparent">
               How It Works
             </h2>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
               Get started in minutes and start saving today
             </p>
           </div>
@@ -626,8 +626,8 @@ export default function Homepage() {
                     <div className={`text-5xl font-bold mb-4 bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
                       {step.step}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{step.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{step.description}</p>
                   </div>
                   {idx < howItWorks.length - 1 && (
                     <div className="hidden lg:block absolute top-1/2 -right-4 z-0">
@@ -642,32 +642,32 @@ export default function Homepage() {
       </section>
 
       {/* Trust & Security Section */}
-      <section className="relative py-20 px-4 z-10 bg-gradient-to-br from-gray-50 to-white">
+      <section className="relative py-20 px-4 z-10 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Trusted & Secure
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               Your data is protected with enterprise-grade security
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transform hover:scale-105 transition-all">
+            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl mb-4">
                 <LockClosedIcon className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Bank-Level Security</h3>
               <p className="text-gray-600">256-bit encryption protects your data</p>
             </div>
-            <div className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transform hover:scale-105 transition-all">
+            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl mb-4">
                 <ShieldCheckIcon className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Privacy First</h3>
               <p className="text-gray-600">Your data is never sold or shared</p>
             </div>
-            <div className="text-center p-6 bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transform hover:scale-105 transition-all">
+            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transform hover:scale-105 transition-all">
               <div className="inline-flex p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mb-4">
                 <AcademicCapIcon className="w-8 h-8 text-white" />
               </div>
@@ -682,7 +682,7 @@ export default function Homepage() {
       <section className="relative py-32 px-4 z-10">
         <div className="max-w-5xl mx-auto">
           <div className="bg-gradient-to-r from-cyan-600 via-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 md:p-16 text-center text-white shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 relative overflow-hidden">
-            <div 
+            <div
               className="absolute inset-0 opacity-20"
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
@@ -704,15 +704,15 @@ export default function Homepage() {
                     <PlayIcon className="w-5 h-5" />
                     Try Drive Simulator
                   </button>
-              ) : (
-                <button
-                  onClick={() => navigate('/signup')}
-                  className="px-8 py-4 bg-white text-cyan-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  Get Your Quote
-                  <ArrowRightIcon className="w-5 h-5" />
-                </button>
-              )}
+                ) : (
+                  <button
+                    onClick={() => navigate('/signup')}
+                    className="px-8 py-4 bg-white text-cyan-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    Get Your Quote
+                    <ArrowRightIcon className="w-5 h-5" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -720,7 +720,7 @@ export default function Homepage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative py-12 px-4 border-t-2 border-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 backdrop-blur-sm z-10">
+      <footer className="relative py-12 px-4 border-t-2 border-gradient-to-r from-cyan-200 via-blue-200 to-purple-200 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 dark:from-gray-900 dark:via-gray-900/30 dark:to-gray-800/30 backdrop-blur-sm z-10">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-10 h-10 bg-gradient-to-br from-cyan-600 via-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -728,13 +728,13 @@ export default function Homepage() {
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-cyan-700 via-blue-700 to-purple-700 bg-clip-text text-transparent">SmartDrive</span>
           </div>
-          <p className="text-gray-700 font-medium">
+          <p className="text-gray-700 dark:text-gray-300 font-medium">
             © 2024 SmartDrive Telematics. All rights reserved.
           </p>
-          <div className="mt-4 flex justify-center gap-6 text-sm text-gray-600">
-            <span className="hover:text-cyan-600 cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-cyan-600 cursor-pointer transition-colors">Terms of Service</span>
-            <span className="hover:text-cyan-600 cursor-pointer transition-colors">Contact Us</span>
+          <div className="mt-4 flex justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+            <span className="hover:text-cyan-600 dark:hover:text-cyan-400 cursor-pointer transition-colors">Privacy Policy</span>
+            <span className="hover:text-cyan-600 dark:hover:text-cyan-400 cursor-pointer transition-colors">Terms of Service</span>
+            <span className="hover:text-cyan-600 dark:hover:text-cyan-400 cursor-pointer transition-colors">Contact Us</span>
           </div>
         </div>
       </footer>

@@ -184,7 +184,7 @@ export default function Signup() {
   if (quoteResult) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 flex items-center justify-center px-4 py-12">
-        <div className="max-w-2xl w-full bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 md:p-12">
+        <div className="max-w-2xl w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 transition-colors duration-200 p-8 md:p-12">
           <div className="text-center mb-8">
             <div className="inline-flex p-4 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full mb-4 animate-bounce">
               <CheckCircleIcon className="w-12 h-12 text-white" />
@@ -192,8 +192,8 @@ export default function Signup() {
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
               Quote Request Received!
             </h1>
-            <p className="text-gray-600">
-              Quote ID: <span className="font-semibold text-gray-900">{quoteResult.quote_id}</span>
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500">
+              Quote ID: <span className="font-semibold text-gray-900 dark:text-white">{quoteResult.quote_id}</span>
             </p>
           </div>
 
@@ -202,17 +202,17 @@ export default function Signup() {
               <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl">
                 <CurrencyDollarIcon className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">Your Estimated Premium</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Estimated Premium</h2>
             </div>
             <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="bg-white rounded-xl p-6 shadow-md">
-                <div className="text-sm text-gray-600 mb-2">Monthly Premium</div>
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md">
+                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Monthly Premium</div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
                   ${quoteResult.estimated_monthly_premium.toFixed(2)}
                 </div>
               </div>
-              <div className="bg-white rounded-xl p-6 shadow-md">
-                <div className="text-sm text-gray-600 mb-2">Annual Premium</div>
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md">
+                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Annual Premium</div>
                 <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                   ${quoteResult.estimated_annual_premium.toFixed(2)}
                 </div>
@@ -232,7 +232,7 @@ export default function Signup() {
                 <ClockIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 mb-2 text-lg">What's Next?</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-2 text-lg">What's Next?</h3>
                 <p className="text-gray-700 leading-relaxed">
                   {quoteResult.message}
                 </p>
@@ -283,12 +283,12 @@ export default function Signup() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-200 flex items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Enhanced Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-200 dark:bg-cyan-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob" />
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-violet-200 dark:bg-violet-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-fuchsia-200 dark:bg-fuchsia-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
         <div className="absolute top-1/2 right-1/3 w-80 h-80 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-6000" />
         {/* Floating decorative elements */}
         <div className="absolute top-20 left-20 w-3 h-3 bg-yellow-200 rounded-full animate-float opacity-40" />
@@ -299,9 +299,9 @@ export default function Signup() {
       {/* Homepage Button */}
       <Link
         to="/home"
-        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-md rounded-full shadow-xl hover:shadow-2xl border-2 border-white/50 hover:border-cyan-300 transition-all group transform hover:scale-105"
+        className="absolute top-6 left-6 z-10 flex items-center gap-2 px-5 py-2.5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full shadow-xl hover:shadow-2xl border-2 border-white/50 dark:border-gray-700/50 hover:border-cyan-300 transition-all group transform hover:scale-105"
       >
-        <HomeIcon className="w-5 h-5 text-cyan-600 group-hover:text-purple-600 transition-colors" />
+        <HomeIcon className="w-5 h-5 text-cyan-600 dark:text-cyan-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />
         <span className="text-sm font-semibold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">Home</span>
       </Link>
 
@@ -312,13 +312,13 @@ export default function Signup() {
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
               Get Your Personalized Quote
             </h1>
-            <div className="px-4 py-2 bg-white/90 backdrop-blur-md rounded-full border-2 border-white/50 shadow-lg">
+            <div className="px-4 py-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full border-2 border-white/50 dark:border-gray-700/50 shadow-lg">
               <span className="text-sm font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
                 Step {currentStep} of {totalSteps}
               </span>
             </div>
           </div>
-          <div className="w-full bg-white/30 backdrop-blur-sm rounded-full h-3 overflow-hidden shadow-inner border-2 border-white/30">
+          <div className="w-full bg-white/30 dark:bg-gray-700/30 backdrop-blur-sm rounded-full h-3 overflow-hidden shadow-inner border-2 border-white/30">
             <div 
               className="h-full bg-gradient-to-r from-cyan-400 via-blue-400 via-purple-400 to-pink-400 rounded-full transition-all duration-500 shadow-lg relative overflow-hidden"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
@@ -329,10 +329,10 @@ export default function Signup() {
         </div>
 
         {/* Main Form Card */}
-        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/30 p-8 md:p-10 relative overflow-hidden">
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/30 transition-colors duration-200 p-8 md:p-10 relative overflow-hidden">
           {/* Decorative gradient overlays */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-cyan-200/20 to-purple-200/20 rounded-full blur-3xl -mr-48 -mt-48" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-pink-200/20 to-rose-200/20 rounded-full blur-3xl -ml-40 -mb-40" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-cyan-200/20 to-purple-200/20 dark:from-cyan-900/20 dark:to-purple-900/20 rounded-full blur-3xl -mr-48 -mt-48" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-pink-200/20 to-rose-200/20 dark:from-pink-900/20 dark:to-rose-900/20 rounded-full blur-3xl -ml-40 -mb-40" />
           {error && (
             <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 rounded-xl animate-shake shadow-md relative z-10">
               <div className="flex items-center gap-3">
@@ -623,7 +623,7 @@ export default function Signup() {
                       name="coverage_type"
                       value={formData.coverage_type}
                       onChange={handleChange}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 bg-white hover:border-amber-300 transition-all font-medium"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-amber-500 dark:focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 bg-white hover:border-amber-300 transition-all font-medium"
                     >
                       <option value="full">Full Coverage</option>
                       <option value="liability">Liability Only</option>
@@ -698,9 +698,9 @@ export default function Signup() {
             >
               Already have an account? Sign in →
             </Link>
-            <div className="flex items-center gap-2 px-3 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-white/50">
+            <div className="flex items-center gap-2 px-3 py-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/50 dark:border-gray-700/50">
               <LockClosedIcon className="w-4 h-4 text-emerald-600" />
-              <span className="text-xs font-semibold text-gray-700">Secure & Encrypted</span>
+              <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300">Secure & Encrypted</span>
             </div>
           </div>
         </div>
