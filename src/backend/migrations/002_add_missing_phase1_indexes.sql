@@ -80,3 +80,5 @@ ANALYZE telematics_events;
 
 
 
+
+

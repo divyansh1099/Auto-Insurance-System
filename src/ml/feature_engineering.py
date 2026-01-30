@@ -141,6 +141,36 @@ class FeatureEngineer:
 
         return features
 
+
+    def calculate_interaction_features(self, features: Dict[str, float]) -> Dict[str, float]:
+        """Calculate interaction and non-linear features."""
+        interactions = {}
+        
+        # Interaction: Speeding during night
+        # High speed at night is riskier than high speed during day
+        speeding = features.get('speeding_incidents_per_100mi', 0)
+        night_pct = features.get('night_driving_pct', 0)
+        interactions['interaction_speed_night'] = speeding * night_pct / 100
+
+        # Interaction: Harsh braking during rush hour
+        # Braking in heavy traffic might be more common but high frequent harsh braking is risky
+        braking = features.get('harsh_braking_per_100mi', 0)
+        rush_pct = features.get('rush_hour_pct', 0)
+        interactions['interaction_braking_rush'] = braking * rush_pct / 100
+        
+        # Age risk factor (Young drivers < 25 are statistically riskier)
+        age = features.get('age', 35)
+        interactions['is_young_driver'] = 1.0 if age < 25 else 0.0
+        interactions['is_senior_driver'] = 1.0 if age > 65 else 0.0
+        
+        # Vehicle risk interaction
+        vehicle_age = features.get('vehicle_age', 5)
+        safety_rating = features.get('vehicle_safety_rating', 3)
+        # Older cars with low safety ratings are riskier
+        interactions['vehicle_risk_factor'] = (vehicle_age / 15) * (6 - safety_rating)
+        
+        return interactions
+
     def engineer_features(self, trips_df: pd.DataFrame, driver_demographics: Dict = None) -> Dict[str, float]:
         """
         Engineer all features for a driver.
@@ -162,8 +192,8 @@ class FeatureEngineer:
         trip_pattern_features = self.calculate_trip_pattern_features(trips_df)
         risk_features = self.calculate_risk_features(trips_df)
 
-        # Combine all features
-        all_features = {
+        # Combine base features
+        base_features = {
             **speed_features,
             **braking_accel_features,
             **time_pattern_features,
@@ -173,47 +203,69 @@ class FeatureEngineer:
 
         # Add demographic features if available
         if driver_demographics:
-            all_features.update({
+            base_features.update({
                 'age': driver_demographics.get('age', 30),
                 'years_licensed': driver_demographics.get('years_licensed', 5),
                 'vehicle_age': driver_demographics.get('vehicle_age', 5),
                 'vehicle_safety_rating': driver_demographics.get('vehicle_safety_rating', 3)
             })
+            
+        # Calculate interaction features
+        interaction_features = self.calculate_interaction_features(base_features)
+        
+        # Combine all
+        all_features = {**base_features, **interaction_features}
 
         return all_features
 
     def create_risk_score_target(self, features: Dict[str, float]) -> float:
         """
         Create risk score target from features (for initial model training).
-
+        
         This is a weighted combination of key risk metrics.
         In production, this would be based on actual claims data.
         """
         weights = {
-            'harsh_braking_per_100mi': 0.25,
-            'rapid_accel_per_100mi': 0.15,
-            'speeding_incidents_per_100mi': 0.20,
-            'night_driving_pct': 0.10,
-            'max_speed_recorded': 0.15,
+            'harsh_braking_per_100mi': 0.20,
+            'rapid_accel_per_100mi': 0.10,
+            'speeding_incidents_per_100mi': 0.15,
+            'night_driving_pct': 0.05,
+            'max_speed_recorded': 0.10,
             'phone_usage_trip_pct': 0.10,
-            'late_night_driving_pct': 0.05
+            'late_night_driving_pct': 0.05,
+            'interaction_speed_night': 0.10,  # New
+            'interaction_braking_rush': 0.05, # New
+            'is_young_driver': 5.0,           # New (Absolute adder, not weight in loop if treated differently, but here we treat as keys)
+            'vehicle_risk_factor': 2.0        # New
         }
 
         risk_score = 0
+        
+        # Handle special binary/categorical features separately or normalize them
+        if features.get('is_young_driver', 0) > 0:
+            risk_score += 15.0 # Penalty for young drivers
+            
+        if features.get('is_senior_driver', 0) > 0:
+            risk_score += 5.0 # Slight penalty for senior drivers
 
         for feature, weight in weights.items():
-            if feature in features:
+            if feature in features and feature not in ['is_young_driver', 'vehicle_risk_factor']:
                 # Normalize each feature to 0-1 range (simplified)
                 if feature == 'max_speed_recorded':
-                    normalized = min(features[feature] / 100, 1.0)
+                    normalized = min(features[feature] / 120, 1.0) # Adjusted max
                 elif 'pct' in feature:
                     normalized = features[feature] / 100
                 elif 'per_100mi' in feature:
-                    normalized = min(features[feature] / 10, 1.0)
+                    normalized = min(features[feature] / 15, 1.0)
+                elif 'interaction' in feature:
+                    normalized = min(features[feature] / 10, 1.0) # Approximate normalization
                 else:
                     normalized = min(features[feature] / 50, 1.0)
 
                 risk_score += normalized * weight * 100
+        
+        # Add vehicle risk
+        risk_score += features.get('vehicle_risk_factor', 0) * 3.0
 
         return min(max(risk_score, 0), 100)  # Clip to 0-100
 

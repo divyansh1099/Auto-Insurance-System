@@ -215,6 +215,30 @@ class RiskScoringModel:
         if driver_info:
             features['age'] = driver_info.get('age', 35)
             features['years_licensed'] = driver_info.get('years_licensed', 10)
+            features['vehicle_age'] = 5 # Default
+            features['vehicle_safety_rating'] = 4 # Default
+            
+        # --- Interaction Features (Must match src/ml/feature_engineering.py) ---
+        
+        # Interaction: Speeding during night
+        speeding = features.get('speeding_incidents_per_100mi', 0)
+        night_pct = features.get('night_driving_pct', 0)
+        features['interaction_speed_night'] = speeding * night_pct / 100
+
+        # Interaction: Harsh braking during rush hour
+        braking = features.get('harsh_braking_per_100mi', 0)
+        rush_pct = features.get('rush_hour_pct', 0)
+        features['interaction_braking_rush'] = braking * rush_pct / 100
+        
+        # Age risk factor
+        age = features.get('age', 35)
+        features['is_young_driver'] = 1.0 if age < 25 else 0.0
+        features['is_senior_driver'] = 1.0 if age > 65 else 0.0
+        
+        # Vehicle risk interaction
+        vehicle_age = features.get('vehicle_age', 5)
+        safety_rating = features.get('vehicle_safety_rating', 4)
+        features['vehicle_risk_factor'] = (vehicle_age / 15) * (6 - safety_rating)
         
         return features
 

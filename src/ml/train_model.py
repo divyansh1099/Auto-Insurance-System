@@ -330,8 +330,17 @@ def create_synthetic_training_data(n_drivers: int = 500) -> pd.DataFrame:
             'vehicle_safety_rating': np.random.randint(1, 6)
         }
 
-        # Calculate risk score target
-        risk_score = feature_engineer.create_risk_score_target(features)
+        # Calculate interaction features for synthetic data
+        interactions = feature_engineer.calculate_interaction_features(features)
+        features.update(interactions)
+
+        # Calculate risk score target with some noise
+        base_risk_score = feature_engineer.create_risk_score_target(features)
+        
+        # Add random noise to make it realistic (target isn't perfectly linear)
+        noise = np.random.normal(0, 5) # Standard deviation of 5 points
+        risk_score = min(max(base_risk_score + noise, 0), 100)
+        
         features['risk_score'] = risk_score
 
         all_features.append(features)

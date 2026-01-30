@@ -1,0 +1,60 @@
+# Zero-Day Attack Detection System Configuration
+
+# Detection Settings
+detection:
+  # Anomaly detection threshold (0.0 to 1.0)
+  anomaly_threshold: 0.7
+  # Behavioral analysis sensitivity
+  behavioral_sensitivity: 0.8
+  # Minimum confidence for alerting
+  min_confidence: 0.75
+  # Enable ML-based detection
+  enable_ml_detection: true
+
+# Monitoring Settings
+monitoring:
+  # Log file paths to monitor
+  log_paths:
+    - /var/log/auth.log
+    - /var/log/syslog
+    - /var/log/nginx/access.log
+  # Real-time monitoring enabled
+  real_time: true
+  # Check interval in seconds
+  check_interval: 5
+  # Maximum log file size (MB)
+  max_log_size: 100
+
+# Alerting Settings
+alerting:
+  # Enable email alerts
+  email_enabled: false
+  email_smtp_server: smtp.gmail.com
+  email_smtp_port: 587
+  email_from: alerts@example.com
+  email_to: admin@example.com
+  # Enable console alerts
+  console_enabled: true
+  # Alert severity levels: low, medium, high, critical
+  min_severity: medium
+
+# ML Model Settings
+ml_model:
+  # Model file path
+  model_path: models/detection_model.pkl
+  # Retrain interval (days)
+  retrain_interval: 7
+  # Feature extraction window (seconds)
+  feature_window: 300
+
+# System Settings
+system:
+  # Working directory
+  work_dir: ./data
+  # Log directory
+  log_dir: ./logs
+  # Model directory
+  model_dir: ./models
+  # Report directory
+  report_dir: ./reports
+
