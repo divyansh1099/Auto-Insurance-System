@@ -82,3 +82,26 @@ docker-compose.override.yml
 
 # Documentation backups (from cleanup script)
 docs_backup_*/
+
+# Backup files
+backups/
+*.backup
+*.bak
+*.sql.backup
+
+# Local IDE/Editor settings
+.claude/
+.vscode/
+.idea/
+*.code-workspace
+
+# Zeroday project runtime files (keep source, ignore generated)
+Zeroday/venv/
+Zeroday/logs/
+Zeroday/data/
+Zeroday/models/
+Zeroday/reports/
+Zeroday/*.jsonl
+Zeroday/demo_log.jsonl
+Zeroday/training_data.jsonl
+Zeroday/labels.txt
